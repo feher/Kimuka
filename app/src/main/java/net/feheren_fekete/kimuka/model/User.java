@@ -18,6 +18,10 @@ public class User {
     public List<Integer> grades;
     public String note;
 
+    public void setKey(String key) {
+        this.key = key;
+    }
+
     public void setUid(String uid) {
         this.uid = uid;
     }

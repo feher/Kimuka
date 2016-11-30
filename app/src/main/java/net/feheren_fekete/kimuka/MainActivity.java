@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -20,7 +21,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import net.feheren_fekete.kimuka.model.Grading;
 import net.feheren_fekete.kimuka.model.User;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
         implements FragmentInteractionListener {
@@ -30,10 +34,12 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUsersTable;
+    private @Nullable FirebaseUser mFirebaseUser;
     private @Nullable Query mUserQuery;
     private @Nullable User mUser;
 
     private SignInFragment mSignInFragment;
+    private UserProfileFragment mUserProfileFragment;
     private DayFragment mDayFragment;
     private AddAvailabilityFragment mAddAvailabilityFragment;
     private Fragment mActiveFragment;
@@ -114,10 +120,10 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-            FirebaseUser user = firebaseAuth.getCurrentUser();
-            if (user != null) {
-                Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                reRegisterUserListener(user.getUid());
+            mFirebaseUser = firebaseAuth.getCurrentUser();
+            if (mFirebaseUser != null) {
+                Log.d(TAG, "onAuthStateChanged:signed_in:" + mFirebaseUser.getUid());
+                reRegisterUserListener(mFirebaseUser.getUid());
                 showDayFragment();
             } else {
                 Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -147,15 +153,34 @@ public class MainActivity extends AppCompatActivity
     private ValueEventListener mUserListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            mUser = dataSnapshot.getValue(User.class);
-            mUser.key = dataSnapshot.getKey();
+            if (dataSnapshot.getValue() != null) {
+                mUser = dataSnapshot.getValue(User.class);
+                mUser.key = dataSnapshot.getKey();
+            } else if (mFirebaseUser != null) {
+                createUser(mFirebaseUser.getUid(), mFirebaseUser.getDisplayName());
+            }
         }
         @Override
         public void onCancelled(DatabaseError databaseError) {
             // TODO: Handle error.
-            // Create User. Show profile page.
         }
     };
+
+    private void createUser(String uid, String name) {
+        User user = new User();
+        user.setUid(uid);
+        user.setName(name);
+        user.setCanBelay(false);
+        user.setGrades(Arrays.asList(Grading.YDS_5_0, Grading.FONTENBLAU_3));
+        user.setNote("");
+        DatabaseReference userRef = mUsersTable.push();
+        userRef.setValue(user).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // TODO: Handle error.
+            }
+        });
+    }
 
     private void showSignInFragment() {
         if (mSignInFragment == null) {

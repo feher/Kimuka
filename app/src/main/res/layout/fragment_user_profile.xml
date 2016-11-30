@@ -1,0 +1,95 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="net.feheren_fekete.kimuka.UserProfileFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/user_profile_name" />
+
+    <EditText
+        android:id="@+id/name_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_below="@+id/name_text"
+        android:layout_alignParentStart="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <TextView
+        android:text="@string/user_profile_can_belay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name_value"
+        android:layout_alignParentStart="true"
+        android:id="@+id/can_belay_text" />
+
+    <Switch
+        android:id="@+id/can_belay_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/can_belay_text" />
+
+    <TextView
+        android:text="@string/user_profile_grade_free_climbing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/can_belay_switch"
+        android:layout_alignParentStart="true"
+        android:id="@+id/free_climbing_grade_text" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_below="@+id/free_climbing_grade_text"
+        android:layout_alignParentStart="true"
+        android:id="@+id/free_climbing_grade_value"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAlignment="textEnd" />
+
+    <TextView
+        android:text="@string/user_profile_grade_bouldering"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/free_climbing_grade_value"
+        android:layout_alignParentStart="true"
+        android:id="@+id/bouldering_grade_text" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_below="@+id/bouldering_grade_text"
+        android:layout_alignParentStart="true"
+        android:id="@+id/bouldering_grade_value"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAlignment="textEnd" />
+
+    <TextView
+        android:text="@string/user_profile_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bouldering_grade_value"
+        android:layout_alignParentStart="true"
+        android:id="@+id/note_text" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:layout_below="@+id/note_text"
+        android:layout_alignParentStart="true"
+        android:id="@+id/note_value"
+        android:hint="@string/user_profile_note_hint"
+        android:gravity="top" />
+
+</RelativeLayout>
