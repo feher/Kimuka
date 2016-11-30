@@ -13,6 +13,14 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import net.feheren_fekete.kimuka.model.User;
 
 public class MainActivity extends AppCompatActivity
         implements FragmentInteractionListener {
@@ -20,6 +28,11 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private FirebaseAuth mAuth;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mUsersTable;
+    private @Nullable Query mUserQuery;
+    private @Nullable User mUser;
+
     private SignInFragment mSignInFragment;
     private DayFragment mDayFragment;
     private AddAvailabilityFragment mAddAvailabilityFragment;
@@ -34,6 +47,8 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(myToolbar);
 
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance();
+        mUsersTable = mDatabase.getReference("users");
     }
 
     @Override
@@ -45,6 +60,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStop() {
         super.onStop();
+        unregisterUserListener();
         mAuth.removeAuthStateListener(mAuthListener);
     }
 
@@ -90,17 +106,54 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Nullable
+    public User getUser() {
+        return mUser;
+    }
+
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null) {
                 Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                reRegisterUserListener(user.getUid());
                 showDayFragment();
             } else {
                 Log.d(TAG, "onAuthStateChanged:signed_out");
+                unregisterUserListener();
                 showSignInFragment();
             }
+        }
+    };
+
+    private void reRegisterUserListener(String uid) {
+        unregisterUserListener();
+        registerUserListener(uid);
+    }
+
+    private void registerUserListener(String uid) {
+        mUserQuery = mUsersTable.orderByChild("uid").equalTo(uid);
+        mUserQuery.addValueEventListener(mUserListener);
+    }
+
+    private void unregisterUserListener() {
+        if (mUserQuery != null) {
+            mUserQuery.removeEventListener(mUserListener);
+            mUserQuery = null;
+        }
+    }
+
+    private ValueEventListener mUserListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            mUser = dataSnapshot.getValue(User.class);
+            mUser.key = dataSnapshot.getKey();
+        }
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            // TODO: Handle error.
+            // Create User. Show profile page.
         }
     };
 

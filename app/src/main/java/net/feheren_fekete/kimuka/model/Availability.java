@@ -5,17 +5,10 @@ import java.util.List;
 
 public class Availability {
 
-    public static final int ACTIVITY_TOP_ROPE = 1 << 0;
-    public static final int ACTIVITY_LEAD = 2 << 0;
-    public static final int ACTIVITY_TRAD = 3 << 0;
-    public static final int ACTIVITY_ICE = 4 << 0;
-    public static final int ACTIVITY_BOULDERING = 5 << 0;
-
-    public static final int GRADE_TOP_ROPE = 0;
-    public static final int GRADE_LEAD = 1;
-    public static final int GRADE_TRAD = 2;
-    public static final int GRADE_ICE = 3;
-    public static final int GRADE_BOULDERING = 4;
+    public static final int ACTIVITY_FREE_TOP_ROPE = 1 << 0;
+    public static final int ACTIVITY_FREE_LEAD = 1 << 1;
+    public static final int ACTIVITY_FREE_TRAD = 1 << 2;
+    public static final int ACTIVITY_BOULDERING = 1 << 3;
 
     public static final int IF_NO_PARTNER_I_GO_ANYWAY = 0;
     public static final int IF_NO_PARTNER_I_DONT_GO = 1;
@@ -32,7 +25,7 @@ public class Availability {
     public long activity; // Bitwise combination of ACTIVITY_*.
     public List<String> sharedEquipment;
     public boolean canBelay;
-    public List<String> grades;
+    public List<Integer> grades;
     public String note;
     public int ifNoPartner;
     public List<String> joinedAvailabilityKeys = new ArrayList<>();
@@ -81,7 +74,7 @@ public class Availability {
         this.canBelay = canBelay;
     }
 
-    public void setGrades(List<String> grades) {
+    public void setGrades(List<Integer> grades) {
         this.grades = grades;
     }
 

@@ -20,12 +20,12 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import net.feheren_fekete.kimuka.model.Availability;
+import net.feheren_fekete.kimuka.model.User;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -60,6 +60,10 @@ public class AddAvailabilityFragment
     private TextView mEndTimeTextView;
     private TextView mTargetTimeTextView;
     private TextView mTargetDateTextView;
+
+    private LatLng mLocationLatLng;
+    private String mLocationAddress;
+    private String mLocationName;
 
     public AddAvailabilityFragment() {
     }
@@ -104,7 +108,7 @@ public class AddAvailabilityFragment
         mStartDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] dateParts = mStartDateTextView.getText().toString().split(".");
+                String[] dateParts = mStartDateTextView.getText().toString().split("\\.");
                 DialogFragment newFragment = DatePickerDialogFragment.newInstance(
                         Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1]), Integer.valueOf(dateParts[2]));
                 newFragment.show(getActivity().getSupportFragmentManager(), "DatePickerDialogFragment");
@@ -133,7 +137,7 @@ public class AddAvailabilityFragment
         mEndDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] dateParts = mEndDateTextView.getText().toString().split(".");
+                String[] dateParts = mEndDateTextView.getText().toString().split("\\.");
                 DialogFragment newFragment = DatePickerDialogFragment.newInstance(
                         Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1]), Integer.valueOf(dateParts[2]));
                 newFragment.show(getActivity().getSupportFragmentManager(), "DatePickerDialogFragment");
@@ -197,7 +201,11 @@ public class AddAvailabilityFragment
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
                 Place place = PlacePicker.getPlace(getContext(), data);
-                mLocationTextView.setText(place.getName() + ", " + place.getAddress() + " [" + place.getLatLng() + "]");
+                mLocationLatLng = place.getLatLng();
+                mLocationAddress = place.getAddress().toString();
+                mLocationName = place.getName().toString();
+                mLocationTextView.setText(mLocationName + ", " + mLocationAddress
+                        + " [" + mLocationLatLng.latitude + ","+ mLocationLatLng.longitude + "]");
             }
         }
     }
@@ -215,27 +223,53 @@ public class AddAvailabilityFragment
     }
 
     private void addAvailability() {
-        try {
-            String startTimeString = mStartDateTextView.getText().toString();
-            String endTimeString = mEndDateTextView.getText().toString();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());
-            Date date = dateFormat.parse(startTimeString);
-            long startTime = date.getTime();
-            date = dateFormat.parse(endTimeString);
-            long endTime = date.getTime();
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Activity activity = getActivity();
+        if (activity != null
+                && (activity instanceof MainActivity)) {
+            MainActivity mainActivity = (MainActivity) activity;
+            User user = mainActivity.getUser();
             if (user != null) {
-                String userId = user.getUid();
-                Availability availability = new Availability();
-                // TODO: set Availability fields.
-                DatabaseReference availabilityRef = mAvailabilityTable.push();
-                availabilityRef.setValue(availability);
-                if (mInteractionListener != null) {
-                    mInteractionListener.onFragmentAction(INTERACTION_DONE_TAPPED, null);
+                try {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());
+
+                    String startDateString = mStartDateTextView.getText().toString();
+                    String startTimeString = mStartTimeTextView.getText().toString();
+                    String startDateTimeString = startDateString + " " + startTimeString;
+                    Date date = dateFormat.parse(startDateTimeString);
+                    long startTime = date.getTime();
+
+                    String endDateString = mEndDateTextView.getText().toString();
+                    String endTimeString = mEndTimeTextView.getText().toString();
+                    String endDateTimeString = endDateString + " " + endTimeString;
+                    date = dateFormat.parse(endDateTimeString);
+                    long endTime = date.getTime();
+
+                    Availability availability = new Availability();
+                    availability.userKey = user.key;
+                    availability.userName = user.name;
+                    availability.locationLatitude = mLocationLatLng.latitude;
+                    availability.locationLongitude = mLocationLatLng.longitude;
+                    availability.locationAddress = mLocationAddress;
+                    availability.locationName = mLocationName;
+                    availability.startTime = startTime;
+                    availability.endTime = endTime;
+                    availability.activity = ???;
+                    availability.sharedEquipment = ???;
+                    availability.canBelay = user.canBelay;
+                    availability.grades = user.grades;
+                    availability.note = ???;
+                    availability.ifNoPartner = ???;
+                    // TODO: set Availability fields.
+
+                    DatabaseReference availabilityRef = mAvailabilityTable.push();
+                    availabilityRef.setValue(availability);
+                    if (mInteractionListener != null) {
+                        mInteractionListener.onFragmentAction(INTERACTION_DONE_TAPPED, null);
+                    }
+                } catch (ParseException e) {
+                    // TODO: Report exception
                 }
             }
-        } catch (ParseException e) {
-            // TODO: Report exception
         }
     }
 
