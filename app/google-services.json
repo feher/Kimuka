@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "158511473245",
+    "firebase_url": "https://kimuka-28d96.firebaseio.com",
+    "project_id": "kimuka-28d96",
+    "storage_bucket": "kimuka-28d96.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:158511473245:android:1ed0955f2166a3d8",
+        "android_client_info": {
+          "package_name": "net.feheren_fekete.kimuka"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "158511473245-emp5l6bjm2nqf7sjh5hprp4mf00all0c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMH4skDTM9Qq8ABR4aTx-fx0uhj3kCEE8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
