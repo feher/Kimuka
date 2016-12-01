@@ -1,6 +1,19 @@
 package net.feheren_fekete.kimuka.model;
 
+import android.util.ArrayMap;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 public class Grading {
+
+    public static final int NAME_YDS = 1;
+    public static final int NAME_FRENCH = 2;
+
+    public static final int NAME_FONTENBLAU = 1;
+    public static final int NAME_HUECO = 2;
 
     public static final int YDS_5_0 = 5000;
     public static final int YDS_5_1 = 5010;
@@ -35,7 +48,48 @@ public class Grading {
     public static final int YDS_5_15_A = 5150;
     public static final int YDS_5_15_B = 5151;
     public static final int YDS_5_15_C = 5152;
-    public static final int YDS_5_15_D = 5153;
+
+    public static final Map<Integer, List<String>> sYdsNameMap;
+    static {
+        sYdsNameMap = new ArrayMap<>();
+        sYdsNameMap.put(YDS_5_0, new ArrayList<>(Arrays.asList("YDS 5.0", "French 1")));
+        sYdsNameMap.put(YDS_5_1, new ArrayList<>(Arrays.asList("YDS 5.1", "French 2")));
+        sYdsNameMap.put(YDS_5_2, new ArrayList<>(Arrays.asList("YDS 5.2", "French 2")));
+        sYdsNameMap.put(YDS_5_3, new ArrayList<>(Arrays.asList("YDS 5.3", "French 3")));
+        sYdsNameMap.put(YDS_5_4, new ArrayList<>(Arrays.asList("YDS 5.4", "French 4a")));
+        sYdsNameMap.put(YDS_5_5, new ArrayList<>(Arrays.asList("YDS 5.5", "French 4b")));
+        sYdsNameMap.put(YDS_5_6, new ArrayList<>(Arrays.asList("YDS 5.6", "French 4c")));
+        sYdsNameMap.put(YDS_5_7, new ArrayList<>(Arrays.asList("YDS 5.7", "French 5a")));
+        sYdsNameMap.put(YDS_5_8, new ArrayList<>(Arrays.asList("YDS 5.8", "French 5b")));
+        sYdsNameMap.put(YDS_5_9, new ArrayList<>(Arrays.asList("YDS 5.9", "French 5c")));
+        sYdsNameMap.put(YDS_5_10_A, new ArrayList<>(Arrays.asList("YDS 5.10a", "French 6a")));
+        sYdsNameMap.put(YDS_5_10_B, new ArrayList<>(Arrays.asList("YDS 5.10b", "French 6a+")));
+        sYdsNameMap.put(YDS_5_10_C, new ArrayList<>(Arrays.asList("YDS 5.10c", "French 6b")));
+        sYdsNameMap.put(YDS_5_10_D, new ArrayList<>(Arrays.asList("YDS 5.10d", "French 6b+")));
+        sYdsNameMap.put(YDS_5_11_A, new ArrayList<>(Arrays.asList("YDS 5.11a", "French 6c")));
+        sYdsNameMap.put(YDS_5_11_B, new ArrayList<>(Arrays.asList("YDS 5.11b", "French 6c+")));
+        sYdsNameMap.put(YDS_5_11_C, new ArrayList<>(Arrays.asList("YDS 5.11c", "French 6c+")));
+        sYdsNameMap.put(YDS_5_11_D, new ArrayList<>(Arrays.asList("YDS 5.11d", "French 7a")));
+        sYdsNameMap.put(YDS_5_12_A, new ArrayList<>(Arrays.asList("YDS 5.12a", "French 7a+")));
+        sYdsNameMap.put(YDS_5_12_B, new ArrayList<>(Arrays.asList("YDS 5.12b", "French 7b")));
+        sYdsNameMap.put(YDS_5_12_C, new ArrayList<>(Arrays.asList("YDS 5.12c", "French 7b+")));
+        sYdsNameMap.put(YDS_5_12_D, new ArrayList<>(Arrays.asList("YDS 5.12d", "French 7c")));
+        sYdsNameMap.put(YDS_5_13_A, new ArrayList<>(Arrays.asList("YDS 5.13a", "French 7c+")));
+        sYdsNameMap.put(YDS_5_13_B, new ArrayList<>(Arrays.asList("YDS 5.13b", "French 8a")));
+        sYdsNameMap.put(YDS_5_13_C, new ArrayList<>(Arrays.asList("YDS 5.13c", "French 8a+")));
+        sYdsNameMap.put(YDS_5_13_D, new ArrayList<>(Arrays.asList("YDS 5.13d", "French 8b")));
+        sYdsNameMap.put(YDS_5_14_A, new ArrayList<>(Arrays.asList("YDS 5.14a", "French 8b+")));
+        sYdsNameMap.put(YDS_5_14_B, new ArrayList<>(Arrays.asList("YDS 5.14b", "French 8c")));
+        sYdsNameMap.put(YDS_5_14_C, new ArrayList<>(Arrays.asList("YDS 5.14c", "French 8c+")));
+        sYdsNameMap.put(YDS_5_14_D, new ArrayList<>(Arrays.asList("YDS 5.14d", "French 9a")));
+        sYdsNameMap.put(YDS_5_15_A, new ArrayList<>(Arrays.asList("YDS 5.15a", "French 9a+")));
+        sYdsNameMap.put(YDS_5_15_B, new ArrayList<>(Arrays.asList("YDS 5.15b", "French 9b")));
+        sYdsNameMap.put(YDS_5_15_C, new ArrayList<>(Arrays.asList("YDS 5.15c", "French 9b+")));
+    }
+
+    public static String getNameForYdsGrade(int ydsGrade, int gradingSystem) {
+        return sYdsNameMap.get(ydsGrade).get(gradingSystem);
+    }
 
     public static final int FRENCH_1 = YDS_5_0;
     public static final int FRENCH_2 = YDS_5_1;
@@ -68,7 +122,6 @@ public class Grading {
     public static final int FRENCH_9_A_PLUS = YDS_5_15_A;
     public static final int FRENCH_9_B = YDS_5_15_B;
     public static final int FRENCH_9_B_PLUS = YDS_5_15_C;
-    public static final int FRENCH_9_C = YDS_5_15_D;
 
     public static final int FONTENBLAU_3 = 3000;
     public static final int FONTENBLAU_4_MINUS = 4000;
@@ -95,6 +148,40 @@ public class Grading {
     public static final int FONTENBLAU_8_C = 8030;
     public static final int FONTENBLAU_8_C_PLUS = 8031;
     public static final int FONTENBLAU_9_A = 9010;
+
+    public static final Map<Integer, List<String>> sFontenblauNameMap;
+    static {
+        sFontenblauNameMap = new ArrayMap<>();
+        sFontenblauNameMap.put(FONTENBLAU_3, new ArrayList<>(Arrays.asList("3", "VB")));
+        sFontenblauNameMap.put(FONTENBLAU_4_MINUS, new ArrayList<>(Arrays.asList("4-", "V0-")));
+        sFontenblauNameMap.put(FONTENBLAU_4, new ArrayList<>(Arrays.asList("4", "V0")));
+        sFontenblauNameMap.put(FONTENBLAU_4_PLUS, new ArrayList<>(Arrays.asList("4+", "V0+")));
+        sFontenblauNameMap.put(FONTENBLAU_5, new ArrayList<>(Arrays.asList("5", "V1")));
+        sFontenblauNameMap.put(FONTENBLAU_5_PLUS, new ArrayList<>(Arrays.asList("5+", "V2")));
+        sFontenblauNameMap.put(FONTENBLAU_6_A, new ArrayList<>(Arrays.asList("6A", "V3")));
+        sFontenblauNameMap.put(FONTENBLAU_6_A_PLUS, new ArrayList<>(Arrays.asList("6A+", "V3")));
+        sFontenblauNameMap.put(FONTENBLAU_6_B, new ArrayList<>(Arrays.asList("6B", "V4")));
+        sFontenblauNameMap.put(FONTENBLAU_6_B_PLUS, new ArrayList<>(Arrays.asList("6B+", "V4")));
+        sFontenblauNameMap.put(FONTENBLAU_6_C, new ArrayList<>(Arrays.asList("6C", "V5")));
+        sFontenblauNameMap.put(FONTENBLAU_6_C_PLUS, new ArrayList<>(Arrays.asList("6C+", "V5")));
+        sFontenblauNameMap.put(FONTENBLAU_7_A, new ArrayList<>(Arrays.asList("7A", "V6")));
+        sFontenblauNameMap.put(FONTENBLAU_7_A_PLUS, new ArrayList<>(Arrays.asList("7A+", "V7")));
+        sFontenblauNameMap.put(FONTENBLAU_7_B, new ArrayList<>(Arrays.asList("7B", "V8")));
+        sFontenblauNameMap.put(FONTENBLAU_7_B_PLUS, new ArrayList<>(Arrays.asList("7B+", "V8")));
+        sFontenblauNameMap.put(FONTENBLAU_7_C, new ArrayList<>(Arrays.asList("7C", "V9")));
+        sFontenblauNameMap.put(FONTENBLAU_7_C_PLUS, new ArrayList<>(Arrays.asList("7C+", "V10")));
+        sFontenblauNameMap.put(FONTENBLAU_8_A, new ArrayList<>(Arrays.asList("8A", "V11")));
+        sFontenblauNameMap.put(FONTENBLAU_8_A_PLUS, new ArrayList<>(Arrays.asList("8A+", "V12")));
+        sFontenblauNameMap.put(FONTENBLAU_8_B, new ArrayList<>(Arrays.asList("8B", "V13")));
+        sFontenblauNameMap.put(FONTENBLAU_8_B_PLUS, new ArrayList<>(Arrays.asList("8B+", "V14")));
+        sFontenblauNameMap.put(FONTENBLAU_8_C, new ArrayList<>(Arrays.asList("8C", "V15")));
+        sFontenblauNameMap.put(FONTENBLAU_8_C_PLUS, new ArrayList<>(Arrays.asList("8C+", "V16")));
+        sFontenblauNameMap.put(FONTENBLAU_9_A, new ArrayList<>(Arrays.asList("9A", "V17")));
+    }
+
+    public static String getNameForFontenblauGrade(int fontGrade, int gradingSystem) {
+        return sYdsNameMap.get(fontGrade).get(gradingSystem);
+    }
 
     public static final int HUECO_V_B = FONTENBLAU_3;
     public static final int HUECO_V_0_MINUS = FONTENBLAU_4_MINUS;

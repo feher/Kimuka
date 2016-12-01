@@ -5,10 +5,10 @@ import java.util.List;
 
 public class Availability {
 
-    public static final int ACTIVITY_FREE_TOP_ROPE = 1 << 0;
-    public static final int ACTIVITY_FREE_LEAD = 1 << 1;
-    public static final int ACTIVITY_FREE_TRAD = 1 << 2;
-    public static final int ACTIVITY_BOULDERING = 1 << 3;
+    public static final int ACTIVITY_TOP_ROPE = 0;
+    public static final int ACTIVITY_LEAD = 1;
+    public static final int ACTIVITY_TRAD = 2;
+    public static final int ACTIVITY_BOULDERING = 3;
 
     public static final int IF_NO_PARTNER_I_GO_ANYWAY = 0;
     public static final int IF_NO_PARTNER_I_DONT_GO = 1;
@@ -22,12 +22,13 @@ public class Availability {
     public String locationAddress;
     public long startTime; // ms since Epoch.
     public long endTime; // ms since Epoch.
-    public long activity; // Bitwise combination of ACTIVITY_*.
-    public List<String> sharedEquipment;
-    public boolean canBelay;
-    public List<Integer> grades;
-    public String note;
+    public String activity; // Comma separated list of activities (integers).
+    public boolean doesNeedPartner;
     public int ifNoPartner;
+    public String sharedEquipment; // Comma separated list of equipments (integers).
+    public boolean canBelay;
+    public String grades; // Comma separated list of grades (integers).
+    public String note;
     public List<String> joinedAvailabilityKeys = new ArrayList<>();
 
     public void setUserKey(String userKey) {
@@ -62,11 +63,15 @@ public class Availability {
         this.endTime = endTime;
     }
 
-    public void setActivity(long activity) {
+    public void setActivity(String activity) {
         this.activity = activity;
     }
 
-    public void setSharedEquipment(List<String> sharedEquipment) {
+    public void setDoesNeedPartner(boolean doesNeedPartner) {
+        this.doesNeedPartner = doesNeedPartner;
+    }
+
+    public void setSharedEquipment(String sharedEquipment) {
         this.sharedEquipment = sharedEquipment;
     }
 
@@ -74,7 +79,7 @@ public class Availability {
         this.canBelay = canBelay;
     }
 
-    public void setGrades(List<Integer> grades) {
+    public void setGrades(String grades) {
         this.grades = grades;
     }
 

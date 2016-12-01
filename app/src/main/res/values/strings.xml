@@ -13,6 +13,14 @@
     <string name="add_availability_capacity">Max number of buddies</string>
     <string name="add_availability_done">Done</string>
 
+    <string name="activity_dialog_title">Select activities</string>
+    <string-array name="activities">
+        <item>Top rope</item>
+        <item>Lead</item>
+        <item>Trad</item>
+        <item>Bouldering</item>
+    </string-array>
+
     <string-array name="shared_equipments">
         <item>Rope</item>
         <item>ATC</item>

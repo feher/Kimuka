@@ -15,8 +15,11 @@ public class User {
     public String uid;
     public String name;
     public boolean canBelay;
-    public List<Integer> grades;
+    public String grades; // Comma separated list of integers.
     public String note;
+
+    @Exclude
+    private int[] gradeNumbers;
 
     public void setKey(String key) {
         this.key = key;
@@ -34,12 +37,21 @@ public class User {
         this.canBelay = canBelay;
     }
 
-    public void setGrades(List<Integer> grades) {
+    public void setGrades(String grades) {
         this.grades = grades;
+        this.gradeNumbers = ModelUtils.toIntArray(this.grades);
     }
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public int getFreeClimbingGrade() {
+        return this.gradeNumbers[GRADE_FREE_CLIMBING];
+    }
+
+    public int getBoulderingGrade() {
+        return this.gradeNumbers[GRADE_BOULDERING];
     }
 
 }

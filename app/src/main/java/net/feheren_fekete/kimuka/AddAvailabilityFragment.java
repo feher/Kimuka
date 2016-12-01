@@ -25,12 +25,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import net.feheren_fekete.kimuka.model.Availability;
+import net.feheren_fekete.kimuka.model.ModelUtils;
 import net.feheren_fekete.kimuka.model.User;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -39,7 +41,8 @@ public class AddAvailabilityFragment
                 Fragment
         implements
                 DatePickerDialogFragment.Listener,
-                TimePickerDialogFragment.Listener {
+                TimePickerDialogFragment.Listener,
+                ActivityDialogFragment.Listener {
 
     private static final String TAG = AddAvailabilityFragment.class.getSimpleName();
 
@@ -222,6 +225,12 @@ public class AddAvailabilityFragment
                 "%02d:%02d", hourOfDay, minute));
     }
 
+    private String mActivities;
+    @Override
+    public void onActivityDialogOk(List<Integer> activities) {
+        mActivities = ModelUtils.toCommaSeparatedString(activities);
+    }
+
     private void addAvailability() {
         Activity activity = getActivity();
         if (activity != null
@@ -253,12 +262,12 @@ public class AddAvailabilityFragment
                     availability.locationName = mLocationName;
                     availability.startTime = startTime;
                     availability.endTime = endTime;
-                    availability.activity = ???;
+                    availability.activity = mActivities;
+                    availability.ifNoPartner = ???;
                     availability.sharedEquipment = ???;
                     availability.canBelay = user.canBelay;
                     availability.grades = user.grades;
                     availability.note = ???;
-                    availability.ifNoPartner = ???;
                     // TODO: set Availability fields.
 
                     DatabaseReference availabilityRef = mAvailabilityTable.push();

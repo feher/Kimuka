@@ -22,6 +22,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import net.feheren_fekete.kimuka.model.Grading;
+import net.feheren_fekete.kimuka.model.ModelUtils;
 import net.feheren_fekete.kimuka.model.User;
 
 import java.util.Arrays;
@@ -109,6 +110,11 @@ public class MainActivity extends AppCompatActivity
                     data.getInt(DatePickerDialogFragment.DATA_YEAR),
                     data.getInt(DatePickerDialogFragment.DATA_MONTH),
                     data.getInt(DatePickerDialogFragment.DATA_DAY_OF_MONTH));
+        } else if (ActivityDialogFragment.INTERCATION_ACTIVITIES_SELECTED.equals(action)
+                && data != null
+                && mActiveFragment instanceof ActivityDialogFragment.Listener) {
+            ActivityDialogFragment.Listener listener = (ActivityDialogFragment.Listener) mActiveFragment;
+            listener.onActivityDialogOk(data.getIntegerArrayList(ActivityDialogFragment.DATA_ACTIVITIES));
         }
     }
 
@@ -171,7 +177,8 @@ public class MainActivity extends AppCompatActivity
         user.setUid(uid);
         user.setName(name);
         user.setCanBelay(false);
-        user.setGrades(Arrays.asList(Grading.YDS_5_0, Grading.FONTENBLAU_3));
+        user.setGrades(ModelUtils.toCommaSeparatedString(Arrays.asList(
+                Grading.YDS_5_0, Grading.FONTENBLAU_3)));
         user.setNote("");
         DatabaseReference userRef = mUsersTable.push();
         userRef.setValue(user).addOnFailureListener(new OnFailureListener() {
