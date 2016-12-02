@@ -18,7 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:padding="5dp" />
+        android:padding="5dp"
+        android:hint="@string/add_availability_location_hint"/>
 
     <TextView
         android:id="@+id/start_datetime_title"
@@ -71,5 +72,20 @@
             android:layout_weight="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/activity_title"
+        android:text="@string/add_availability_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <TextView
+        android:id="@+id/activity_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:padding="5dp"
+        android:hint="@string/add_availability_activity_hint"/>
 
 </LinearLayout>

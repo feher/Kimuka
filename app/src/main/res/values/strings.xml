@@ -8,9 +8,12 @@
     <string name="main_menu_sign_out">Sign out</string>
 
     <string name="add_availability_location">Location</string>
+    <string name="add_availability_location_hint">Select the location</string>
     <string name="add_availability_start_time">From</string>
     <string name="add_availability_end_time">To</string>
     <string name="add_availability_capacity">Max number of buddies</string>
+    <string name="add_availability_activity">Activity</string>
+    <string name="add_availability_activity_hint">Select the activity</string>
     <string name="add_availability_done">Done</string>
 
     <string name="activity_dialog_title">Select activities</string>

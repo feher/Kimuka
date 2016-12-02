@@ -17,12 +17,17 @@ public class ActivityDialogFragment extends DialogFragment {
     public static final String INTERCATION_ACTIVITIES_SELECTED = DatePickerDialogFragment.class.getSimpleName() + ".INTERCATION_ACTIVITIES_SELECTED";
     public static final String DATA_ACTIVITIES = DatePickerDialogFragment.class.getSimpleName() + ".DATA_ACTIVITIES";
 
+    private static final String ARG_SELECTED_ITEMS = "1";
+
     public interface Listener {
-        void onActivityDialogOk(List<Integer> activities);
+        void onActivitySelected(List<Integer> activities);
     }
 
-    public static ActivityDialogFragment newInstance() {
+    public static ActivityDialogFragment newInstance(ArrayList<Integer> selectedItems) {
         ActivityDialogFragment fragment = new ActivityDialogFragment();
+        Bundle arguments = new Bundle();
+        arguments.putIntegerArrayList(ARG_SELECTED_ITEMS, selectedItems);
+        fragment.setArguments(arguments);
         return fragment;
     }
 
@@ -30,10 +35,14 @@ public class ActivityDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         String[] activityNames = getResources().getStringArray(R.array.activities);
-        final ArrayList<Integer> seletedItems = new ArrayList();
+        final ArrayList<Integer> seletedItems = getArguments().getIntegerArrayList(ARG_SELECTED_ITEMS);
+        boolean[] selectedItemsMask = new boolean[activityNames.length];
+        for (Integer selectedItem : seletedItems) {
+            selectedItemsMask[selectedItem] = true;
+        }
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.activity_dialog_title)
-                .setMultiChoiceItems(activityNames, null, new DialogInterface.OnMultiChoiceClickListener() {
+                .setMultiChoiceItems(activityNames, selectedItemsMask, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int itemIndex, boolean isChecked) {
                         if (isChecked) {

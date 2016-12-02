@@ -19,7 +19,7 @@ public class User {
     public String note;
 
     @Exclude
-    private int[] gradeNumbers;
+    private List<Integer> gradeNumbers;
 
     public void setKey(String key) {
         this.key = key;
@@ -39,7 +39,7 @@ public class User {
 
     public void setGrades(String grades) {
         this.grades = grades;
-        this.gradeNumbers = ModelUtils.toIntArray(this.grades);
+        this.gradeNumbers = ModelUtils.toIntList(this.grades);
     }
 
     public void setNote(String note) {
@@ -47,11 +47,11 @@ public class User {
     }
 
     public int getFreeClimbingGrade() {
-        return this.gradeNumbers[GRADE_FREE_CLIMBING];
+        return this.gradeNumbers.get(GRADE_FREE_CLIMBING);
     }
 
     public int getBoulderingGrade() {
-        return this.gradeNumbers[GRADE_BOULDERING];
+        return this.gradeNumbers.get(GRADE_BOULDERING);
     }
 
 }

@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity
                 && data != null
                 && mActiveFragment instanceof ActivityDialogFragment.Listener) {
             ActivityDialogFragment.Listener listener = (ActivityDialogFragment.Listener) mActiveFragment;
-            listener.onActivityDialogOk(data.getIntegerArrayList(ActivityDialogFragment.DATA_ACTIVITIES));
+            listener.onActivitySelected(data.getIntegerArrayList(ActivityDialogFragment.DATA_ACTIVITIES));
         }
     }
 

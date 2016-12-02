@@ -63,10 +63,12 @@ public class AddAvailabilityFragment
     private TextView mEndTimeTextView;
     private TextView mTargetTimeTextView;
     private TextView mTargetDateTextView;
+    private TextView mActivityTextView;
 
     private LatLng mLocationLatLng;
     private String mLocationAddress;
     private String mLocationName;
+    private String mActivities;
 
     public AddAvailabilityFragment() {
     }
@@ -160,6 +162,15 @@ public class AddAvailabilityFragment
             }
         });
 
+        mActivityTextView = (TextView) view.findViewById(R.id.activity_value);
+        mActivityTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment newFragment = ActivityDialogFragment.newInstance(ModelUtils.toIntList(mActivityTextView.getText().toString()));
+                newFragment.show(getActivity().getSupportFragmentManager(), "ActivityDialogFragment");
+            }
+        });
+
         setHasOptionsMenu(true);
 
         return view;
@@ -225,10 +236,10 @@ public class AddAvailabilityFragment
                 "%02d:%02d", hourOfDay, minute));
     }
 
-    private String mActivities;
     @Override
-    public void onActivityDialogOk(List<Integer> activities) {
+    public void onActivitySelected(List<Integer> activities) {
         mActivities = ModelUtils.toCommaSeparatedString(activities);
+        mActivityTextView.setText(ModelUtils.createActivityNameList(getContext(), activities));
     }
 
     private void addAvailability() {
