@@ -1,4 +1,4 @@
-package net.feheren_fekete.kimuka;
+package net.feheren_fekete.kimuka.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
+
+import net.feheren_fekete.kimuka.FragmentInteractionListener;
 
 
 public class TimePickerDialogFragment extends DialogFragment

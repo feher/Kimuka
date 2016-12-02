@@ -7,13 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -24,6 +24,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import net.feheren_fekete.kimuka.dialog.ActivityDialogFragment;
+import net.feheren_fekete.kimuka.dialog.DatePickerDialogFragment;
+import net.feheren_fekete.kimuka.dialog.IfNoPartnerDialogFragment;
+import net.feheren_fekete.kimuka.dialog.NeedPartnerDialogFragment;
+import net.feheren_fekete.kimuka.dialog.SharedEquimentDialogFragment;
+import net.feheren_fekete.kimuka.dialog.TimePickerDialogFragment;
 import net.feheren_fekete.kimuka.model.Availability;
 import net.feheren_fekete.kimuka.model.ModelUtils;
 import net.feheren_fekete.kimuka.model.User;
@@ -42,7 +48,10 @@ public class AddAvailabilityFragment
         implements
                 DatePickerDialogFragment.Listener,
                 TimePickerDialogFragment.Listener,
-                ActivityDialogFragment.Listener {
+                ActivityDialogFragment.Listener,
+                IfNoPartnerDialogFragment.Listener,
+                SharedEquimentDialogFragment.Listener,
+                NeedPartnerDialogFragment.Listener {
 
     private static final String TAG = AddAvailabilityFragment.class.getSimpleName();
 
@@ -64,11 +73,18 @@ public class AddAvailabilityFragment
     private TextView mTargetTimeTextView;
     private TextView mTargetDateTextView;
     private TextView mActivityTextView;
+    private TextView mNeedPartnerTextView;
+    private TextView mIfNoPartnerTextView;
+    private TextView mSharedEquipmentTextView;
+    private EditText mNoteEditText;
 
     private LatLng mLocationLatLng;
-    private String mLocationAddress;
-    private String mLocationName;
-    private String mActivities;
+    private String mLocationAddress = "";
+    private String mLocationName = "";
+    private String mActivities = "";
+    private int mNeedPartner = Availability.NEED_PARTNER_YES;
+    private int mIfNoPartner = Availability.IF_NO_PARTNER_NOT_DECIDED_YET;
+    private String mSharedEquipment = "";
 
     public AddAvailabilityFragment() {
     }
@@ -166,10 +182,41 @@ public class AddAvailabilityFragment
         mActivityTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = ActivityDialogFragment.newInstance(ModelUtils.toIntList(mActivityTextView.getText().toString()));
+                DialogFragment newFragment = ActivityDialogFragment.newInstance(
+                        ModelUtils.toIntList(mActivities));
                 newFragment.show(getActivity().getSupportFragmentManager(), "ActivityDialogFragment");
             }
         });
+
+        mNeedPartnerTextView = (TextView) view.findViewById(R.id.need_partner_value);
+        mNeedPartnerTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment newFragment = NeedPartnerDialogFragment.newInstance();
+                newFragment.show(getActivity().getSupportFragmentManager(), "NeedPartnerDialogFragment");
+            }
+        });
+
+        mIfNoPartnerTextView = (TextView) view.findViewById(R.id.if_no_partner_value);
+        mIfNoPartnerTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment newFragment = IfNoPartnerDialogFragment.newInstance();
+                newFragment.show(getActivity().getSupportFragmentManager(), "IfNoPartnerDialogFragment");
+            }
+        });
+
+        mSharedEquipmentTextView = (TextView) view.findViewById(R.id.shared_equipment_value);
+        mSharedEquipmentTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment newFragment = SharedEquimentDialogFragment.newInstance(
+                        ModelUtils.toIntList(mSharedEquipment));
+                newFragment.show(getActivity().getSupportFragmentManager(), "SharedEquipmentDialogFragment");
+            }
+        });
+
+        mNoteEditText = (EditText) view.findViewById(R.id.note_value);
 
         setHasOptionsMenu(true);
 
@@ -242,6 +289,24 @@ public class AddAvailabilityFragment
         mActivityTextView.setText(ModelUtils.createActivityNameList(getContext(), activities));
     }
 
+    @Override
+    public void onNeedPartnerItemSelected(int itemIndex) {
+        mNeedPartner = itemIndex;
+        mNeedPartnerTextView.setText(ModelUtils.createNeedPartnerText(getContext(), itemIndex));
+    }
+
+    @Override
+    public void onIfNoPartnerItemSelected(int itemIndex) {
+        mIfNoPartner = itemIndex;
+        mIfNoPartnerTextView.setText(ModelUtils.createIfNoPartnerText(getContext(), itemIndex));
+    }
+
+    @Override
+    public void onEquipmentSelected(List<Integer> equipments) {
+        mSharedEquipment = ModelUtils.toCommaSeparatedString(equipments);
+        mSharedEquipmentTextView.setText(ModelUtils.createEquipmentNameList(getContext(), equipments));
+    }
+
     private void addAvailability() {
         Activity activity = getActivity();
         if (activity != null
@@ -269,17 +334,17 @@ public class AddAvailabilityFragment
                     availability.userName = user.name;
                     availability.locationLatitude = mLocationLatLng.latitude;
                     availability.locationLongitude = mLocationLatLng.longitude;
-                    availability.locationAddress = mLocationAddress;
                     availability.locationName = mLocationName;
+                    availability.locationAddress = mLocationAddress;
                     availability.startTime = startTime;
                     availability.endTime = endTime;
                     availability.activity = mActivities;
-                    availability.ifNoPartner = ???;
-                    availability.sharedEquipment = ???;
+                    availability.needPartner = mNeedPartner;
+                    availability.ifNoPartner = mIfNoPartner;
+                    availability.sharedEquipment = mSharedEquipment;
                     availability.canBelay = user.canBelay;
                     availability.grades = user.grades;
-                    availability.note = ???;
-                    // TODO: set Availability fields.
+                    availability.note = mNoteEditText.getText().toString().trim().replace('\n', ' ');
 
                     DatabaseReference availabilityRef = mAvailabilityTable.push();
                     availabilityRef.setValue(availability);

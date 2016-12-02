@@ -13,7 +13,10 @@ public class ModelUtils {
         String[] parts = stringListOfInts.split(",");
         ArrayList<Integer> result = new ArrayList<>();
         for (int i = 0; i < parts.length; ++i) {
-            result.add(Integer.valueOf(parts[i]));
+            String part = parts[i].trim();
+            if (!part.isEmpty()) {
+                result.add(Integer.valueOf(part));
+            }
         }
         return result;
     }
@@ -34,6 +37,26 @@ public class ModelUtils {
             stringBuilder.append(activityNames[activities.get(i)]).append(", ");
         }
         stringBuilder.append(activityNames[activities.get(activities.size() - 1)]);
+        return stringBuilder.toString();
+    }
+
+    public static String createNeedPartnerText(Context context, int itemIndex) {
+        String[] items = context.getResources().getStringArray(R.array.need_partner_options);
+        return items[itemIndex];
+    }
+
+    public static String createIfNoPartnerText(Context context, int itemIndex) {
+        String[] items = context.getResources().getStringArray(R.array.no_partner_options);
+        return items[itemIndex];
+    }
+
+    public static String createEquipmentNameList(Context context, List<Integer> equipments) {
+        String[] equipmentNames = context.getResources().getStringArray(R.array.shared_equipments);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < equipments.size() - 1; ++i) {
+            stringBuilder.append(equipmentNames[equipments.get(i)]).append(", ");
+        }
+        stringBuilder.append(equipmentNames[equipments.get(equipments.size() - 1)]);
         return stringBuilder.toString();
     }
 

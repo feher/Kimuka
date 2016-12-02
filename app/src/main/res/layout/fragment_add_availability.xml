@@ -88,4 +88,68 @@
         android:padding="5dp"
         android:hint="@string/add_availability_activity_hint"/>
 
+    <TextView
+        android:id="@+id/need_partner_title"
+        android:text="@string/add_availability_need_partner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <TextView
+        android:id="@+id/need_partner_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:padding="5dp"
+        android:hint="@string/add_availability_need_partner_hint"/>
+
+    <TextView
+        android:id="@+id/if_no_partner_title"
+        android:text="@string/add_availability_no_partner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <TextView
+        android:id="@+id/if_no_partner_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:padding="5dp"
+        android:hint="@string/add_availability_no_partner_hint"/>
+
+    <TextView
+        android:id="@+id/shared_equipment_title"
+        android:text="@string/add_availability_shared_equipment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <TextView
+        android:id="@+id/shared_equipment_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:padding="5dp"
+        android:hint="@string/add_availability_shared_equipment_hint"/>
+
+    <TextView
+        android:id="@+id/note_title"
+        android:text="@string/add_availability_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <EditText
+        android:id="@+id/note_value"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="textCapSentences|textMultiLine"
+        android:ems="10"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:maxLength="200"
+        android:hint="@string/add_availability_note_hint"
+        android:gravity="top|start"
+        />
+
 </LinearLayout>

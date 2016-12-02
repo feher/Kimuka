@@ -10,6 +10,9 @@ public class Availability {
     public static final int ACTIVITY_TRAD = 2;
     public static final int ACTIVITY_BOULDERING = 3;
 
+    public static final int NEED_PARTNER_YES = 0;
+    public static final int NEED_PARTNER_NO = 1;
+
     public static final int IF_NO_PARTNER_I_GO_ANYWAY = 0;
     public static final int IF_NO_PARTNER_I_DONT_GO = 1;
     public static final int IF_NO_PARTNER_NOT_DECIDED_YET = 2;
@@ -23,7 +26,7 @@ public class Availability {
     public long startTime; // ms since Epoch.
     public long endTime; // ms since Epoch.
     public String activity; // Comma separated list of activities (integers).
-    public boolean doesNeedPartner;
+    public int needPartner;
     public int ifNoPartner;
     public String sharedEquipment; // Comma separated list of equipments (integers).
     public boolean canBelay;
@@ -67,8 +70,8 @@ public class Availability {
         this.activity = activity;
     }
 
-    public void setDoesNeedPartner(boolean doesNeedPartner) {
-        this.doesNeedPartner = doesNeedPartner;
+    public void setNeedPartner(int needPartner) {
+        this.needPartner = needPartner;
     }
 
     public void setSharedEquipment(String sharedEquipment) {

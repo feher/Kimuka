@@ -1,4 +1,4 @@
-package net.feheren_fekete.kimuka;
+package net.feheren_fekete.kimuka.dialog;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.widget.DatePicker;
+
+import net.feheren_fekete.kimuka.FragmentInteractionListener;
 
 
 public class DatePickerDialogFragment extends DialogFragment

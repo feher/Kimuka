@@ -13,10 +13,18 @@
     <string name="add_availability_end_time">To</string>
     <string name="add_availability_capacity">Max number of buddies</string>
     <string name="add_availability_activity">Activity</string>
-    <string name="add_availability_activity_hint">Select the activity</string>
+    <string name="add_availability_activity_hint">Select what you\'d like to do</string>
+    <string name="add_availability_need_partner">Need partner</string>
+    <string name="add_availability_need_partner_hint">Select whether you need partner</string>
+    <string name="add_availability_no_partner">Without partner</string>
+    <string name="add_availability_no_partner_hint">Select what you do without partner</string>
+    <string name="add_availability_shared_equipment">Shared equipment</string>
+    <string name="add_availability_shared_equipment_hint">Select the equipment you could share</string>
+    <string name="add_availability_note">Note</string>
+    <string name="add_availability_note_hint">Write any extra info here (max 200 characters)</string>
     <string name="add_availability_done">Done</string>
 
-    <string name="activity_dialog_title">Select activities</string>
+    <string name="activity_dialog_title">Activities</string>
     <string-array name="activities">
         <item>Top rope</item>
         <item>Lead</item>
@@ -24,6 +32,20 @@
         <item>Bouldering</item>
     </string-array>
 
+    <string name="need_partner_dialog_title">Need partner</string>
+    <string-array name="need_partner_options">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
+    <string name="if_no_partner_dialog_title">Without partner</string>
+    <string-array name="no_partner_options">
+        <item>I go anyway</item>
+        <item>I don\'t go</item>
+        <item>Not decided yet</item>
+    </string-array>
+
+    <string name="shared_equipment_dialog_title">Shared equipment</string>
     <string-array name="shared_equipments">
         <item>Rope</item>
         <item>ATC</item>

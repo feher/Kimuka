@@ -21,6 +21,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import net.feheren_fekete.kimuka.dialog.ActivityDialogFragment;
+import net.feheren_fekete.kimuka.dialog.DatePickerDialogFragment;
+import net.feheren_fekete.kimuka.dialog.IfNoPartnerDialogFragment;
+import net.feheren_fekete.kimuka.dialog.NeedPartnerDialogFragment;
+import net.feheren_fekete.kimuka.dialog.SharedEquimentDialogFragment;
+import net.feheren_fekete.kimuka.dialog.TimePickerDialogFragment;
 import net.feheren_fekete.kimuka.model.Grading;
 import net.feheren_fekete.kimuka.model.ModelUtils;
 import net.feheren_fekete.kimuka.model.User;
@@ -115,6 +121,21 @@ public class MainActivity extends AppCompatActivity
                 && mActiveFragment instanceof ActivityDialogFragment.Listener) {
             ActivityDialogFragment.Listener listener = (ActivityDialogFragment.Listener) mActiveFragment;
             listener.onActivitySelected(data.getIntegerArrayList(ActivityDialogFragment.DATA_ACTIVITIES));
+        } else if (NeedPartnerDialogFragment.INTERCATION_ITEM_SELECTED.equals(action)
+                && data != null
+                && mActiveFragment instanceof NeedPartnerDialogFragment.Listener) {
+            NeedPartnerDialogFragment.Listener listener = (NeedPartnerDialogFragment.Listener) mActiveFragment;
+            listener.onNeedPartnerItemSelected(data.getInt(NeedPartnerDialogFragment.DATA_ITEM_INDEX));
+        } else if (IfNoPartnerDialogFragment.INTERCATION_ITEM_SELECTED.equals(action)
+                && data != null
+                && mActiveFragment instanceof IfNoPartnerDialogFragment.Listener) {
+            IfNoPartnerDialogFragment.Listener listener = (IfNoPartnerDialogFragment.Listener) mActiveFragment;
+            listener.onIfNoPartnerItemSelected(data.getInt(IfNoPartnerDialogFragment.DATA_ITEM_INDEX));
+        } else if (SharedEquimentDialogFragment.INTERCATION_EQUIPMENTS_SELECTED.equals(action)
+                && data != null
+                && mActiveFragment instanceof SharedEquimentDialogFragment.Listener) {
+            SharedEquimentDialogFragment.Listener listener = (SharedEquimentDialogFragment.Listener) mActiveFragment;
+            listener.onEquipmentSelected(data.getIntegerArrayList(SharedEquimentDialogFragment.DATA_EQUIPMENTS));
         }
     }
 

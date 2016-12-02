@@ -46,10 +46,12 @@ public class User {
         this.note = note;
     }
 
+    @Exclude
     public int getFreeClimbingGrade() {
         return this.gradeNumbers.get(GRADE_FREE_CLIMBING);
     }
 
+    @Exclude
     public int getBoulderingGrade() {
         return this.gradeNumbers.get(GRADE_BOULDERING);
     }

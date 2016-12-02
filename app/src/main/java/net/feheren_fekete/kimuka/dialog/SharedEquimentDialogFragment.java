@@ -1,4 +1,4 @@
-package net.feheren_fekete.kimuka;
+package net.feheren_fekete.kimuka.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -8,23 +8,26 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
+import net.feheren_fekete.kimuka.FragmentInteractionListener;
+import net.feheren_fekete.kimuka.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ActivityDialogFragment extends DialogFragment {
+public class SharedEquimentDialogFragment extends DialogFragment {
 
-    public static final String INTERCATION_ACTIVITIES_SELECTED = DatePickerDialogFragment.class.getSimpleName() + ".INTERCATION_ACTIVITIES_SELECTED";
-    public static final String DATA_ACTIVITIES = DatePickerDialogFragment.class.getSimpleName() + ".DATA_ACTIVITIES";
+    public static final String INTERCATION_EQUIPMENTS_SELECTED = SharedEquimentDialogFragment.class.getSimpleName() + ".INTERCATION_EQUIPMENTS_SELECTED";
+    public static final String DATA_EQUIPMENTS = SharedEquimentDialogFragment.class.getSimpleName() + ".DATA_EQUIPMENTS";
 
     private static final String ARG_SELECTED_ITEMS = "1";
 
     public interface Listener {
-        void onActivitySelected(List<Integer> activities);
+        void onEquipmentSelected(List<Integer> equipments);
     }
 
-    public static ActivityDialogFragment newInstance(ArrayList<Integer> selectedItems) {
-        ActivityDialogFragment fragment = new ActivityDialogFragment();
+    public static SharedEquimentDialogFragment newInstance(ArrayList<Integer> selectedItems) {
+        SharedEquimentDialogFragment fragment = new SharedEquimentDialogFragment();
         Bundle arguments = new Bundle();
         arguments.putIntegerArrayList(ARG_SELECTED_ITEMS, selectedItems);
         fragment.setArguments(arguments);
@@ -34,15 +37,15 @@ public class ActivityDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String[] activityNames = getResources().getStringArray(R.array.activities);
+        String[] items = getResources().getStringArray(R.array.shared_equipments);
         final ArrayList<Integer> seletedItems = getArguments().getIntegerArrayList(ARG_SELECTED_ITEMS);
-        boolean[] selectedItemsMask = new boolean[activityNames.length];
+        boolean[] selectedItemsMask = new boolean[items.length];
         for (Integer selectedItem : seletedItems) {
             selectedItemsMask[selectedItem] = true;
         }
         return new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.activity_dialog_title)
-                .setMultiChoiceItems(activityNames, selectedItemsMask, new DialogInterface.OnMultiChoiceClickListener() {
+                .setTitle(R.string.shared_equipment_dialog_title)
+                .setMultiChoiceItems(items, selectedItemsMask, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int itemIndex, boolean isChecked) {
                         if (isChecked) {
@@ -58,8 +61,8 @@ public class ActivityDialogFragment extends DialogFragment {
                         if (activity instanceof FragmentInteractionListener) {
                             FragmentInteractionListener listener = (FragmentInteractionListener) activity;
                             Bundle data = new Bundle();
-                            data.putIntegerArrayList(DATA_ACTIVITIES, seletedItems);
-                            listener.onFragmentAction(INTERCATION_ACTIVITIES_SELECTED, data);
+                            data.putIntegerArrayList(DATA_EQUIPMENTS, seletedItems);
+                            listener.onFragmentAction(INTERCATION_EQUIPMENTS_SELECTED, data);
                         }
                     }
                 }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
