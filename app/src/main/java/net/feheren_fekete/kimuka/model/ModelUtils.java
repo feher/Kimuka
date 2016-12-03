@@ -22,6 +22,9 @@ public class ModelUtils {
     }
 
     public static String toCommaSeparatedString(List<Integer> args) {
+        if (args.isEmpty()) {
+            return "";
+        }
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < args.size() - 1; ++i) {
             stringBuilder.append(String.valueOf(args.get(i))).append(",");
@@ -31,6 +34,9 @@ public class ModelUtils {
     }
 
     public static String createActivityNameList(Context context, List<Integer> activities) {
+        if (activities.isEmpty()) {
+            return "";
+        }
         String[] activityNames = context.getResources().getStringArray(R.array.activities);
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < activities.size() - 1; ++i) {
@@ -51,6 +57,9 @@ public class ModelUtils {
     }
 
     public static String createEquipmentNameList(Context context, List<Integer> equipments) {
+        if (equipments.isEmpty()) {
+            return "";
+        }
         String[] equipmentNames = context.getResources().getStringArray(R.array.shared_equipments);
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < equipments.size() - 1; ++i) {

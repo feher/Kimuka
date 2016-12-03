@@ -32,6 +32,7 @@ import net.feheren_fekete.kimuka.model.ModelUtils;
 import net.feheren_fekete.kimuka.model.User;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity
         implements FragmentInteractionListener {
@@ -182,7 +183,17 @@ public class MainActivity extends AppCompatActivity
         public void onDataChange(DataSnapshot dataSnapshot) {
             if (dataSnapshot.getValue() != null) {
                 mUser = dataSnapshot.getValue(User.class);
-                mUser.key = dataSnapshot.getKey();
+                if (mUser != null) {
+                    Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                    if (iterator.hasNext()) {
+                        mUser.key = iterator.next().getKey();
+                    } else {
+                        // TODO: Handle error.
+                        mUser.key = "";
+                    }
+                } else {
+                    // TODO: Handle error.
+                }
             } else if (mFirebaseUser != null) {
                 createUser(mFirebaseUser.getUid(), mFirebaseUser.getDisplayName());
             }

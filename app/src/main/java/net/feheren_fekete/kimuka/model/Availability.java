@@ -10,9 +10,11 @@ public class Availability {
     public static final int ACTIVITY_TRAD = 2;
     public static final int ACTIVITY_BOULDERING = 3;
 
+    public static final int NEED_PARTNER_UNDEFINED = -1;
     public static final int NEED_PARTNER_YES = 0;
     public static final int NEED_PARTNER_NO = 1;
 
+    public static final int IF_NO_PARTNER_UNDEFINED = -1;
     public static final int IF_NO_PARTNER_I_GO_ANYWAY = 0;
     public static final int IF_NO_PARTNER_I_DONT_GO = 1;
     public static final int IF_NO_PARTNER_NOT_DECIDED_YET = 2;

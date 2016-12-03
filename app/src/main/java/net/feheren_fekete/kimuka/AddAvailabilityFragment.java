@@ -15,12 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -58,6 +58,8 @@ public class AddAvailabilityFragment
     public static final String INTERACTION_DONE_TAPPED = DayFragment.class.getSimpleName() + ".INTERACTION_DONE_TAPPED";
 
     private static final int PLACE_PICKER_REQUEST = 1;
+    private static final int ONE_HOUR_IN_MILLIS = 1000 * 60 * 60;
+    private static final int TWO_HOURS_IN_MILLIS = ONE_HOUR_IN_MILLIS * 2;
 
     @Nullable
     private FragmentInteractionListener mInteractionListener;
@@ -78,12 +80,15 @@ public class AddAvailabilityFragment
     private TextView mSharedEquipmentTextView;
     private EditText mNoteEditText;
 
-    private LatLng mLocationLatLng;
+    private double mLocationLatitude = Double.MAX_VALUE;
+    private double mLocationLongitude = Double.MAX_VALUE;
+    private long mStartTime;
+    private long mEndTime;
     private String mLocationAddress = "";
     private String mLocationName = "";
     private String mActivities = "";
-    private int mNeedPartner = Availability.NEED_PARTNER_YES;
-    private int mIfNoPartner = Availability.IF_NO_PARTNER_NOT_DECIDED_YET;
+    private int mNeedPartner = Availability.NEED_PARTNER_UNDEFINED;
+    private int mIfNoPartner = Availability.IF_NO_PARTNER_UNDEFINED;
     private String mSharedEquipment = "";
 
     public AddAvailabilityFragment() {
@@ -106,6 +111,8 @@ public class AddAvailabilityFragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_availability, container, false);
 
+        mLocationLatitude = Double.MAX_VALUE;
+        mLocationLongitude = Double.MAX_VALUE;
         mLocationTextView = (TextView) view.findViewById(R.id.location_value);
         mLocationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,24 +127,22 @@ public class AddAvailabilityFragment
             }
         });
 
-        long twoHoursAhead = System.currentTimeMillis() + (2 * 1000 * 60 * 60);
-        final Calendar startCalendar = Calendar.getInstance();
-        startCalendar.setTimeInMillis(twoHoursAhead);
+        long twoHoursAhead = System.currentTimeMillis() + TWO_HOURS_IN_MILLIS;
+        mStartTime = twoHoursAhead;
         mStartDateTextView = (TextView) view.findViewById(R.id.start_date_value);
-        mStartDateTextView.setText(String.format(Locale.getDefault(), "%04d.%02d.%02d",
-                startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH)));
+        mStartDateTextView.setText(formatDateForTextView(mStartTime));
         mStartDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String[] dateParts = mStartDateTextView.getText().toString().split("\\.");
                 DialogFragment newFragment = DatePickerDialogFragment.newInstance(
-                        Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1]), Integer.valueOf(dateParts[2]));
+                        Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1]) - 1, Integer.valueOf(dateParts[2]));
                 newFragment.show(getActivity().getSupportFragmentManager(), "DatePickerDialogFragment");
                 mTargetDateTextView = mStartDateTextView;
             }
         });
         mStartTimeTextView = (TextView) view.findViewById(R.id.start_time_value);
-        mStartTimeTextView.setText(String.format(Locale.getDefault(), "%02d:00", startCalendar.get(Calendar.HOUR)));
+        mStartTimeTextView.setText(formatTimeForTextView(mStartTime));
         mStartTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,24 +154,22 @@ public class AddAvailabilityFragment
             }
         });
 
-        long threeHoursAhead = twoHoursAhead + (1000 * 60 * 60);
-        final Calendar endCalendar = Calendar.getInstance();
-        endCalendar.setTimeInMillis(threeHoursAhead);
+        long threeHoursAhead = twoHoursAhead + ONE_HOUR_IN_MILLIS;
+        mEndTime = threeHoursAhead;
         mEndDateTextView = (TextView) view.findViewById(R.id.end_date_value);
-        mEndDateTextView.setText(String.format(Locale.getDefault(), "%04d.%02d.%02d",
-                endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DAY_OF_MONTH)));
+        mEndDateTextView.setText(formatDateForTextView(mEndTime));
         mEndDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String[] dateParts = mEndDateTextView.getText().toString().split("\\.");
                 DialogFragment newFragment = DatePickerDialogFragment.newInstance(
-                        Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1]), Integer.valueOf(dateParts[2]));
+                        Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1]) - 1, Integer.valueOf(dateParts[2]));
                 newFragment.show(getActivity().getSupportFragmentManager(), "DatePickerDialogFragment");
                 mTargetDateTextView = mEndDateTextView;
             }
         });
         mEndTimeTextView = (TextView) view.findViewById(R.id.end_time_value);
-        mEndTimeTextView.setText(String.format(Locale.getDefault(), "%02d:00", endCalendar.get(Calendar.HOUR)));
+        mEndTimeTextView.setText(formatTimeForTextView(mEndTime));
         mEndTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -262,11 +265,12 @@ public class AddAvailabilityFragment
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
                 Place place = PlacePicker.getPlace(getContext(), data);
-                mLocationLatLng = place.getLatLng();
+                mLocationLatitude = place.getLatLng().latitude;
+                mLocationLongitude = place.getLatLng().longitude;
                 mLocationAddress = place.getAddress().toString();
                 mLocationName = place.getName().toString();
                 mLocationTextView.setText(mLocationName + ", " + mLocationAddress
-                        + " [" + mLocationLatLng.latitude + ","+ mLocationLatLng.longitude + "]");
+                        + " [" + mLocationLatitude + ","+ mLocationLongitude + "]");
             }
         }
     }
@@ -274,13 +278,15 @@ public class AddAvailabilityFragment
     @Override
     public void onDateSet(int year, int month, int dayOfMonth) {
         mTargetDateTextView.setText(String.format(Locale.getDefault(),
-                "%04d.%02d.%02d", year, month, dayOfMonth));
+                "%04d.%02d.%02d", year, month + 1, dayOfMonth));
+        adjustStartAndEndTime(mTargetDateTextView == mStartDateTextView);
     }
 
     @Override
     public void onTimeSet(int hourOfDay, int minute) {
         mTargetTimeTextView.setText(String.format(Locale.getDefault(),
                 "%02d:%02d", hourOfDay, minute));
+        adjustStartAndEndTime(mTargetTimeTextView == mStartTimeTextView);
     }
 
     @Override
@@ -307,6 +313,57 @@ public class AddAvailabilityFragment
         mSharedEquipmentTextView.setText(ModelUtils.createEquipmentNameList(getContext(), equipments));
     }
 
+    private void adjustStartAndEndTime(boolean isTriggeredByStartTime) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());
+            String startDateString = mStartDateTextView.getText().toString();
+            String startTimeString = mStartTimeTextView.getText().toString();
+            String startDateTimeString = startDateString + " " + startTimeString;
+            Date date = dateFormat.parse(startDateTimeString);
+            mStartTime = date.getTime();
+
+            String endDateString = mEndDateTextView.getText().toString();
+            String endTimeString = mEndTimeTextView.getText().toString();
+            String endDateTimeString = endDateString + " " + endTimeString;
+            date = dateFormat.parse(endDateTimeString);
+            mEndTime = date.getTime();
+
+            if (isTriggeredByStartTime) {
+                if (mEndTime <= mStartTime) {
+                    mEndTime = mStartTime + TWO_HOURS_IN_MILLIS;
+                    mEndDateTextView.setText(formatDateForTextView(mEndTime));
+                    mEndTimeTextView.setText(formatTimeForTextView(mEndTime));
+                }
+            } else {
+                if (mEndTime <= mStartTime) {
+                    mStartTime = mEndTime - TWO_HOURS_IN_MILLIS;
+                    mStartDateTextView.setText(formatDateForTextView(mStartTime));
+                    mStartTimeTextView.setText(formatTimeForTextView(mStartTime));
+                }
+            }
+        } catch (ParseException e) {
+            // TODO: Handle error.
+        }
+    }
+
+    private String formatDateForTextView(long timeInMillis) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timeInMillis);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return String.format(Locale.getDefault(), "%04d.%02d.%02d",
+                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+    }
+
+    private String formatTimeForTextView(long timeInMillis) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timeInMillis);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return String.format(Locale.getDefault(), "%02d:%02d",
+                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+    }
+
     private void addAvailability() {
         Activity activity = getActivity();
         if (activity != null
@@ -314,45 +371,50 @@ public class AddAvailabilityFragment
             MainActivity mainActivity = (MainActivity) activity;
             User user = mainActivity.getUser();
             if (user != null) {
-                try {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());
+                if (mLocationLatitude == Double.MAX_VALUE || mLocationLongitude == Double.MAX_VALUE) {
+                    Toast.makeText(activity, R.string.add_availability_missing_location, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (mActivities.isEmpty()) {
+                    Toast.makeText(activity, R.string.add_availability_missing_activity, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (mNeedPartner == Availability.NEED_PARTNER_UNDEFINED) {
+                    Toast.makeText(activity, R.string.add_availability_missing_need_partner, Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                    String startDateString = mStartDateTextView.getText().toString();
-                    String startTimeString = mStartTimeTextView.getText().toString();
-                    String startDateTimeString = startDateString + " " + startTimeString;
-                    Date date = dateFormat.parse(startDateTimeString);
-                    long startTime = date.getTime();
-
-                    String endDateString = mEndDateTextView.getText().toString();
-                    String endTimeString = mEndTimeTextView.getText().toString();
-                    String endDateTimeString = endDateString + " " + endTimeString;
-                    date = dateFormat.parse(endDateTimeString);
-                    long endTime = date.getTime();
-
-                    Availability availability = new Availability();
-                    availability.userKey = user.key;
-                    availability.userName = user.name;
-                    availability.locationLatitude = mLocationLatLng.latitude;
-                    availability.locationLongitude = mLocationLatLng.longitude;
-                    availability.locationName = mLocationName;
-                    availability.locationAddress = mLocationAddress;
-                    availability.startTime = startTime;
-                    availability.endTime = endTime;
-                    availability.activity = mActivities;
-                    availability.needPartner = mNeedPartner;
-                    availability.ifNoPartner = mIfNoPartner;
-                    availability.sharedEquipment = mSharedEquipment;
-                    availability.canBelay = user.canBelay;
-                    availability.grades = user.grades;
-                    availability.note = mNoteEditText.getText().toString().trim().replace('\n', ' ');
-
-                    DatabaseReference availabilityRef = mAvailabilityTable.push();
-                    availabilityRef.setValue(availability);
-                    if (mInteractionListener != null) {
-                        mInteractionListener.onFragmentAction(INTERACTION_DONE_TAPPED, null);
+                Availability availability = new Availability();
+                availability.userKey = user.key;
+                availability.userName = user.name;
+                availability.locationLatitude = mLocationLatitude;
+                availability.locationLongitude = mLocationLongitude;
+                availability.locationName = mLocationName;
+                availability.locationAddress = mLocationAddress;
+                availability.startTime = mStartTime;
+                availability.endTime = mEndTime;
+                availability.activity = mActivities;
+                availability.needPartner = mNeedPartner;
+                if (availability.needPartner == Availability.NEED_PARTNER_YES) {
+                    if (mIfNoPartner == Availability.IF_NO_PARTNER_UNDEFINED) {
+                        Toast.makeText(activity, R.string.add_availability_missing_no_partner, Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                } catch (ParseException e) {
-                    // TODO: Report exception
+                    availability.ifNoPartner = mIfNoPartner;
+                } else {
+                    availability.ifNoPartner = (mIfNoPartner == Availability.IF_NO_PARTNER_UNDEFINED)
+                            ? Availability.IF_NO_PARTNER_NOT_DECIDED_YET
+                            : mIfNoPartner;
+                }
+                availability.sharedEquipment = mSharedEquipment;
+                availability.canBelay = user.canBelay;
+                availability.grades = user.grades;
+                availability.note = mNoteEditText.getText().toString().trim().replace('\n', ' ');
+
+                DatabaseReference availabilityRef = mAvailabilityTable.push();
+                availabilityRef.setValue(availability);
+                if (mInteractionListener != null) {
+                    mInteractionListener.onFragmentAction(INTERACTION_DONE_TAPPED, null);
                 }
             }
         }

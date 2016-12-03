@@ -12,6 +12,7 @@ import net.feheren_fekete.kimuka.FragmentInteractionListener;
 import net.feheren_fekete.kimuka.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -38,9 +39,9 @@ public class SharedEquimentDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         String[] items = getResources().getStringArray(R.array.shared_equipments);
-        final ArrayList<Integer> seletedItems = getArguments().getIntegerArrayList(ARG_SELECTED_ITEMS);
+        final ArrayList<Integer> selectedItems = getArguments().getIntegerArrayList(ARG_SELECTED_ITEMS);
         boolean[] selectedItemsMask = new boolean[items.length];
-        for (Integer selectedItem : seletedItems) {
+        for (Integer selectedItem : selectedItems) {
             selectedItemsMask[selectedItem] = true;
         }
         return new AlertDialog.Builder(getActivity())
@@ -49,9 +50,9 @@ public class SharedEquimentDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int itemIndex, boolean isChecked) {
                         if (isChecked) {
-                            seletedItems.add(itemIndex);
-                        } else if (seletedItems.contains(itemIndex)) {
-                            seletedItems.remove(Integer.valueOf(itemIndex));
+                            selectedItems.add(itemIndex);
+                        } else if (selectedItems.contains(itemIndex)) {
+                            selectedItems.remove(Integer.valueOf(itemIndex));
                         }
                     }
                 }).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -61,7 +62,8 @@ public class SharedEquimentDialogFragment extends DialogFragment {
                         if (activity instanceof FragmentInteractionListener) {
                             FragmentInteractionListener listener = (FragmentInteractionListener) activity;
                             Bundle data = new Bundle();
-                            data.putIntegerArrayList(DATA_EQUIPMENTS, seletedItems);
+                            Collections.sort(selectedItems);
+                            data.putIntegerArrayList(DATA_EQUIPMENTS, selectedItems);
                             listener.onFragmentAction(INTERCATION_EQUIPMENTS_SELECTED, data);
                         }
                     }
