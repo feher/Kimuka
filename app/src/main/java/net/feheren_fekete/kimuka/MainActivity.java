@@ -236,6 +236,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showUserProfileFragment() {
+        if (mUser == null) {
+            // TODO: Handle this case. Show toast to SignIn? Wait for SignIn?
+            return;
+        }
         if (mUserProfileFragment == null) {
             mUserProfileFragment = UserProfileFragment.newInstance();
         }

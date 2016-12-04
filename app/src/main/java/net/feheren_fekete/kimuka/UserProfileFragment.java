@@ -46,6 +46,8 @@ public class UserProfileFragment extends Fragment {
         mCanBelay = (Switch) view.findViewById(R.id.can_belay_switch);
         mNote = (EditText) view.findViewById(R.id.note_value);
 
+        // TODO: Save edited profile back to server.
+
         if (getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
             User user = mainActivity.getUser();
