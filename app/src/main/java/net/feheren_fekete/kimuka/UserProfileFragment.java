@@ -45,27 +45,29 @@ public class UserProfileFragment extends Fragment {
         mBoulderingGrade = (EditText) view.findViewById(R.id.bouldering_grade_value);
         mCanBelay = (Switch) view.findViewById(R.id.can_belay_switch);
         mNote = (EditText) view.findViewById(R.id.note_value);
+
+        if (getActivity() instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            User user = mainActivity.getUser();
+            if (user != null) {
+                mName.setText(user.getName());
+                mFreeClimbingGrade.setText(Grading.getNameForYdsGrade(
+                        user.getFreeClimbingGrade(), Grading.NAME_FRENCH));
+                mBoulderingGrade.setText(Grading.getNameForFontenblauGrade(
+                        user.getBoulderingGrade(), Grading.NAME_FONTENBLAU));
+                mCanBelay.setChecked(user.getCanBelay());
+                mNote.setText(user.getNote());
+            }
+        } else {
+            throw new RuntimeException("Activity must implement MainActivity");
+        }
+
         return view;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof MainActivity) {
-            MainActivity mainActivity = (MainActivity) context;
-            User user = mainActivity.getUser();
-             if (user != null) {
-                 mName.setText(user.name);
-                 mFreeClimbingGrade.setText(Grading.getNameForYdsGrade(
-                         user.getFreeClimbingGrade(), Grading.NAME_FRENCH));
-                 mBoulderingGrade.setText(Grading.getNameForFontenblauGrade(
-                         user.getBoulderingGrade(), Grading.NAME_FONTENBLAU));
-                 mCanBelay.setChecked(user.canBelay);
-                 mNote.setText(user.note);
-             }
-        } else {
-            throw new RuntimeException(context.toString() + " must implement MainActivity");
-        }
     }
 
 }

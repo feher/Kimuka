@@ -385,31 +385,32 @@ public class AddAvailabilityFragment
                 }
 
                 Availability availability = new Availability();
-                availability.userKey = user.key;
-                availability.userName = user.name;
-                availability.locationLatitude = mLocationLatitude;
-                availability.locationLongitude = mLocationLongitude;
-                availability.locationName = mLocationName;
-                availability.locationAddress = mLocationAddress;
-                availability.startTime = mStartTime;
-                availability.endTime = mEndTime;
-                availability.activity = mActivities;
-                availability.needPartner = mNeedPartner;
-                if (availability.needPartner == Availability.NEED_PARTNER_YES) {
+                availability.setUserKey(user.getKey());
+                availability.setUserName(user.getName());
+                availability.setLocationLatitude(mLocationLatitude);
+                availability.setLocationLongitude(mLocationLongitude);
+                availability.setLocationName(mLocationName);
+                availability.setLocationAddress(mLocationAddress);
+                availability.setStartTime(mStartTime);
+                availability.setEndTime(mEndTime);
+                availability.setActivity(mActivities);
+                availability.setNeedPartner(mNeedPartner);
+                if (availability.getNeedPartner() == Availability.NEED_PARTNER_YES) {
                     if (mIfNoPartner == Availability.IF_NO_PARTNER_UNDEFINED) {
                         Toast.makeText(activity, R.string.add_availability_missing_no_partner, Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    availability.ifNoPartner = mIfNoPartner;
+                    availability.setIfNoPartner(mIfNoPartner);
                 } else {
-                    availability.ifNoPartner = (mIfNoPartner == Availability.IF_NO_PARTNER_UNDEFINED)
+                    availability.setIfNoPartner(
+                            (mIfNoPartner == Availability.IF_NO_PARTNER_UNDEFINED)
                             ? Availability.IF_NO_PARTNER_NOT_DECIDED_YET
-                            : mIfNoPartner;
+                            : mIfNoPartner);
                 }
-                availability.sharedEquipment = mSharedEquipment;
-                availability.canBelay = user.canBelay;
-                availability.grades = user.grades;
-                availability.note = mNoteEditText.getText().toString().trim().replace('\n', ' ');
+                availability.setSharedEquipment(mSharedEquipment);
+                availability.setCanBelay(user.getCanBelay());
+                availability.setGrades(user.getGrades());
+                availability.setNote(mNoteEditText.getText().toString().trim().replace('\n', ' '));
 
                 DatabaseReference availabilityRef = mAvailabilityTable.push();
                 availabilityRef.setValue(availability);

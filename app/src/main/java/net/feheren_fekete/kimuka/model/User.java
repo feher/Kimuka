@@ -10,17 +10,21 @@ public class User {
     public static final int GRADE_BOULDERING = 1;
 
     @Exclude
-    public String key;
+    private String key;
 
-    public String uid;
-    public String name;
-    public boolean canBelay;
-    public String grades; // Comma separated list of integers.
-    public String note;
+    private String uid;
+    private String name;
+    private boolean canBelay;
+    private String grades; // Comma separated list of integers.
+    private String note;
 
     @Exclude
     private List<Integer> gradeNumbers;
 
+    public User() {
+    }
+
+    @Exclude
     public void setKey(String key) {
         this.key = key;
     }
@@ -39,7 +43,7 @@ public class User {
 
     public void setGrades(String grades) {
         this.grades = grades;
-        this.gradeNumbers = ModelUtils.toIntList(this.grades);
+        this.gradeNumbers = null;
     }
 
     public void setNote(String note) {
@@ -47,12 +51,43 @@ public class User {
     }
 
     @Exclude
+    public String getKey() {
+        return key;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean getCanBelay() {
+        return canBelay;
+    }
+
+    public String getGrades() {
+        return grades;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    @Exclude
     public int getFreeClimbingGrade() {
+        if (this.gradeNumbers == null) {
+            this.gradeNumbers = ModelUtils.toIntList(this.grades);
+        }
         return this.gradeNumbers.get(GRADE_FREE_CLIMBING);
     }
 
     @Exclude
     public int getBoulderingGrade() {
+        if (this.gradeNumbers == null) {
+            this.gradeNumbers = ModelUtils.toIntList(this.grades);
+        }
         return this.gradeNumbers.get(GRADE_BOULDERING);
     }
 

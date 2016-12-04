@@ -9,11 +9,11 @@ import java.util.Map;
 
 public class Grading {
 
-    public static final int NAME_YDS = 1;
-    public static final int NAME_FRENCH = 2;
+    public static final int NAME_YDS = 0;
+    public static final int NAME_FRENCH = 1;
 
-    public static final int NAME_FONTENBLAU = 1;
-    public static final int NAME_HUECO = 2;
+    public static final int NAME_FONTENBLAU = 0;
+    public static final int NAME_HUECO = 1;
 
     public static final int YDS_5_0 = 5000;
     public static final int YDS_5_1 = 5010;
@@ -180,7 +180,7 @@ public class Grading {
     }
 
     public static String getNameForFontenblauGrade(int fontGrade, int gradingSystem) {
-        return sYdsNameMap.get(fontGrade).get(gradingSystem);
+        return sFontenblauNameMap.get(fontGrade).get(gradingSystem);
     }
 
     public static final int HUECO_V_B = FONTENBLAU_3;

@@ -19,85 +19,148 @@ public class Availability {
     public static final int IF_NO_PARTNER_I_DONT_GO = 1;
     public static final int IF_NO_PARTNER_NOT_DECIDED_YET = 2;
 
-    public String userKey;
-    public String userName;
-    public double locationLatitude;
-    public double locationLongitude;
-    public String locationName;
-    public String locationAddress;
-    public long startTime; // ms since Epoch.
-    public long endTime; // ms since Epoch.
-    public String activity; // Comma separated list of activities (integers).
-    public int needPartner;
-    public int ifNoPartner;
-    public String sharedEquipment; // Comma separated list of equipments (integers).
-    public boolean canBelay;
-    public String grades; // Comma separated list of grades (integers).
-    public String note;
-    public List<String> joinedAvailabilityKeys = new ArrayList<>();
+    private String userKey;
+    private String userName;
+    private double locationLatitude;
+    private double locationLongitude;
+    private String locationName;
+    private String locationAddress;
+    private long startTime; // ms since Epoch.
+    private long endTime; // ms since Epoch.
+    private String activity; // Comma separated list of activities (integers).
+    private int needPartner;
+    private int ifNoPartner;
+    private String sharedEquipment; // Comma separated list of equipments (integers).
+    private boolean canBelay;
+    private String grades; // Comma separated list of grades (integers).
+    private String note;
+    private List<String> joinedAvailabilityKeys = new ArrayList<>();
+
+    public String getUserKey() {
+        return userKey;
+    }
 
     public void setUserKey(String userKey) {
         this.userKey = userKey;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
+    public double getLocationLatitude() {
+        return locationLatitude;
+    }
+
     public void setLocationLatitude(double locationLatitude) {
         this.locationLatitude = locationLatitude;
+    }
+
+    public double getLocationLongitude() {
+        return locationLongitude;
     }
 
     public void setLocationLongitude(double locationLongitude) {
         this.locationLongitude = locationLongitude;
     }
 
+    public String getLocationName() {
+        return locationName;
+    }
+
     public void setLocationName(String locationName) {
         this.locationName = locationName;
+    }
+
+    public String getLocationAddress() {
+        return locationAddress;
     }
 
     public void setLocationAddress(String locationAddress) {
         this.locationAddress = locationAddress;
     }
 
+    public long getStartTime() {
+        return startTime;
+    }
+
     public void setStartTime(long startTime) {
         this.startTime = startTime;
+    }
+
+    public long getEndTime() {
+        return endTime;
     }
 
     public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
 
+    public String getActivity() {
+        return activity;
+    }
+
     public void setActivity(String activity) {
         this.activity = activity;
+    }
+
+    public int getNeedPartner() {
+        return needPartner;
     }
 
     public void setNeedPartner(int needPartner) {
         this.needPartner = needPartner;
     }
 
-    public void setSharedEquipment(String sharedEquipment) {
-        this.sharedEquipment = sharedEquipment;
-    }
-
-    public void setCanBelay(boolean canBelay) {
-        this.canBelay = canBelay;
-    }
-
-    public void setGrades(String grades) {
-        this.grades = grades;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
+    public int getIfNoPartner() {
+        return ifNoPartner;
     }
 
     public void setIfNoPartner(int ifNoPartner) {
         this.ifNoPartner = ifNoPartner;
     }
 
+    public String getSharedEquipment() {
+        return sharedEquipment;
+    }
+
+    public void setSharedEquipment(String sharedEquipment) {
+        this.sharedEquipment = sharedEquipment;
+    }
+
+    public boolean isCanBelay() {
+        return canBelay;
+    }
+
+    public void setCanBelay(boolean canBelay) {
+        this.canBelay = canBelay;
+    }
+
+    public String getGrades() {
+        return grades;
+    }
+
+    public void setGrades(String grades) {
+        this.grades = grades;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public List<String> getJoinedAvailabilityKeys() {
+        return joinedAvailabilityKeys;
+    }
+
     public void setJoinedAvailabilityKeys(List<String> joinedAvailabilityKeys) {
         this.joinedAvailabilityKeys = joinedAvailabilityKeys;
     }
-
 }

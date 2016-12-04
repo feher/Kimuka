@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_user_profile:
+                showUserProfileFragment();
+                return true;
             case R.id.action_sign_out:
                 mAuth.signOut();
                 return true;
@@ -181,15 +184,15 @@ public class MainActivity extends AppCompatActivity
     private ValueEventListener mUserListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            if (dataSnapshot.getValue() != null) {
-                mUser = dataSnapshot.getValue(User.class);
-                if (mUser != null) {
-                    Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
-                    if (iterator.hasNext()) {
-                        mUser.key = iterator.next().getKey();
+            if (dataSnapshot.exists()) {
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                if (iterator.hasNext()) {
+                    DataSnapshot user = iterator.next();
+                    mUser = user.getValue(User.class);
+                    if (mUser != null) {
+                        mUser.setKey(user.getKey());
                     } else {
                         // TODO: Handle error.
-                        mUser.key = "";
                     }
                 } else {
                     // TODO: Handle error.
@@ -230,6 +233,17 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.fragment_container, mSignInFragment, "SignInFragment")
                 .commit();
         mActiveFragment = mSignInFragment;
+    }
+
+    private void showUserProfileFragment() {
+        if (mUserProfileFragment == null) {
+            mUserProfileFragment = UserProfileFragment.newInstance();
+        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, mUserProfileFragment, "UserProfileFragment")
+                .commit();
+        mActiveFragment = mUserProfileFragment;
     }
 
     private void showDayFragment() {
