@@ -1,6 +1,5 @@
 package net.feheren_fekete.kimuka;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -71,16 +70,6 @@ public class SignInFragment extends Fragment {
             }
         });
         return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     @Override

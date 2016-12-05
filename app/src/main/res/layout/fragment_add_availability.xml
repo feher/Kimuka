@@ -1,155 +1,161 @@
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="net.feheren_fekete.kimuka.AddAvailabilityFragment">
 
-    <TextView
-        android:id="@+id/location_title"
-        android:text="@string/add_availability_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-
-    <TextView
-        android:id="@+id/location_value"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:padding="5dp"
-        android:hint="@string/add_availability_location_hint"/>
-
-    <TextView
-        android:id="@+id/start_datetime_title"
-        android:text="@string/add_availability_start_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="5dp">
+        android:layout_height="wrap_content">
+
         <TextView
-            android:id="@+id/start_date_value"
-            android:layout_width="0dp"
+            android:id="@+id/location_title"
+            android:text="@string/add_availability_location"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            />
+
         <TextView
-            android:id="@+id/start_time_value"
-            android:layout_width="0dp"
+            android:id="@+id/location_value"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:padding="5dp"
+            android:hint="@string/add_availability_location_hint"/>
+
+        <TextView
+            android:id="@+id/start_datetime_title"
+            android:text="@string/add_availability_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+            <TextView
+                android:id="@+id/start_date_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            <TextView
+                android:id="@+id/start_time_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/end_datetime_value"
+            android:text="@string/add_availability_end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+            <TextView
+                android:id="@+id/end_date_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            <TextView
+                android:id="@+id/end_time_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/activity_title"
+            android:text="@string/add_availability_activity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:id="@+id/activity_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:padding="5dp"
+            android:hint="@string/add_availability_activity_hint"/>
+
+        <TextView
+            android:id="@+id/need_partner_title"
+            android:text="@string/add_availability_need_partner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:id="@+id/need_partner_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:padding="5dp"
+            android:hint="@string/add_availability_need_partner_hint"/>
+
+        <TextView
+            android:id="@+id/if_no_partner_title"
+            android:text="@string/add_availability_no_partner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:id="@+id/if_no_partner_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:padding="5dp"
+            android:hint="@string/add_availability_no_partner_hint"/>
+
+        <TextView
+            android:id="@+id/shared_equipment_title"
+            android:text="@string/add_availability_shared_equipment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:id="@+id/shared_equipment_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:padding="5dp"
+            android:hint="@string/add_availability_shared_equipment_hint"/>
+
+        <TextView
+            android:id="@+id/note_title"
+            android:text="@string/add_availability_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <EditText
+            android:id="@+id/note_value"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textCapSentences|textMultiLine"
+            android:ems="10"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:maxLength="200"
+            android:hint="@string/add_availability_note_hint"
+            android:gravity="top|start"
+            />
+
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/end_datetime_value"
-        android:text="@string/add_availability_end_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="5dp">
-        <TextView
-            android:id="@+id/end_date_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-        <TextView
-            android:id="@+id/end_time_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/activity_title"
-        android:text="@string/add_availability_activity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <TextView
-        android:id="@+id/activity_value"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:padding="5dp"
-        android:hint="@string/add_availability_activity_hint"/>
-
-    <TextView
-        android:id="@+id/need_partner_title"
-        android:text="@string/add_availability_need_partner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <TextView
-        android:id="@+id/need_partner_value"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:padding="5dp"
-        android:hint="@string/add_availability_need_partner_hint"/>
-
-    <TextView
-        android:id="@+id/if_no_partner_title"
-        android:text="@string/add_availability_no_partner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <TextView
-        android:id="@+id/if_no_partner_value"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:padding="5dp"
-        android:hint="@string/add_availability_no_partner_hint"/>
-
-    <TextView
-        android:id="@+id/shared_equipment_title"
-        android:text="@string/add_availability_shared_equipment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <TextView
-        android:id="@+id/shared_equipment_value"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:padding="5dp"
-        android:hint="@string/add_availability_shared_equipment_hint"/>
-
-    <TextView
-        android:id="@+id/note_title"
-        android:text="@string/add_availability_note"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <EditText
-        android:id="@+id/note_value"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:inputType="textCapSentences|textMultiLine"
-        android:ems="10"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:maxLength="200"
-        android:hint="@string/add_availability_note_hint"
-        android:gravity="top|start"
-        />
-
-</LinearLayout>
+</ScrollView>

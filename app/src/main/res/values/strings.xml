@@ -8,6 +8,11 @@
     <string name="main_menu_user_profile">User profile</string>
     <string name="main_menu_sign_out">Sign out</string>
 
+    <string name="sign_in_title">Sign in</string>
+
+    <string name="availabilities_title">Available buddies</string>
+
+    <string name="add_availability_title">Add availability</string>
     <string name="add_availability_location">Location</string>
     <string name="add_availability_location_hint">Select the location</string>
     <string name="add_availability_start_time">From</string>
@@ -23,7 +28,6 @@
     <string name="add_availability_note">Note</string>
     <string name="add_availability_note_hint">Write any extra info here (max 200 characters)</string>
     <string name="add_availability_done">Done</string>
-
     <string name="add_availability_missing_location">You must specify the location</string>
     <string name="add_availability_missing_start_time">You must specify the start time</string>
     <string name="add_availability_missing_end_time">You must specify the end time</string>
@@ -63,6 +67,7 @@
         <item>Slings</item>
     </string-array>
 
+    <string name="user_profile_title">Profile</string>
     <string name="user_profile_name">Name</string>
     <string name="user_profile_can_belay">Can belay</string>
     <string name="user_profile_grade_free_climbing">Free climbing grade</string>

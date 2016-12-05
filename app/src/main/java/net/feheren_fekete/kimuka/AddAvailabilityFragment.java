@@ -1,10 +1,8 @@
 package net.feheren_fekete.kimuka;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -55,14 +53,11 @@ public class AddAvailabilityFragment
 
     private static final String TAG = AddAvailabilityFragment.class.getSimpleName();
 
-    public static final String INTERACTION_DONE_TAPPED = DayFragment.class.getSimpleName() + ".INTERACTION_DONE_TAPPED";
+    public static final String INTERACTION_DONE_TAPPED = AddAvailabilityFragment.class.getSimpleName() + ".INTERACTION_DONE_TAPPED";
 
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int ONE_HOUR_IN_MILLIS = 1000 * 60 * 60;
     private static final int TWO_HOURS_IN_MILLIS = ONE_HOUR_IN_MILLIS * 2;
-
-    @Nullable
-    private FragmentInteractionListener mInteractionListener;
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mAvailabilityTable;
@@ -224,22 +219,6 @@ public class AddAvailabilityFragment
         setHasOptionsMenu(true);
 
         return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof FragmentInteractionListener) {
-            mInteractionListener = (FragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement FragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mInteractionListener = null;
     }
 
     @Override
@@ -414,9 +393,8 @@ public class AddAvailabilityFragment
 
                 DatabaseReference availabilityRef = mAvailabilityTable.push();
                 availabilityRef.setValue(availability);
-                if (mInteractionListener != null) {
-                    mInteractionListener.onFragmentAction(INTERACTION_DONE_TAPPED, null);
-                }
+
+                mainActivity.onFragmentAction(INTERACTION_DONE_TAPPED, null);
             }
         }
     }

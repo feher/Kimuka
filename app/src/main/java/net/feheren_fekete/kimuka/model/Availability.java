@@ -1,5 +1,7 @@
 package net.feheren_fekete.kimuka.model;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,9 @@ public class Availability {
     public static final int IF_NO_PARTNER_I_DONT_GO = 1;
     public static final int IF_NO_PARTNER_NOT_DECIDED_YET = 2;
 
+    @Exclude
+    private String key;
+
     private String userKey;
     private String userName;
     private double locationLatitude;
@@ -35,6 +40,16 @@ public class Availability {
     private String grades; // Comma separated list of grades (integers).
     private String note;
     private List<String> joinedAvailabilityKeys = new ArrayList<>();
+
+    @Exclude
+    public String getKey() {
+        return key;
+    }
+
+    @Exclude
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public String getUserKey() {
         return userKey;

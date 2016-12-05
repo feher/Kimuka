@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import net.feheren_fekete.kimuka.availabilities.AvailabilitiesFragment;
 import net.feheren_fekete.kimuka.dialog.ActivityDialogFragment;
 import net.feheren_fekete.kimuka.dialog.DatePickerDialogFragment;
 import net.feheren_fekete.kimuka.dialog.IfNoPartnerDialogFragment;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity
 
     private SignInFragment mSignInFragment;
     private UserProfileFragment mUserProfileFragment;
-    private DayFragment mDayFragment;
+    private AvailabilitiesFragment mAvailabilitiesFragment;
     private AddAvailabilityFragment mAddAvailabilityFragment;
     private Fragment mActiveFragment;
 
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
+        mDatabase.setPersistenceEnabled(true);
         mUsersTable = mDatabase.getReference("users");
     }
 
@@ -82,6 +84,13 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+        if (mActiveFragment == mAvailabilitiesFragment) {
+            menu.findItem(R.id.action_user_profile).setVisible(true);
+            menu.findItem(R.id.action_sign_out).setVisible(true);
+        } else {
+            menu.findItem(R.id.action_user_profile).setVisible(false);
+            menu.findItem(R.id.action_sign_out).setVisible(false);
+        }
         return true;
     }
 
@@ -94,16 +103,28 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_sign_out:
                 mAuth.signOut();
                 return true;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
+    public void onBackPressed() {
+        if (mActiveFragment == mAddAvailabilityFragment) {
+            showAvailabilitiesFragment();
+        } else if (mActiveFragment == mUserProfileFragment) {
+            showAvailabilitiesFragment();
+        }
+    }
+
+    @Override
     public void onFragmentAction(String action, @Nullable Bundle data) {
         if (AddAvailabilityFragment.INTERACTION_DONE_TAPPED.equals(action)) {
-            showDayFragment();
-        } else if (DayFragment.INTERACTION_ADD_AVAILABILITY_TAPPED.equals(action)) {
+            showAvailabilitiesFragment();
+        } else if (AvailabilitiesFragment.INTERACTION_ADD_AVAILABILITY_TAPPED.equals(action)) {
             showAddAvailabilityFragment();
         } else if (TimePickerDialogFragment.INTERCATION_TIME_PICKED.equals(action)
                 && data != null
@@ -155,9 +176,10 @@ public class MainActivity extends AppCompatActivity
             if (mFirebaseUser != null) {
                 Log.d(TAG, "onAuthStateChanged:signed_in:" + mFirebaseUser.getUid());
                 reRegisterUserListener(mFirebaseUser.getUid());
-                showDayFragment();
+                showAvailabilitiesFragment();
             } else {
                 Log.d(TAG, "onAuthStateChanged:signed_out");
+                mUser = null;
                 unregisterUserListener();
                 showSignInFragment();
             }
@@ -232,6 +254,9 @@ public class MainActivity extends AppCompatActivity
                 .beginTransaction()
                 .replace(R.id.fragment_container, mSignInFragment, "SignInFragment")
                 .commit();
+        getSupportActionBar().setTitle(R.string.sign_in_title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        invalidateOptionsMenu();
         mActiveFragment = mSignInFragment;
     }
 
@@ -247,18 +272,24 @@ public class MainActivity extends AppCompatActivity
                 .beginTransaction()
                 .replace(R.id.fragment_container, mUserProfileFragment, "UserProfileFragment")
                 .commit();
+        getSupportActionBar().setTitle(R.string.user_profile_title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        invalidateOptionsMenu();
         mActiveFragment = mUserProfileFragment;
     }
 
-    private void showDayFragment() {
-        if (mDayFragment == null) {
-            mDayFragment = DayFragment.newInstance();
+    private void showAvailabilitiesFragment() {
+        if (mAvailabilitiesFragment == null) {
+            mAvailabilitiesFragment = AvailabilitiesFragment.newInstance();
         }
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, mDayFragment, "DayFragment")
+                .replace(R.id.fragment_container, mAvailabilitiesFragment, "AvailabilitiesFragment")
                 .commit();
-        mActiveFragment = mDayFragment;
+        getSupportActionBar().setTitle(R.string.availabilities_title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        invalidateOptionsMenu();
+        mActiveFragment = mAvailabilitiesFragment;
     }
 
     private void showAddAvailabilityFragment() {
@@ -269,6 +300,9 @@ public class MainActivity extends AppCompatActivity
                 .beginTransaction()
                 .replace(R.id.fragment_container, mAddAvailabilityFragment, "AddAvailabilityFragment")
                 .commit();
+        getSupportActionBar().setTitle(R.string.add_availability_title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        invalidateOptionsMenu();
         mActiveFragment = mAddAvailabilityFragment;
     }
 

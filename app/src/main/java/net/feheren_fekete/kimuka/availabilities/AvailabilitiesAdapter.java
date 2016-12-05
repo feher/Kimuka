@@ -12,14 +12,17 @@ import net.feheren_fekete.kimuka.model.Availability;
 import net.feheren_fekete.kimuka.model.ModelUtils;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<Availability> mAvailabilities;
+    private List<Availability> mAvailabilities = new ArrayList<>();
     private Calendar mStartTimeCalendar = Calendar.getInstance();
     private Calendar mEndTimeCalendar = Calendar.getInstance();
     private Date mDate = new Date();
@@ -43,6 +46,60 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
     public void setAvailabilities(List<Availability> availabilities) {
         mAvailabilities = availabilities;
         notifyDataSetChanged();
+    }
+
+    public void addItem(Availability newAvailability) {
+        addItem(newAvailability, -1);
+    }
+
+    private void addItem(Availability newAvailability, int fromPosition) {
+        final int count = mAvailabilities.size();
+        Availability availability;
+        int newPosition = 0;
+        for (; newPosition < count; ++newPosition) {
+            availability = mAvailabilities.get(newPosition);
+            if (newAvailability.getStartTime() > availability.getStartTime()) {
+                break;
+            }
+            if (availability.getKey().equals(newAvailability.getKey())) {
+                return;
+            }
+        }
+        mAvailabilities.add(newPosition, newAvailability);
+        if (fromPosition != -1) {
+            notifyItemMoved(fromPosition, newPosition);
+        } else {
+            notifyItemInserted(newPosition);
+        }
+    }
+
+    public void updateItem(Availability updatedAvailability) {
+        final int count = mAvailabilities.size();
+        Availability availability;
+        for (int i = 0; i < count; ++i) {
+            availability = mAvailabilities.get(i);
+            if (availability.getKey().equals(updatedAvailability.getKey())) {
+                if (availability.getStartTime() == updatedAvailability.getStartTime()) {
+                    mAvailabilities.set(i, updatedAvailability);
+                    notifyItemChanged(i);
+                } else {
+                    mAvailabilities.remove(i);
+                    addItem(updatedAvailability, i);
+                }
+                break;
+            }
+        }
+    }
+
+    public void removeItem(Availability availability) {
+        final int count = mAvailabilities.size();
+        for (int i = 0; i < count; ++i) {
+            if (mAvailabilities.get(i).getKey().equals(availability.getKey())) {
+                mAvailabilities.remove(i);
+                notifyItemRemoved(i);
+                break;
+            }
+        }
     }
 
     @Override
