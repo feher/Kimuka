@@ -14,7 +14,7 @@
 
     <string name="add_availability_title">Add availability</string>
     <string name="add_availability_location">Location</string>
-    <string name="add_availability_location_hint">Select the location</string>
+    <string name="add_availability_location_hint">Select location</string>
     <string name="add_availability_start_time">From</string>
     <string name="add_availability_end_time">To</string>
     <string name="add_availability_activity">Activity</string>
@@ -24,16 +24,14 @@
     <string name="add_availability_no_partner">Without partner</string>
     <string name="add_availability_no_partner_hint">Select what you do without partner</string>
     <string name="add_availability_shared_equipment">Shared equipment</string>
-    <string name="add_availability_shared_equipment_hint">Select the equipment you could share</string>
+    <string name="add_availability_shared_equipment_hint">Select shared equipment</string>
     <string name="add_availability_note">Note</string>
-    <string name="add_availability_note_hint">Write any extra info here (max 200 characters)</string>
+    <string name="add_availability_note_hint">Write extra info here (max 200 characters)</string>
     <string name="add_availability_done">Done</string>
-    <string name="add_availability_missing_location">You must specify the location</string>
-    <string name="add_availability_missing_start_time">You must specify the start time</string>
-    <string name="add_availability_missing_end_time">You must specify the end time</string>
-    <string name="add_availability_missing_activity">You must specify the activity</string>
-    <string name="add_availability_missing_need_partner">You must specify whether you need partner or not</string>
-    <string name="add_availability_missing_no_partner">You must specify what happens if no partner found</string>
+    <string name="add_availability_missing_location">Location missing</string>
+    <string name="add_availability_missing_activity">Activity missing</string>
+    <string name="add_availability_missing_need_partner">Do you need partner?</string>
+    <string name="add_availability_missing_no_partner">What do you do without partner?</string>
 
     <string name="activity_dialog_title">Activities</string>
     <string-array name="activities">

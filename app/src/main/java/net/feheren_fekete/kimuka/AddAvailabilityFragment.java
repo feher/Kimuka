@@ -112,6 +112,7 @@ public class AddAvailabilityFragment
         mLocationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mLocationTextView.setError(null);
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
                 try {
                     Intent intent = builder.build(getActivity());
@@ -180,6 +181,7 @@ public class AddAvailabilityFragment
         mActivityTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mActivityTextView.setError(null);
                 DialogFragment newFragment = ActivityDialogFragment.newInstance(
                         ModelUtils.toIntList(mActivities));
                 newFragment.show(getActivity().getSupportFragmentManager(), "ActivityDialogFragment");
@@ -190,6 +192,7 @@ public class AddAvailabilityFragment
         mNeedPartnerTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mNeedPartnerTextView.setError(null);
                 DialogFragment newFragment = NeedPartnerDialogFragment.newInstance();
                 newFragment.show(getActivity().getSupportFragmentManager(), "NeedPartnerDialogFragment");
             }
@@ -199,6 +202,7 @@ public class AddAvailabilityFragment
         mIfNoPartnerTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mIfNoPartnerTextView.setError(null);
                 DialogFragment newFragment = IfNoPartnerDialogFragment.newInstance();
                 newFragment.show(getActivity().getSupportFragmentManager(), "IfNoPartnerDialogFragment");
             }
@@ -352,14 +356,17 @@ public class AddAvailabilityFragment
             if (user != null) {
                 if (mLocationLatitude == Double.MAX_VALUE || mLocationLongitude == Double.MAX_VALUE) {
                     Toast.makeText(activity, R.string.add_availability_missing_location, Toast.LENGTH_SHORT).show();
+                    mLocationTextView.setError("");
                     return;
                 }
                 if (mActivities.isEmpty()) {
                     Toast.makeText(activity, R.string.add_availability_missing_activity, Toast.LENGTH_SHORT).show();
+                    mActivityTextView.setError("");
                     return;
                 }
                 if (mNeedPartner == Availability.NEED_PARTNER_UNDEFINED) {
                     Toast.makeText(activity, R.string.add_availability_missing_need_partner, Toast.LENGTH_SHORT).show();
+                    mNeedPartnerTextView.setError("");
                     return;
                 }
 
@@ -377,6 +384,7 @@ public class AddAvailabilityFragment
                 if (availability.getNeedPartner() == Availability.NEED_PARTNER_YES) {
                     if (mIfNoPartner == Availability.IF_NO_PARTNER_UNDEFINED) {
                         Toast.makeText(activity, R.string.add_availability_missing_no_partner, Toast.LENGTH_SHORT).show();
+                        mIfNoPartnerTextView.setError("");
                         return;
                     }
                     availability.setIfNoPartner(mIfNoPartner);
