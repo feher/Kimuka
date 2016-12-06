@@ -12,17 +12,17 @@ import net.feheren_fekete.kimuka.FragmentInteractionListener;
 import net.feheren_fekete.kimuka.R;
 
 
-public class NeedPartnerDialogFragment extends DialogFragment {
+public class CanBelayDialogFragment extends DialogFragment {
 
-    public static final String INTERCATION_ITEM_SELECTED = NeedPartnerDialogFragment.class.getSimpleName() + ".INTERCATION_ITEM_SELECTED";
-    public static final String DATA_ITEM_INDEX = NeedPartnerDialogFragment.class.getSimpleName() + ".DATA_ITEM_INDEX";
+    public static final String INTERCATION_ITEM_SELECTED = CanBelayDialogFragment.class.getSimpleName() + ".INTERCATION_ITEM_SELECTED";
+    public static final String DATA_ITEM_INDEX = CanBelayDialogFragment.class.getSimpleName() + ".DATA_ITEM_INDEX";
 
     public interface Listener {
-        void onNeedPartnerItemSelected(int itemIndex);
+        void onCanBelayItemSelected(int itemIndex);
     }
 
-    public static NeedPartnerDialogFragment newInstance() {
-        NeedPartnerDialogFragment fragment = new NeedPartnerDialogFragment();
+    public static CanBelayDialogFragment newInstance() {
+        CanBelayDialogFragment fragment = new CanBelayDialogFragment();
         return fragment;
     }
 
@@ -30,8 +30,8 @@ public class NeedPartnerDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.need_partner_dialog_title)
-                .setItems(R.array.need_partner_options, new DialogInterface.OnClickListener() {
+                .setTitle(R.string.can_belay_dialog_title)
+                .setItems(R.array.can_belay_options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Activity activity = getActivity();

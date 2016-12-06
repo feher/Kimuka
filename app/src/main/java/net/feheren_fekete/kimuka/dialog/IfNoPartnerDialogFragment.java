@@ -29,7 +29,6 @@ public class IfNoPartnerDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String[] items = getResources().getStringArray(R.array.no_partner_options);
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.if_no_partner_dialog_title)
                 .setItems(R.array.no_partner_options, new DialogInterface.OnClickListener() {

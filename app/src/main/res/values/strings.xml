@@ -65,6 +65,15 @@
         <item>Slings</item>
     </string-array>
 
+    <string name="free_climbing_grade_dialog_title">Free climbing grade</string>
+    <string name="bouldering_grade_dialog_title">Bouldering grade</string>
+
+    <string name="can_belay_dialog_title">Can you belay?</string>
+    <string-array name="can_belay_options">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
     <string name="user_profile_title">Profile</string>
     <string name="user_profile_name">Name</string>
     <string name="user_profile_can_belay">Can belay</string>
