@@ -36,7 +36,7 @@ public class Availability {
     private int needPartner;
     private int ifNoPartner;
     private String sharedEquipment; // Comma separated list of equipments (integers).
-    private boolean canBelay;
+    private int canBelay;
     private String grades; // Comma separated list of grades (integers).
     private String note;
     private List<String> joinedAvailabilityKeys = new ArrayList<>();
@@ -147,11 +147,11 @@ public class Availability {
         this.sharedEquipment = sharedEquipment;
     }
 
-    public boolean isCanBelay() {
+    public int getCanBelay() {
         return canBelay;
     }
 
-    public void setCanBelay(boolean canBelay) {
+    public void setCanBelay(int canBelay) {
         this.canBelay = canBelay;
     }
 

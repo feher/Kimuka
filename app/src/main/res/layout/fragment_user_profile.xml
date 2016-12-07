@@ -40,10 +40,10 @@
             />
 
         <TextView
+            android:id="@+id/free_climbing_grade_text"
             android:text="@string/user_profile_grade_free_climbing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/free_climbing_grade_text"
             />
 
         <TextView
@@ -55,10 +55,10 @@
             />
 
         <TextView
+            android:id="@+id/bouldering_grade_text"
             android:text="@string/user_profile_grade_bouldering"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/bouldering_grade_text"
             />
 
         <TextView

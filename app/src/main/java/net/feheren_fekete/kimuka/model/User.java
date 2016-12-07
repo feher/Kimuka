@@ -9,12 +9,15 @@ public class User {
     public static final int GRADE_FREE_CLIMBING = 0;
     public static final int GRADE_BOULDERING = 1;
 
+    public static final int CAN_BELAY_YES = 0;
+    public static final int CAN_BELAY_NO = 1;
+
     @Exclude
     private String key;
 
     private String uid;
     private String name;
-    private boolean canBelay;
+    private int canBelay;
     private String grades; // Comma separated list of integers.
     private String note;
 
@@ -37,7 +40,7 @@ public class User {
         this.name = name;
     }
 
-    public void setCanBelay(boolean canBelay) {
+    public void setCanBelay(int canBelay) {
         this.canBelay = canBelay;
     }
 
@@ -63,7 +66,7 @@ public class User {
         return name;
     }
 
-    public boolean getCanBelay() {
+    public int getCanBelay() {
         return canBelay;
     }
 

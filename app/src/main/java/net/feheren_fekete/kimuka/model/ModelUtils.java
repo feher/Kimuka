@@ -9,6 +9,9 @@ import java.util.List;
 
 public class ModelUtils {
 
+    public static final String TABLE_AVAILABILITIES = "availability";
+    public static final String TABLE_USERS = "users";
+
     public static ArrayList<Integer> toIntList(String stringListOfInts) throws NumberFormatException {
         String[] parts = stringListOfInts.split(",");
         ArrayList<Integer> result = new ArrayList<>();
@@ -67,6 +70,11 @@ public class ModelUtils {
         }
         stringBuilder.append(equipmentNames[equipments.get(equipments.size() - 1)]);
         return stringBuilder.toString();
+    }
+
+    public static String createCanBelayText(Context context, int itemIndex) {
+        String[] items = context.getResources().getStringArray(R.array.can_belay_options);
+        return items[itemIndex];
     }
 
 }

@@ -98,12 +98,14 @@ public class AddAvailabilityFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance();
-        mAvailabilityTable = mDatabase.getReference().child("availability");
+        mAvailabilityTable = mDatabase.getReference().child(ModelUtils.TABLE_AVAILABILITIES);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+
         View view = inflater.inflate(R.layout.fragment_add_availability, container, false);
 
         mLocationLatitude = Double.MAX_VALUE;
@@ -219,8 +221,6 @@ public class AddAvailabilityFragment
         });
 
         mNoteEditText = (EditText) view.findViewById(R.id.note_value);
-
-        setHasOptionsMenu(true);
 
         return view;
     }

@@ -38,7 +38,7 @@ public class GradeDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        int type = getArguments().getInt(ARG_TYPE, TYPE_FREE_CLIMBING);
+        final int type = getArguments().getInt(ARG_TYPE, TYPE_FREE_CLIMBING);
         String[] items = (type == TYPE_FREE_CLIMBING)
                 ? Grading.getFreeClimbingGradeNames(Grading.NAME_FRENCH)
                 : Grading.getBoulderingGradeNames(Grading.NAME_FONTENBLAU);
@@ -53,7 +53,11 @@ public class GradeDialogFragment extends DialogFragment {
                         if (activity instanceof FragmentInteractionListener) {
                             FragmentInteractionListener listener = (FragmentInteractionListener) activity;
                             Bundle data = new Bundle();
-                            data.putInt(DATA_GRADE, i);
+                            data.putInt(
+                                    DATA_GRADE,
+                                    (type == TYPE_FREE_CLIMBING)
+                                            ? Grading.sYdsNameMap.get(i).first
+                                            : Grading.sFontenblauNameMap.get(i).first);
                             listener.onFragmentAction(INTERCATION_GRADE_SELECTED, data);
                         }
                     }

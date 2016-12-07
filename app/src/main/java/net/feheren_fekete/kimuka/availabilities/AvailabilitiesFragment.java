@@ -21,6 +21,7 @@ import com.google.firebase.database.Query;
 import net.feheren_fekete.kimuka.FragmentInteractionListener;
 import net.feheren_fekete.kimuka.R;
 import net.feheren_fekete.kimuka.model.Availability;
+import net.feheren_fekete.kimuka.model.ModelUtils;
 
 
 public class AvailabilitiesFragment extends Fragment {
@@ -45,7 +46,7 @@ public class AvailabilitiesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance();
-        mAvailabilityTable = mDatabase.getReference().child("availability");
+        mAvailabilityTable = mDatabase.getReference().child(ModelUtils.TABLE_AVAILABILITIES);
         mSortedAvailabilityTable = mAvailabilityTable.orderByChild("startTime").limitToLast(100);
         mSortedAvailabilityTable.addChildEventListener(mChildEventListener);
         mAdapter = new AvailabilitiesAdapter(getContext());

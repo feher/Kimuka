@@ -23,7 +23,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.feheren_fekete.kimuka.availabilities.AvailabilitiesFragment;
 import net.feheren_fekete.kimuka.dialog.ActivityDialogFragment;
+import net.feheren_fekete.kimuka.dialog.CanBelayDialogFragment;
 import net.feheren_fekete.kimuka.dialog.DatePickerDialogFragment;
+import net.feheren_fekete.kimuka.dialog.GradeDialogFragment;
 import net.feheren_fekete.kimuka.dialog.IfNoPartnerDialogFragment;
 import net.feheren_fekete.kimuka.dialog.NeedPartnerDialogFragment;
 import net.feheren_fekete.kimuka.dialog.SharedEquimentDialogFragment;
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
         mDatabase.setPersistenceEnabled(true);
-        mUsersTable = mDatabase.getReference("users");
+        mUsersTable = mDatabase.getReference(ModelUtils.TABLE_USERS);
     }
 
     @Override
@@ -161,6 +163,16 @@ public class MainActivity extends AppCompatActivity
                 && mActiveFragment instanceof SharedEquimentDialogFragment.Listener) {
             SharedEquimentDialogFragment.Listener listener = (SharedEquimentDialogFragment.Listener) mActiveFragment;
             listener.onEquipmentSelected(data.getIntegerArrayList(SharedEquimentDialogFragment.DATA_EQUIPMENTS));
+        } else if (GradeDialogFragment.INTERCATION_GRADE_SELECTED.equals(action)
+                && data != null
+                && mActiveFragment instanceof GradeDialogFragment.Listener) {
+            GradeDialogFragment.Listener listener = (GradeDialogFragment.Listener) mActiveFragment;
+            listener.onGradeSelected(data.getInt(GradeDialogFragment.DATA_GRADE));
+        } else if (CanBelayDialogFragment.INTERCATION_ITEM_SELECTED.equals(action)
+                && data != null
+                && mActiveFragment instanceof CanBelayDialogFragment.Listener) {
+            CanBelayDialogFragment.Listener listener = (CanBelayDialogFragment.Listener) mActiveFragment;
+            listener.onCanBelayItemSelected(data.getInt(CanBelayDialogFragment.DATA_ITEM_INDEX));
         }
     }
 
@@ -233,7 +245,7 @@ public class MainActivity extends AppCompatActivity
         User user = new User();
         user.setUid(uid);
         user.setName(name);
-        user.setCanBelay(false);
+        user.setCanBelay(User.CAN_BELAY_NO);
         user.setGrades(ModelUtils.toCommaSeparatedString(Arrays.asList(
                 Grading.YDS_5_0, Grading.FONTENBLAU_3)));
         user.setNote("");
@@ -261,10 +273,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showUserProfileFragment() {
-        if (mUser == null) {
-            // TODO: Handle this case. Show toast to SignIn? Wait for SignIn?
-            return;
-        }
         if (mUserProfileFragment == null) {
             mUserProfileFragment = UserProfileFragment.newInstance();
         }
