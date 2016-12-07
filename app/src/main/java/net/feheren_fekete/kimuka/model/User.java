@@ -9,8 +9,8 @@ public class User {
     public static final int GRADE_FREE_CLIMBING = 0;
     public static final int GRADE_BOULDERING = 1;
 
-    public static final int CAN_BELAY_NO = 0;
-    public static final int CAN_BELAY_YES = 1;
+    public static final int CAN_BELAY_YES = 0;
+    public static final int CAN_BELAY_NO = 1;
 
     @Exclude
     private String key;

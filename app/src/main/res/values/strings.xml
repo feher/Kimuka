@@ -20,11 +20,13 @@
     <string name="add_availability_start_time">From</string>
     <string name="add_availability_end_time">To</string>
     <string name="add_availability_activity">Activity</string>
-    <string name="add_availability_activity_hint">Select what you\'d like to do</string>
+    <string name="add_availability_activity_hint">What would you like to do?</string>
     <string name="add_availability_need_partner">Need partner</string>
-    <string name="add_availability_need_partner_hint">Select whether you need partner</string>
+    <string name="add_availability_need_partner_hint">Do you need partner?</string>
+    <string name="add_availability_can_belay">Can belay</string>
+    <string name="add_availability_can_belay_hint">Can you belay?</string>
     <string name="add_availability_no_partner">Without partner</string>
-    <string name="add_availability_no_partner_hint">Select what you do without partner</string>
+    <string name="add_availability_no_partner_hint">What do you do without partner?</string>
     <string name="add_availability_shared_equipment">Shared equipment</string>
     <string name="add_availability_shared_equipment_hint">Select shared equipment</string>
     <string name="add_availability_note">Note</string>

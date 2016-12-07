@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import net.feheren_fekete.kimuka.dialog.ActivityDialogFragment;
+import net.feheren_fekete.kimuka.dialog.CanBelayDialogFragment;
 import net.feheren_fekete.kimuka.dialog.DatePickerDialogFragment;
 import net.feheren_fekete.kimuka.dialog.IfNoPartnerDialogFragment;
 import net.feheren_fekete.kimuka.dialog.NeedPartnerDialogFragment;
@@ -51,7 +52,8 @@ public class AddAvailabilityFragment
                 ActivityDialogFragment.Listener,
                 IfNoPartnerDialogFragment.Listener,
                 SharedEquimentDialogFragment.Listener,
-                NeedPartnerDialogFragment.Listener {
+                NeedPartnerDialogFragment.Listener,
+                CanBelayDialogFragment.Listener {
 
     private static final String TAG = AddAvailabilityFragment.class.getSimpleName();
 
@@ -73,6 +75,7 @@ public class AddAvailabilityFragment
     private TextView mEndTimeTextView;
     private boolean mIsAdjustingStartTime;
     private TextView mActivityTextView;
+    private TextView mCanBelayTextView;
     private TextView mNeedPartnerTextView;
     private TextView mIfNoPartnerTextView;
     private TextView mSharedEquipmentTextView;
@@ -175,6 +178,16 @@ public class AddAvailabilityFragment
                 DialogFragment newFragment = ActivityDialogFragment.newInstance(
                         ModelUtils.toIntList(mAvailability.getActivity()));
                 newFragment.show(getActivity().getSupportFragmentManager(), "ActivityDialogFragment");
+            }
+        });
+
+        mCanBelayTextView = (TextView) view.findViewById(R.id.can_belay_value);
+        mCanBelayTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCanBelayTextView.setError(null);
+                DialogFragment newFragment = CanBelayDialogFragment.newInstance();
+                newFragment.show(getActivity().getSupportFragmentManager(), "CanBelayDialogFragment");
             }
         });
 
@@ -297,6 +310,12 @@ public class AddAvailabilityFragment
     @Override
     public void onActivitySelected(List<Integer> activities) {
         mAvailability.setActivity(ModelUtils.toCommaSeparatedString(activities));
+        updateViewsFromAvailability(mAvailability);
+    }
+
+    @Override
+    public void onCanBelayItemSelected(int itemIndex) {
+        mAvailability.setCanBelay(itemIndex);
         updateViewsFromAvailability(mAvailability);
     }
 
@@ -437,20 +456,19 @@ public class AddAvailabilityFragment
                         getContext(),
                         ModelUtils.toIntList(availability.getActivity())));
 
+        mCanBelayTextView.setText(
+                ModelUtils.createCanBelayText(getContext(), availability.getCanBelay()));
+
         int needPartner = availability.getNeedPartner();
         mNeedPartnerTextView.setText(
                 (needPartner != Availability.NEED_PARTNER_UNDEFINED)
-                ? ModelUtils.createNeedPartnerText(
-                        getContext(),
-                        availability.getNeedPartner())
+                ? ModelUtils.createNeedPartnerText(getContext(), needPartner)
                 : "");
 
         int ifNoPartner = availability.getIfNoPartner();
         mIfNoPartnerTextView.setText(
                 (ifNoPartner != Availability.IF_NO_PARTNER_UNDEFINED)
-                ? ModelUtils.createIfNoPartnerText(
-                        getContext(),
-                        availability.getIfNoPartner())
+                ? ModelUtils.createIfNoPartnerText(getContext(), ifNoPartner)
                 : "");
 
         mSharedEquipmentTextView.setText(
@@ -474,6 +492,7 @@ public class AddAvailabilityFragment
                     mEndDateTextView.setEnabled(false);
                     mEndTimeTextView.setEnabled(false);
                     mActivityTextView.setEnabled(false);
+                    mCanBelayTextView.setEnabled(false);
                     mNeedPartnerTextView.setEnabled(false);
                     mIfNoPartnerTextView.setEnabled(false);
                     mSharedEquipmentTextView.setEnabled(false);
