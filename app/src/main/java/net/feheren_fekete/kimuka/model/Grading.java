@@ -1,12 +1,10 @@
 package net.feheren_fekete.kimuka.model;
 
 import android.support.v4.util.Pair;
-import android.util.ArrayMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class Grading {
 
@@ -168,31 +166,31 @@ public class Grading {
     public static final List<Pair<Integer, ArrayList<String>>> sFontenblauNameMap;
     static {
         sFontenblauNameMap = new ArrayList<>();
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_3, new ArrayList<>(Arrays.asList("3", "VB"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_4_MINUS, new ArrayList<>(Arrays.asList("4-", "V0-"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_4, new ArrayList<>(Arrays.asList("4", "V0"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_4_PLUS, new ArrayList<>(Arrays.asList("4+", "V0+"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_5, new ArrayList<>(Arrays.asList("5", "V1"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_5_PLUS, new ArrayList<>(Arrays.asList("5+", "V2"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_6_A, new ArrayList<>(Arrays.asList("6A", "V3"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_6_A_PLUS, new ArrayList<>(Arrays.asList("6A+", "V3"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_6_B, new ArrayList<>(Arrays.asList("6B", "V4"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_6_B_PLUS, new ArrayList<>(Arrays.asList("6B+", "V4"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_6_C, new ArrayList<>(Arrays.asList("6C", "V5"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_6_C_PLUS, new ArrayList<>(Arrays.asList("6C+", "V5"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_7_A, new ArrayList<>(Arrays.asList("7A", "V6"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_7_A_PLUS, new ArrayList<>(Arrays.asList("7A+", "V7"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_7_B, new ArrayList<>(Arrays.asList("7B", "V8"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_7_B_PLUS, new ArrayList<>(Arrays.asList("7B+", "V8"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_7_C, new ArrayList<>(Arrays.asList("7C", "V9"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_7_C_PLUS, new ArrayList<>(Arrays.asList("7C+", "V10"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_8_A, new ArrayList<>(Arrays.asList("8A", "V11"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_8_A_PLUS, new ArrayList<>(Arrays.asList("8A+", "V12"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_8_B, new ArrayList<>(Arrays.asList("8B", "V13"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_8_B_PLUS, new ArrayList<>(Arrays.asList("8B+", "V14"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_8_C, new ArrayList<>(Arrays.asList("8C", "V15"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_8_C_PLUS, new ArrayList<>(Arrays.asList("8C+", "V16"))));
-        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_9_A, new ArrayList<>(Arrays.asList("9A", "V17"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_3, new ArrayList<>(Arrays.asList("Fontenblau 3", "HUECO VB"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_4_MINUS, new ArrayList<>(Arrays.asList("Fontenblau 4-", "HUECO V0-"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_4, new ArrayList<>(Arrays.asList("Fontenblau 4", "HUECO V0"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_4_PLUS, new ArrayList<>(Arrays.asList("Fontenblau 4+", "HUECO V0+"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_5, new ArrayList<>(Arrays.asList("Fontenblau 5", "HUECO V1"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_5_PLUS, new ArrayList<>(Arrays.asList("Fontenblau 5+", "HUECO V2"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_6_A, new ArrayList<>(Arrays.asList("Fontenblau 6A", "HUECO V3"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_6_A_PLUS, new ArrayList<>(Arrays.asList("Fontenblau 6A+", "HUECO V3"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_6_B, new ArrayList<>(Arrays.asList("Fontenblau 6B", "HUECO V4"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_6_B_PLUS, new ArrayList<>(Arrays.asList("Fontenblau 6B+", "HUECO V4"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_6_C, new ArrayList<>(Arrays.asList("Fontenblau 6C", "HUECO V5"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_6_C_PLUS, new ArrayList<>(Arrays.asList("Fontenblau 6C+", "HUECO V5"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_7_A, new ArrayList<>(Arrays.asList("Fontenblau 7A", "HUECO V6"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_7_A_PLUS, new ArrayList<>(Arrays.asList("Fontenblau 7A+", "HUECO V7"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_7_B, new ArrayList<>(Arrays.asList("Fontenblau 7B", "HUECO V8"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_7_B_PLUS, new ArrayList<>(Arrays.asList("Fontenblau 7B+", "HUECO V8"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_7_C, new ArrayList<>(Arrays.asList("Fontenblau 7C", "HUECO V9"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_7_C_PLUS, new ArrayList<>(Arrays.asList("Fontenblau 7C+", "HUECO V10"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_8_A, new ArrayList<>(Arrays.asList("Fontenblau 8A", "HUECO V11"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_8_A_PLUS, new ArrayList<>(Arrays.asList("Fontenblau 8A+", "HUECO V12"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_8_B, new ArrayList<>(Arrays.asList("Fontenblau 8B", "HUECO V13"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_8_B_PLUS, new ArrayList<>(Arrays.asList("Fontenblau 8B+", "HUECO V14"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_8_C, new ArrayList<>(Arrays.asList("Fontenblau 8C", "HUECO V15"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_8_C_PLUS, new ArrayList<>(Arrays.asList("Fontenblau 8C+", "HUECO V16"))));
+        sFontenblauNameMap.add(new Pair<>(FONTENBLAU_9_A, new ArrayList<>(Arrays.asList("Fontenblau 9A", "HUECO V17"))));
     }
 
     public static String getNameForFontenblauGrade(int fontGrade, int gradingSystem) {

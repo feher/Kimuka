@@ -24,9 +24,12 @@ import net.feheren_fekete.kimuka.model.Availability;
 import net.feheren_fekete.kimuka.model.ModelUtils;
 
 
-public class AvailabilitiesFragment extends Fragment {
+public class AvailabilitiesFragment extends Fragment implements AvailabilitiesAdapter.Listener {
 
     public static final String INTERACTION_ADD_AVAILABILITY_TAPPED = AvailabilitiesFragment.class.getSimpleName() + ".INTERACTION_ADD_AVAILABILITY_TAPPED";
+    public static final String INTERACTION_AVAILABILITY_TAPPED = AvailabilitiesFragment.class.getSimpleName() + ".INTERACTION_AVAILABILITY_TAPPED";
+
+    public static final String DATA_AVAILABILITY_KEY = AvailabilitiesFragment.class.getSimpleName() + ".DATA_AVAILABILITY_KEY";
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mAvailabilityTable;
@@ -49,7 +52,7 @@ public class AvailabilitiesFragment extends Fragment {
         mAvailabilityTable = mDatabase.getReference().child(ModelUtils.TABLE_AVAILABILITIES);
         mSortedAvailabilityTable = mAvailabilityTable.orderByChild("startTime").limitToLast(100);
         mSortedAvailabilityTable.addChildEventListener(mChildEventListener);
-        mAdapter = new AvailabilitiesAdapter(getContext());
+        mAdapter = new AvailabilitiesAdapter(getContext(), this);
     }
 
     @Override
@@ -74,6 +77,17 @@ public class AvailabilitiesFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onItemClicked(Availability availability) {
+        Activity activity = getActivity();
+        if (activity instanceof FragmentInteractionListener) {
+            FragmentInteractionListener listener = (FragmentInteractionListener) activity;
+            Bundle data = new Bundle();
+            data.putString(DATA_AVAILABILITY_KEY, availability.getKey());
+            listener.onFragmentAction(INTERACTION_AVAILABILITY_TAPPED, data);
+        }
     }
 
     private ChildEventListener mChildEventListener = new ChildEventListener() {

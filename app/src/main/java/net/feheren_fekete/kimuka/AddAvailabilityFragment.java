@@ -223,20 +223,6 @@ public class AddAvailabilityFragment
             updateViewsFromAvailability(mAvailability);
         }
 
-        boolean isReadOnly = getArguments().getBoolean(ARG_IS_READONLY, true);
-        if (isReadOnly) {
-            mLocationTextView.setEnabled(false);
-            mStartDateTextView.setEnabled(false);
-            mStartTimeTextView.setEnabled(false);
-            mEndDateTextView.setEnabled(false);
-            mEndTimeTextView.setEnabled(false);
-            mActivityTextView.setEnabled(false);
-            mNeedPartnerTextView.setEnabled(false);
-            mIfNoPartnerTextView.setEnabled(false);
-            mSharedEquipmentTextView.setEnabled(false);
-            mNoteEditText.setEnabled(false);
-        }
-
         return view;
     }
 
@@ -420,6 +406,7 @@ public class AddAvailabilityFragment
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     mAvailability = dataSnapshot.getValue(Availability.class);
+                    mAvailability.setKey(dataSnapshot.getKey());
                     updateViewsFromAvailability(mAvailability);
                 }
             }
@@ -432,27 +419,74 @@ public class AddAvailabilityFragment
     }
 
     private void updateViewsFromAvailability(Availability availability) {
-        mLocationTextView.setText(
-                availability.getLocationName() + ", "
-                        + availability.getLocationAddress()
-                        + " [" + availability.getLocationLatitude() + ","+ availability.getLocationLongitude() + "]");
+        if (availability.getLocationLatitude() != Double.MAX_VALUE) {
+            mLocationTextView.setText(
+                    availability.getLocationName() + ", "
+                            + availability.getLocationAddress()
+                            + " [" + availability.getLocationLatitude() + "," + availability.getLocationLongitude() + "]");
+        } else {
+            mLocationTextView.setText("");
+        }
+
         mStartDateTextView.setText(formatDateForTextView(availability.getStartTime()));
         mStartTimeTextView.setText(formatTimeForTextView(availability.getStartTime()));
+
         mEndDateTextView.setText(formatDateForTextView(availability.getEndTime()));
         mEndTimeTextView.setText(formatTimeForTextView(availability.getEndTime()));
+
         mActivityTextView.setText(
-                ModelUtils.createActivityNameList(getContext(),
-                ModelUtils.toIntList(availability.getActivity())));
+                ModelUtils.createActivityNameList(
+                        getContext(),
+                        ModelUtils.toIntList(availability.getActivity())));
+
+        int needPartner = availability.getNeedPartner();
         mNeedPartnerTextView.setText(
-                ModelUtils.createNeedPartnerText(getContext(),
-                availability.getNeedPartner()));
+                (needPartner != Availability.NEED_PARTNER_UNDEFINED)
+                ? ModelUtils.createNeedPartnerText(
+                        getContext(),
+                        availability.getNeedPartner())
+                : "");
+
+        int ifNoPartner = availability.getIfNoPartner();
         mIfNoPartnerTextView.setText(
-                ModelUtils.createIfNoPartnerText(getContext(),
-                availability.getIfNoPartner()));
+                (ifNoPartner != Availability.IF_NO_PARTNER_UNDEFINED)
+                ? ModelUtils.createIfNoPartnerText(
+                        getContext(),
+                        availability.getIfNoPartner())
+                : "");
+
         mSharedEquipmentTextView.setText(
-                ModelUtils.createEquipmentNameList(getContext(),
-                ModelUtils.toIntList(availability.getSharedEquipment())));
+                ModelUtils.createEquipmentNameList(
+                        getContext(),
+                        ModelUtils.toIntList(availability.getSharedEquipment())));
+
         mNoteEditText.setText(availability.getNote());
+
+        Activity activity = getActivity();
+        if (activity != null
+                && (activity instanceof MainActivity)) {
+            MainActivity mainActivity = (MainActivity) activity;
+            User user = mainActivity.getUser();
+            if (user != null) {
+                boolean isEditable = user.getKey().equals(availability.getUserKey());
+                if (!isEditable) {
+                    mLocationTextView.setEnabled(false);
+                    mStartDateTextView.setEnabled(false);
+                    mStartTimeTextView.setEnabled(false);
+                    mEndDateTextView.setEnabled(false);
+                    mEndTimeTextView.setEnabled(false);
+                    mActivityTextView.setEnabled(false);
+                    mNeedPartnerTextView.setEnabled(false);
+                    mIfNoPartnerTextView.setEnabled(false);
+                    mSharedEquipmentTextView.setEnabled(false);
+                    mNoteEditText.setEnabled(false);
+                }
+            } else {
+                // TODO: Report error
+            }
+        } else {
+            // TODO: Report error
+        }
     }
 
     private void addAvailability() {

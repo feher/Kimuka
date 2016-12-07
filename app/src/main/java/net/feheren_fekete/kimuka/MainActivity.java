@@ -124,10 +124,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentAction(String action, @Nullable Bundle data) {
-        if (AddAvailabilityFragment.INTERACTION_DONE_TAPPED.equals(action)) {
+        if (UserProfileFragment.INTERACTION_DONE_TAPPED.equals(action)) {
+            showAvailabilitiesFragment();
+        } else if (AddAvailabilityFragment.INTERACTION_DONE_TAPPED.equals(action)) {
             showAvailabilitiesFragment();
         } else if (AvailabilitiesFragment.INTERACTION_ADD_AVAILABILITY_TAPPED.equals(action)) {
-            showAddAvailabilityFragment();
+            showAddAvailabilityFragment("");
+        } else if (AvailabilitiesFragment.INTERACTION_AVAILABILITY_TAPPED.equals(action)
+                && data != null) {
+            showAddAvailabilityFragment(data.getString(AvailabilitiesFragment.DATA_AVAILABILITY_KEY));
         } else if (TimePickerDialogFragment.INTERCATION_TIME_PICKED.equals(action)
                 && data != null
                 && mActiveFragment instanceof TimePickerDialogFragment.Listener) {
@@ -300,9 +305,9 @@ public class MainActivity extends AppCompatActivity
         mActiveFragment = mAvailabilitiesFragment;
     }
 
-    private void showAddAvailabilityFragment() {
+    private void showAddAvailabilityFragment(String availabilityKey) {
         if (mAddAvailabilityFragment == null) {
-            mAddAvailabilityFragment = AddAvailabilityFragment.newInstance("", false);
+            mAddAvailabilityFragment = AddAvailabilityFragment.newInstance(availabilityKey, false);
         }
         getSupportFragmentManager()
                 .beginTransaction()

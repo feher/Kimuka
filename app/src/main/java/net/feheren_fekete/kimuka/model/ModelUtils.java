@@ -51,12 +51,22 @@ public class ModelUtils {
 
     public static String createNeedPartnerText(Context context, int itemIndex) {
         String[] items = context.getResources().getStringArray(R.array.need_partner_options);
-        return items[itemIndex];
+        if (0 <= itemIndex && itemIndex < items.length) {
+            return items[itemIndex];
+        } else {
+            // TODO: Throw exception.
+            return "";
+        }
     }
 
     public static String createIfNoPartnerText(Context context, int itemIndex) {
         String[] items = context.getResources().getStringArray(R.array.no_partner_options);
-        return items[itemIndex];
+        if (0 <= itemIndex && itemIndex < items.length) {
+            return items[itemIndex];
+        } else {
+            // TODO: Throw exception.
+            return "";
+        }
     }
 
     public static String createEquipmentNameList(Context context, List<Integer> equipments) {
@@ -74,7 +84,12 @@ public class ModelUtils {
 
     public static String createCanBelayText(Context context, int itemIndex) {
         String[] items = context.getResources().getStringArray(R.array.can_belay_options);
-        return items[itemIndex];
+        if (0 <= itemIndex && itemIndex < items.length) {
+            return items[itemIndex];
+        } else {
+            // TODO: Throw exception.
+            return "";
+        }
     }
 
 }
