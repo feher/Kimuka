@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity
 
     private void showAddAvailabilityFragment() {
         if (mAddAvailabilityFragment == null) {
-            mAddAvailabilityFragment = AddAvailabilityFragment.newInstance();
+            mAddAvailabilityFragment = AddAvailabilityFragment.newInstance("");
         }
         getSupportFragmentManager()
                 .beginTransaction()
