@@ -1,6 +1,7 @@
 package net.feheren_fekete.kimuka.availabilities;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,27 +51,6 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
 
     public void addItem(Availability newAvailability) {
         addItem(newAvailability, -1);
-    }
-
-    private void addItem(Availability newAvailability, int fromPosition) {
-        final int count = mAvailabilities.size();
-        Availability availability;
-        int newPosition = 0;
-        for (; newPosition < count; ++newPosition) {
-            availability = mAvailabilities.get(newPosition);
-            if (newAvailability.getStartTime() > availability.getStartTime()) {
-                break;
-            }
-            if (availability.getKey().equals(newAvailability.getKey())) {
-                return;
-            }
-        }
-        mAvailabilities.add(newPosition, newAvailability);
-        if (fromPosition != -1) {
-            notifyItemMoved(fromPosition, newPosition);
-        } else {
-            notifyItemInserted(newPosition);
-        }
     }
 
     public void updateItem(Availability updatedAvailability) {
@@ -138,19 +118,68 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
         }
         holder.mTextView1.setText(period);
 
-        String whatAndWho = ModelUtils.createActivityNameList(mContext, ModelUtils.toIntList(availability.getActivity()));
+        String activity = ModelUtils.createActivityNameList(mContext, ModelUtils.toIntList(availability.getActivity()));
+
+        String sharedEquipment = "";
         if (!availability.getSharedEquipment().isEmpty()) {
-            whatAndWho += " ("
+            sharedEquipment = " ("
                     + ModelUtils.createEquipmentNameList(mContext, ModelUtils.toIntList(availability.getSharedEquipment()))
                     + ")";
         }
-        whatAndWho += ", " + availability.getUserName();
-        holder.mTextView2.setText(whatAndWho);
+
+        String who = ", " + availability.getUserName();
+        List<String> joinedAvailabilityKeys = availability.getJoinedAvailabilityKeys();
+        if (!joinedAvailabilityKeys.isEmpty()) {
+            for (String availabilityKey : joinedAvailabilityKeys) {
+                Availability joinedAvailability = getAvailability(availabilityKey);
+                if (joinedAvailability != null) {
+                    who += ", " + joinedAvailability.getUserName();
+                } else {
+                    // TODO: Report error.
+                }
+            }
+        }
+
+        holder.mTextView2.setText(activity + sharedEquipment + who);
     }
 
     @Override
     public int getItemCount() {
         return mAvailabilities.size();
+    }
+
+    private void addItem(Availability newAvailability, int fromPosition) {
+        final int count = mAvailabilities.size();
+        Availability availability;
+        int newPosition = 0;
+        for (; newPosition < count; ++newPosition) {
+            availability = mAvailabilities.get(newPosition);
+            if (newAvailability.getStartTime() > availability.getStartTime()) {
+                break;
+            }
+            if (availability.getKey().equals(newAvailability.getKey())) {
+                return;
+            }
+        }
+        mAvailabilities.add(newPosition, newAvailability);
+        if (fromPosition != -1) {
+            notifyItemMoved(fromPosition, newPosition);
+        } else {
+            notifyItemInserted(newPosition);
+        }
+    }
+
+    @Nullable
+    private Availability getAvailability(String availabilityKey) {
+        final int count = mAvailabilities.size();
+        Availability availability;
+        for (int i = 0; i < count; ++i) {
+            availability = mAvailabilities.get(i);
+            if (availability.getKey().equals(availabilityKey)) {
+                return availability;
+            }
+        }
+        return null;
     }
 
 }

@@ -165,8 +165,11 @@ public class UserProfileFragment
                 user.setCanBelay(mCanBelay);
                 user.setNote(mNoteTextView.getText().toString().trim());
 
-                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference(ModelUtils.TABLE_USERS).push();
+                DatabaseReference userRef = FirebaseDatabase.getInstance()
+                        .getReference(ModelUtils.TABLE_USERS)
+                        .child(user.getKey());
                 userRef.setValue(user);
+
                 mainActivity.onFragmentAction(INTERACTION_DONE_TAPPED, null);
             }
         }
