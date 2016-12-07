@@ -12,7 +12,9 @@
 
     <string name="availabilities_title">Available buddies</string>
 
-    <string name="add_availability_title">Add availability</string>
+    <string name="add_availability_title_new">New availability</string>
+    <string name="add_availability_title_edit">Edit availability</string>
+    <string name="add_availability_title_show">Availability</string>
     <string name="add_availability_location">Location</string>
     <string name="add_availability_location_hint">Select location</string>
     <string name="add_availability_start_time">From</string>

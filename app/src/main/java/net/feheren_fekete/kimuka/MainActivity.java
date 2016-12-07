@@ -307,13 +307,17 @@ public class MainActivity extends AppCompatActivity
 
     private void showAddAvailabilityFragment(String availabilityKey) {
         if (mAddAvailabilityFragment == null) {
-            mAddAvailabilityFragment = AddAvailabilityFragment.newInstance(availabilityKey, false);
+            mAddAvailabilityFragment = AddAvailabilityFragment.newInstance(availabilityKey);
         }
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, mAddAvailabilityFragment, "AddAvailabilityFragment")
                 .commit();
-        getSupportActionBar().setTitle(R.string.add_availability_title);
+        if (availabilityKey.isEmpty()) {
+            getSupportActionBar().setTitle(R.string.add_availability_title_new);
+        } else {
+            getSupportActionBar().setTitle(R.string.add_availability_title_edit);
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         invalidateOptionsMenu();
         mActiveFragment = mAddAvailabilityFragment;
