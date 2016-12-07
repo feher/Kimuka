@@ -62,6 +62,7 @@ public class AddAvailabilityFragment
     private static final int TWO_HOURS_IN_MILLIS = ONE_HOUR_IN_MILLIS * 2;
 
     private static final String ARG_AVAILABILITY_KEY = AddAvailabilityFragment.class.getSimpleName() + ".ARG_AVAILABILITY_KEY";
+    private static final String ARG_IS_READONLY = AddAvailabilityFragment.class.getSimpleName() + ".ARG_IS_READONLY";
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mAvailabilityTable;
@@ -84,10 +85,11 @@ public class AddAvailabilityFragment
     public AddAvailabilityFragment() {
     }
 
-    public static AddAvailabilityFragment newInstance(String availabilityKey) {
+    public static AddAvailabilityFragment newInstance(String availabilityKey, boolean readOnly) {
         AddAvailabilityFragment fragment = new AddAvailabilityFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_AVAILABILITY_KEY, availabilityKey);
+        bundle.putBoolean(ARG_IS_READONLY, readOnly);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -219,6 +221,20 @@ public class AddAvailabilityFragment
             mIsNewAvailability = true;
             initNewAvailability();
             updateViewsFromAvailability(mAvailability);
+        }
+
+        boolean isReadOnly = getArguments().getBoolean(ARG_IS_READONLY, true);
+        if (isReadOnly) {
+            mLocationTextView.setEnabled(false);
+            mStartDateTextView.setEnabled(false);
+            mStartTimeTextView.setEnabled(false);
+            mEndDateTextView.setEnabled(false);
+            mEndTimeTextView.setEnabled(false);
+            mActivityTextView.setEnabled(false);
+            mNeedPartnerTextView.setEnabled(false);
+            mIfNoPartnerTextView.setEnabled(false);
+            mSharedEquipmentTextView.setEnabled(false);
+            mNoteEditText.setEnabled(false);
         }
 
         return view;
