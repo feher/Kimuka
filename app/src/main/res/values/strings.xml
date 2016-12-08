@@ -32,6 +32,8 @@
     <string name="add_availability_note">Note</string>
     <string name="add_availability_note_hint">Write extra info here (max 200 characters)</string>
     <string name="add_availability_done">Done</string>
+    <string name="add_availability_send_request">Send request</string>
+    <string name="add_availability_cancel">Cancel availability</string>
     <string name="add_availability_missing_location">Location missing</string>
     <string name="add_availability_missing_activity">Activity missing</string>
     <string name="add_availability_missing_need_partner">Do you need partner?</string>

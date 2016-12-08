@@ -82,6 +82,8 @@ public class AddAvailabilityFragment
     private EditText mNoteEditText;
 
     private boolean mIsNewAvailability;
+    private boolean mIsHosting;
+    private Menu mMenu;
     private Availability mAvailability = new Availability();
 
     public AddAvailabilityFragment() {
@@ -241,12 +243,16 @@ public class AddAvailabilityFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.add_availability_menu, menu);
+        mMenu = menu;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
+            case R.id.action_send_request:
+                sendRequest();
+                break;
             case R.id.action_done:
                 addAvailability();
                 break;
@@ -346,6 +352,7 @@ public class AddAvailabilityFragment
             if (user != null) {
                 mAvailability.setUserKey(user.getKey());
                 mAvailability.setUserName(user.getName());
+                mAvailability.setHostUser(true);
                 mAvailability.setCanBelay(user.getCanBelay());
                 mAvailability.setGrades(user.getGrades());
                 mAvailability.setLocationLatitude(Double.MAX_VALUE);
@@ -424,6 +431,7 @@ public class AddAvailabilityFragment
                 if (dataSnapshot.exists()) {
                     mAvailability = dataSnapshot.getValue(Availability.class);
                     mAvailability.setKey(dataSnapshot.getKey());
+                    mIsHosting = getIsHosting(mAvailability);
                     updateViewsFromAvailability(mAvailability);
                 }
             }
@@ -433,6 +441,25 @@ public class AddAvailabilityFragment
                 // TODO: Show toast, close fragment. Report error.
             }
         });
+    }
+
+    private boolean getIsHosting(Availability availability) {
+        boolean result = false;
+        Activity activity = getActivity();
+        if (activity != null
+                && (activity instanceof MainActivity)) {
+            MainActivity mainActivity = (MainActivity) activity;
+            User user = mainActivity.getUser();
+            if (user != null) {
+                result = user.getKey().equals(availability.getUserKey())
+                        && availability.isHostUser();
+            } else {
+                // TODO: Report error
+            }
+        } else {
+            // TODO: Report error
+        }
+        return result;
     }
 
     private void updateViewsFromAvailability(Availability availability) {
@@ -478,32 +505,25 @@ public class AddAvailabilityFragment
 
         mNoteEditText.setText(availability.getNote());
 
-        Activity activity = getActivity();
-        if (activity != null
-                && (activity instanceof MainActivity)) {
-            MainActivity mainActivity = (MainActivity) activity;
-            User user = mainActivity.getUser();
-            if (user != null) {
-                boolean isEditable = user.getKey().equals(availability.getUserKey());
-                if (!isEditable) {
-                    mLocationTextView.setEnabled(false);
-                    mStartDateTextView.setEnabled(false);
-                    mStartTimeTextView.setEnabled(false);
-                    mEndDateTextView.setEnabled(false);
-                    mEndTimeTextView.setEnabled(false);
-                    mActivityTextView.setEnabled(false);
-                    mCanBelayTextView.setEnabled(false);
-                    mNeedPartnerTextView.setEnabled(false);
-                    mIfNoPartnerTextView.setEnabled(false);
-                    mSharedEquipmentTextView.setEnabled(false);
-                    mNoteEditText.setEnabled(false);
-                }
-            } else {
-                // TODO: Report error
-            }
-        } else {
-            // TODO: Report error
+        if (!mIsNewAvailability && !mIsHosting) {
+            mLocationTextView.setEnabled(false);
+            mStartDateTextView.setEnabled(false);
+            mStartTimeTextView.setEnabled(false);
+            mEndDateTextView.setEnabled(false);
+            mEndTimeTextView.setEnabled(false);
+            mActivityTextView.setEnabled(false);
+            mCanBelayTextView.setEnabled(false);
+            mNeedPartnerTextView.setEnabled(false);
+            mIfNoPartnerTextView.setEnabled(false);
+            mSharedEquipmentTextView.setEnabled(false);
+            mNoteEditText.setEnabled(false);
         }
+
+        boolean canSendRequest = (!mIsNewAvailability && !mIsHosting && availability.getJoinedAvailabilityKeys().isEmpty());
+        mMenu.findItem(R.id.action_send_request).setVisible(canSendRequest);
+
+        boolean canCancel = !mIsNewAvailability;
+        mMenu.findItem(R.id.action_cancel).setVisible(canCancel);
     }
 
     private void addAvailability() {
@@ -554,6 +574,10 @@ public class AddAvailabilityFragment
                 mainActivity.onFragmentAction(INTERACTION_DONE_TAPPED, null);
             }
         }
+    }
+
+    private void sendRequest() {
+        // TODO
     }
 
 }

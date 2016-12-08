@@ -26,6 +26,7 @@ public class Availability {
 
     private String userKey;
     private String userName;
+    private boolean isHostUser;
     private double locationLatitude;
     private double locationLongitude;
     private String locationName;
@@ -65,6 +66,14 @@ public class Availability {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public boolean isHostUser() {
+        return isHostUser;
+    }
+
+    public void setHostUser(boolean hostUser) {
+        isHostUser = hostUser;
     }
 
     public double getLocationLatitude() {
