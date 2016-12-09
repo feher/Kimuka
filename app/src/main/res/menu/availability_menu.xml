@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_done"
+        android:id="@+id/action_save_availability"
         android:title="@string/availability_done"
         android:icon="@drawable/ic_done"
         app:showAsAction="always"/>
@@ -16,9 +16,9 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/action_cancel"
+        android:id="@+id/action_cancel_availability"
         android:title="@string/availability_cancel"
-        android:icon="@drawable/ic_group_add"
+        android:icon="@drawable/ic_delete"
         app:showAsAction="always"/>
 
 </menu>

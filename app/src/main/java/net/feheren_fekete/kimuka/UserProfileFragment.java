@@ -131,7 +131,7 @@ public class UserProfileFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
-            case R.id.action_done:
+            case R.id.action_save_availability:
                 saveUserProfile();
                 break;
         }

@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ActivityDialogFragment extends DialogFragment {
 
-    public static final String INTERCATION_ACTIVITIES_SELECTED = ActivityDialogFragment.class.getSimpleName() + ".INTERCATION_ACTIVITIES_SELECTED";
+    public static final String INTERACTION_ACTIVITIES_SELECTED = ActivityDialogFragment.class.getSimpleName() + ".INTERACTION_ACTIVITIES_SELECTED";
     public static final String DATA_ACTIVITIES = ActivityDialogFragment.class.getSimpleName() + ".DATA_ACTIVITIES";
 
     private static final String ARG_SELECTED_ITEMS = "1";
@@ -62,7 +62,7 @@ public class ActivityDialogFragment extends DialogFragment {
                             FragmentInteractionListener listener = (FragmentInteractionListener) activity;
                             Bundle data = new Bundle();
                             data.putIntegerArrayList(DATA_ACTIVITIES, seletedItems);
-                            listener.onFragmentAction(INTERCATION_ACTIVITIES_SELECTED, data);
+                            listener.onFragmentAction(INTERACTION_ACTIVITIES_SELECTED, data);
                         }
                     }
                 }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

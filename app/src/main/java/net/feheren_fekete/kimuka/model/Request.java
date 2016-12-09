@@ -7,6 +7,7 @@ public class Request {
     @Exclude
     private String key;
 
+    private String availabilityKey;
     private String senderKey;
     private String senderName;
     private String receiverKey;
@@ -26,6 +27,14 @@ public class Request {
     @Exclude
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getAvailabilityKey() {
+        return availabilityKey;
+    }
+
+    public void setAvailabilityKey(String availabilityKey) {
+        this.availabilityKey = availabilityKey;
     }
 
     public String getSenderKey() {

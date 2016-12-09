@@ -71,8 +71,6 @@ public class AvailabilityFragment
     private FirebaseDatabase mDatabase;
     private DatabaseReference mAvailabilityTable;
 
-    private Menu mMenu;
-
     private TextView mLocationTextView;
     private TextView mStartDateTextView;
     private TextView mStartTimeTextView;
@@ -88,7 +86,6 @@ public class AvailabilityFragment
 
     private User mUser;
     private Availability mAvailability = new Availability();
-    private boolean mIsHosting;
     private boolean mIsNewAvailability;
 
     public AvailabilityFragment() {
@@ -238,7 +235,7 @@ public class AvailabilityFragment
         } else {
             mIsNewAvailability = true;
             initNewAvailability();
-            updateViewsFromAvailability(mAvailability);
+            updateViews();
         }
 
         return view;
@@ -247,26 +244,22 @@ public class AvailabilityFragment
     @Override
     public void onResume() {
         super.onResume();
-        MainActivity activity = getMainActivity();
-        if (activity != null) {
-            User user = activity.getUser();
-            if (user != null) {
-                mUser = user;
-            } else {
-                // TODO: Handle error. Report exception. Close fragment.
-                throw new RuntimeException();
-            }
-        } else {
-            // TODO: Handle error. Report exception. Close fragment.
-            throw new RuntimeException();
-        }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.add_availability_menu, menu);
-        mMenu = menu;
+        inflater.inflate(R.menu.availability_menu, menu);
+
+        if (mAvailability != null) {
+            boolean canSendRequest = true;
+//            boolean canSendRequest = (!mIsNewAvailability && !isUserHosting()
+//                    && mAvailability.getJoinedAvailabilityKeys().isEmpty());
+            menu.findItem(R.id.action_send_request).setVisible(canSendRequest);
+
+            boolean canCancel = (!mIsNewAvailability && isUserOwner());
+            menu.findItem(R.id.action_cancel_availability).setVisible(canCancel);
+        }
     }
 
     @Override
@@ -276,7 +269,7 @@ public class AvailabilityFragment
             case R.id.action_send_request:
                 sendRequest();
                 break;
-            case R.id.action_done:
+            case R.id.action_save_availability:
                 addAvailability();
                 break;
         }
@@ -293,7 +286,7 @@ public class AvailabilityFragment
                 mAvailability.setLocationLongitude(place.getLatLng().longitude);
                 mAvailability.setLocationAddress(place.getAddress().toString());
                 mAvailability.setLocationName(place.getName().toString());
-                updateViewsFromAvailability(mAvailability);
+                updateViews();
             }
         }
     }
@@ -315,7 +308,7 @@ public class AvailabilityFragment
             mAvailability.setEndTime(calendar.getTimeInMillis());
         }
         adjustStartAndEndTime(mIsAdjustingStartTime);
-        updateViewsFromAvailability(mAvailability);
+        updateViews();
     }
 
     @Override
@@ -333,45 +326,72 @@ public class AvailabilityFragment
             mAvailability.setEndTime(calendar.getTimeInMillis());
         }
         adjustStartAndEndTime(mIsAdjustingStartTime);
-        updateViewsFromAvailability(mAvailability);
+        updateViews();
     }
 
     @Override
     public void onActivitySelected(List<Integer> activities) {
         mAvailability.setActivity(ModelUtils.toCommaSeparatedString(activities));
-        updateViewsFromAvailability(mAvailability);
+        updateViews();
     }
 
     @Override
     public void onCanBelayItemSelected(int itemIndex) {
         mAvailability.setCanBelay(itemIndex);
-        updateViewsFromAvailability(mAvailability);
+        updateViews();
     }
 
     @Override
     public void onNeedPartnerItemSelected(int itemIndex) {
         mAvailability.setNeedPartner(itemIndex);
-        updateViewsFromAvailability(mAvailability);
+        updateViews();
     }
 
     @Override
     public void onIfNoPartnerItemSelected(int itemIndex) {
         mAvailability.setIfNoPartner(itemIndex);
-        updateViewsFromAvailability(mAvailability);
+        updateViews();
     }
 
     @Override
     public void onEquipmentSelected(List<Integer> equipments) {
         mAvailability.setSharedEquipment(ModelUtils.toCommaSeparatedString(equipments));
-        updateViewsFromAvailability(mAvailability);
+        updateViews();
+    }
+
+    private MainActivity getMainActivity() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            return (MainActivity) activity;
+        }
+        return null;
+    }
+
+    private User getUser() {
+        if (mUser == null) {
+            MainActivity activity = getMainActivity();
+            if (activity != null) {
+                User user = activity.getUser();
+                if (user != null) {
+                    mUser = user;
+                } else {
+                    // TODO: Handle error. Report exception. Close fragment.
+                    throw new RuntimeException();
+                }
+            } else {
+                // TODO: Handle error. Report exception. Close fragment.
+                throw new RuntimeException();
+            }
+        }
+        return mUser;
     }
 
     private void initNewAvailability() {
-        mAvailability.setUserKey(mUser.getKey());
-        mAvailability.setUserName(mUser.getName());
+        mAvailability.setUserKey(getUser().getKey());
+        mAvailability.setUserName(getUser().getName());
         mAvailability.setHostUser(true);
-        mAvailability.setCanBelay(mUser.getCanBelay());
-        mAvailability.setGrades(mUser.getGrades());
+        mAvailability.setCanBelay(getUser().getCanBelay());
+        mAvailability.setGrades(getUser().getGrades());
         mAvailability.setLocationLatitude(Double.MAX_VALUE);
         mAvailability.setLocationLongitude(Double.MAX_VALUE);
         long twoHoursAhead = System.currentTimeMillis() + TWO_HOURS_IN_MILLIS;
@@ -442,8 +462,7 @@ public class AvailabilityFragment
                 if (dataSnapshot.exists()) {
                     mAvailability = dataSnapshot.getValue(Availability.class);
                     mAvailability.setKey(dataSnapshot.getKey());
-                    mIsHosting = getIsHosting(mAvailability);
-                    updateViewsFromAvailability(mAvailability);
+                    updateViews();
                 }
             }
 
@@ -454,42 +473,46 @@ public class AvailabilityFragment
         });
     }
 
-    private boolean getIsHosting(Availability availability) {
-        return mUser.getKey().equals(availability.getUserKey())
-                && availability.isHostUser();
+    private boolean isUserHosting() {
+        return getUser().getKey().equals(mAvailability.getUserKey())
+                && mAvailability.isHostUser();
     }
 
-    private void updateViewsFromAvailability(Availability availability) {
-        if (availability.getLocationLatitude() != Double.MAX_VALUE) {
+    private boolean isUserOwner() {
+        return getUser().getKey().equals(mAvailability.getUserKey());
+    }
+
+    private void updateViews() {
+        if (mAvailability.getLocationLatitude() != Double.MAX_VALUE) {
             mLocationTextView.setText(
-                    availability.getLocationName() + ", "
-                            + availability.getLocationAddress()
-                            + " [" + availability.getLocationLatitude() + "," + availability.getLocationLongitude() + "]");
+                    mAvailability.getLocationName() + ", "
+                            + mAvailability.getLocationAddress()
+                            + " [" + mAvailability.getLocationLatitude() + "," + mAvailability.getLocationLongitude() + "]");
         } else {
             mLocationTextView.setText("");
         }
 
-        mStartDateTextView.setText(formatDateForTextView(availability.getStartTime()));
-        mStartTimeTextView.setText(formatTimeForTextView(availability.getStartTime()));
+        mStartDateTextView.setText(formatDateForTextView(mAvailability.getStartTime()));
+        mStartTimeTextView.setText(formatTimeForTextView(mAvailability.getStartTime()));
 
-        mEndDateTextView.setText(formatDateForTextView(availability.getEndTime()));
-        mEndTimeTextView.setText(formatTimeForTextView(availability.getEndTime()));
+        mEndDateTextView.setText(formatDateForTextView(mAvailability.getEndTime()));
+        mEndTimeTextView.setText(formatTimeForTextView(mAvailability.getEndTime()));
 
         mActivityTextView.setText(
                 ModelUtils.createActivityNameList(
                         getContext(),
-                        ModelUtils.toIntList(availability.getActivity())));
+                        ModelUtils.toIntList(mAvailability.getActivity())));
 
         mCanBelayTextView.setText(
-                ModelUtils.createCanBelayText(getContext(), availability.getCanBelay()));
+                ModelUtils.createCanBelayText(getContext(), mAvailability.getCanBelay()));
 
-        int needPartner = availability.getNeedPartner();
+        int needPartner = mAvailability.getNeedPartner();
         mNeedPartnerTextView.setText(
                 (needPartner != Availability.NEED_PARTNER_UNDEFINED)
                 ? ModelUtils.createNeedPartnerText(getContext(), needPartner)
                 : "");
 
-        int ifNoPartner = availability.getIfNoPartner();
+        int ifNoPartner = mAvailability.getIfNoPartner();
         mIfNoPartnerTextView.setText(
                 (ifNoPartner != Availability.IF_NO_PARTNER_UNDEFINED)
                 ? ModelUtils.createIfNoPartnerText(getContext(), ifNoPartner)
@@ -498,11 +521,12 @@ public class AvailabilityFragment
         mSharedEquipmentTextView.setText(
                 ModelUtils.createEquipmentNameList(
                         getContext(),
-                        ModelUtils.toIntList(availability.getSharedEquipment())));
+                        ModelUtils.toIntList(mAvailability.getSharedEquipment())));
 
-        mNoteEditText.setText(availability.getNote());
+        mNoteEditText.setText(mAvailability.getNote());
 
-        if (!mIsNewAvailability && !mIsHosting) {
+        boolean isEditable = mIsNewAvailability || (isUserHosting() && mAvailability.getJoinedAvailabilityKeys().isEmpty());
+        if (!isEditable) {
             mLocationTextView.setEnabled(false);
             mStartDateTextView.setEnabled(false);
             mStartTimeTextView.setEnabled(false);
@@ -516,19 +540,7 @@ public class AvailabilityFragment
             mNoteEditText.setEnabled(false);
         }
 
-        boolean canSendRequest = (!mIsNewAvailability && !mIsHosting && availability.getJoinedAvailabilityKeys().isEmpty());
-        mMenu.findItem(R.id.action_send_request).setVisible(canSendRequest);
-
-        boolean canCancel = !mIsNewAvailability;
-        mMenu.findItem(R.id.action_cancel).setVisible(canCancel);
-    }
-
-    private MainActivity getMainActivity() {
-        Activity activity = getActivity();
-        if (activity != null) {
-            return (MainActivity) activity;
-        }
-        return null;
+        getActivity().invalidateOptionsMenu();
     }
 
     private void addAvailability() {

@@ -55,9 +55,11 @@ public class RequestFragment
     private static final int TWO_HOURS_IN_MILLIS = ONE_HOUR_IN_MILLIS * 2;
 
     private static final String ARG_AVAILABILITY_KEY = RequestFragment.class.getSimpleName() + ".ARG_AVAILABILITY_KEY";
+    private static final String ARG_REQUEST_KEY = RequestFragment.class.getSimpleName() + ".ARG_REQUEST_KEY";
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mAvailabilityTable;
+    private DatabaseReference mRequestTable;
 
     private TextView mPartnerTextView;
     private TextView mLocationTextView;
@@ -74,14 +76,16 @@ public class RequestFragment
     private User mUser;
     private Availability mAvailability = new Availability();
     private Request mRequest = new Request();
+    private boolean mIsNewRequest;
 
     public RequestFragment() {
     }
 
-    public static RequestFragment newInstance(String availabilityKey) {
+    public static RequestFragment newInstance(String availabilityKey, String requestKey) {
         RequestFragment fragment = new RequestFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_AVAILABILITY_KEY, availabilityKey);
+        bundle.putString(ARG_REQUEST_KEY, requestKey);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -91,6 +95,7 @@ public class RequestFragment
         super.onCreate(savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance();
         mAvailabilityTable = mDatabase.getReference().child(ModelUtils.TABLE_AVAILABILITY);
+        mRequestTable = mDatabase.getReference().child(ModelUtils.TABLE_REQUEST);
     }
 
     @Override
@@ -107,6 +112,7 @@ public class RequestFragment
         mStartDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mStartDateTextView.setError(null);
                 String[] dateParts = mStartDateTextView.getText().toString().split("\\.");
                 DialogFragment newFragment = DatePickerDialogFragment.newInstance(
                         Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1]) - 1, Integer.valueOf(dateParts[2]));
@@ -118,6 +124,7 @@ public class RequestFragment
         mStartTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mStartTimeTextView.setError(null);
                 String[] timeParts = mStartTimeTextView.getText().toString().split(":");
                 DialogFragment newFragment = TimePickerDialogFragment.newInstance(
                         Integer.valueOf(timeParts[0]), Integer.valueOf(timeParts[1]));
@@ -130,6 +137,7 @@ public class RequestFragment
         mEndDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mEndDateTextView.setError(null);
                 String[] dateParts = mEndDateTextView.getText().toString().split("\\.");
                 DialogFragment newFragment = DatePickerDialogFragment.newInstance(
                         Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1]) - 1, Integer.valueOf(dateParts[2]));
@@ -141,6 +149,7 @@ public class RequestFragment
         mEndTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mEndTimeTextView.setError(null);
                 String[] timeParts = mEndTimeTextView.getText().toString().split(":");
                 DialogFragment newFragment = TimePickerDialogFragment.newInstance(
                         Integer.valueOf(timeParts[0]), Integer.valueOf(timeParts[1]));
@@ -184,8 +193,13 @@ public class RequestFragment
         mNoteEditText.addTextChangedListener(mNoteTextWatcher);
 
         String availabilityKey = getArguments().getString(ARG_AVAILABILITY_KEY, "");
+        String requestKey = getArguments().getString(ARG_REQUEST_KEY, "");
         if (!availabilityKey.isEmpty()) {
+            mIsNewRequest = true;
             loadAvailabilityAndInitViews(availabilityKey);
+        } else if (!requestKey.isEmpty()) {
+            mIsNewRequest = false;
+            loadRequestAndInitViews(requestKey);
         } else {
             // TODO: Handle error.
             throw new RuntimeException();
@@ -195,29 +209,29 @@ public class RequestFragment
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Activity activity = getActivity();
-        if (activity != null
-                && (activity instanceof MainActivity)) {
-            MainActivity mainActivity = (MainActivity) activity;
-            User user = mainActivity.getUser();
-            if (user != null) {
-                mUser = user;
-            } else {
-                // TODO: Handle error. Report exception. Close fragment.
-                throw new RuntimeException();
-            }
-        } else {
-            // TODO: Handle error. Report exception. Close fragment.
-            throw new RuntimeException();
-        }
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.request_menu, menu);
+        if (mRequest != null) {
+            if (mIsNewRequest) {
+                menu.findItem(R.id.action_send_request).setVisible(true);
+                menu.findItem(R.id.action_accept_request).setVisible(false);
+                menu.findItem(R.id.action_reject_request).setVisible(false);
+                menu.findItem(R.id.action_cancel_request).setVisible(false);
+            } else {
+                if (isUserSender()) {
+                    menu.findItem(R.id.action_send_request).setVisible(false);
+                    menu.findItem(R.id.action_accept_request).setVisible(false);
+                    menu.findItem(R.id.action_reject_request).setVisible(false);
+                    menu.findItem(R.id.action_cancel_request).setVisible(true);
+                } else if (isUserReceiver()) {
+                    menu.findItem(R.id.action_send_request).setVisible(false);
+                    menu.findItem(R.id.action_accept_request).setVisible(true);
+                    menu.findItem(R.id.action_reject_request).setVisible(true);
+                    menu.findItem(R.id.action_cancel_request).setVisible(false);
+                }
+            }
+        }
     }
 
     @Override
@@ -302,6 +316,33 @@ public class RequestFragment
         }
     };
 
+    private MainActivity getMainActivity() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            return (MainActivity) activity;
+        }
+        return null;
+    }
+
+    private User getUser() {
+        if (mUser == null) {
+            MainActivity activity = getMainActivity();
+            if (activity != null) {
+                User user = activity.getUser();
+                if (user != null) {
+                    mUser = user;
+                } else {
+                    // TODO: Handle error. Report exception. Close fragment.
+                    throw new RuntimeException();
+                }
+            } else {
+                // TODO: Handle error. Report exception. Close fragment.
+                throw new RuntimeException();
+            }
+        }
+        return mUser;
+    }
+
     private void adjustStartAndEndTime(boolean isTriggeredByStartTime) {
         long startTime = mRequest.getStartTime();
         long endTime = mRequest.getEndTime();
@@ -343,14 +384,15 @@ public class RequestFragment
                 if (dataSnapshot.exists()) {
                     mAvailability = dataSnapshot.getValue(Availability.class);
                     mAvailability.setKey(dataSnapshot.getKey());
-                    mRequest.setSenderKey(mUser.getKey());
-                    mRequest.setSenderName(mUser.getName());
+                    mRequest.setAvailabilityKey(mAvailability.getKey());
+                    mRequest.setSenderKey(getUser().getKey());
+                    mRequest.setSenderName(getUser().getName());
                     mRequest.setReceiverKey(mAvailability.getUserKey());
                     mRequest.setReceiverName(mAvailability.getUserName());
                     mRequest.setStartTime(mAvailability.getStartTime());
                     mRequest.setEndTime(mAvailability.getEndTime());
                     mRequest.setActivity(mAvailability.getActivity());
-                    mRequest.setCanBelay(mUser.getCanBelay());
+                    mRequest.setCanBelay(getUser().getCanBelay());
                     mRequest.setSharedEquipment("");
                     mRequest.setNote("");
                     updateViews();
@@ -362,6 +404,45 @@ public class RequestFragment
                 // TODO: Show toast, close fragment. Report error.
             }
         });
+    }
+
+    private void loadRequestAndInitViews(String requestKey) {
+        mRequestTable.child(requestKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    mRequest = dataSnapshot.getValue(Request.class);
+                    mRequest.setKey(dataSnapshot.getKey());
+                    mAvailabilityTable.child(mRequest.getAvailabilityKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                mAvailability = dataSnapshot.getValue(Availability.class);
+                                mAvailability.setKey(dataSnapshot.getKey());
+                                updateViews();
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // TODO: Handle error.
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // TODO: Show toast, close fragment. Report error.
+            }
+        });
+    }
+
+    private boolean isUserSender() {
+        return mRequest.getSenderKey().equals(getUser().getKey());
+    }
+
+    private boolean isUserReceiver() {
+        return mRequest.getReceiverKey().equals(getUser().getKey());
     }
 
     private void updateViews() {
@@ -397,6 +478,21 @@ public class RequestFragment
                         ModelUtils.toIntList(mRequest.getSharedEquipment())));
 
         mNoteEditText.setText(mRequest.getNote());
+
+        if (!mIsNewRequest) {
+            mPartnerTextView.setEnabled(false);
+            mLocationTextView.setEnabled(false);
+            mStartDateTextView.setEnabled(false);
+            mStartTimeTextView.setEnabled(false);
+            mEndDateTextView.setEnabled(false);
+            mEndTimeTextView.setEnabled(false);
+            mActivityTextView.setEnabled(false);
+            mCanBelayTextView.setEnabled(false);
+            mSharedEquipmentTextView.setEnabled(false);
+            mNoteEditText.setEnabled(false);
+        }
+
+        getActivity().invalidateOptionsMenu();
     }
 
     private boolean isActivityOverlapping() {
@@ -410,23 +506,20 @@ public class RequestFragment
         return false;
     }
 
-    private boolean isTimeBetween(long minTime, long maxTime, long time) {
-        return minTime <= time && time <= maxTime;
+    private boolean isTimeOverlapping() {
+        long startTimeA = mAvailability.getStartTime();
+        long endTimeA = mAvailability.getEndTime();
+        long startTimeR = mRequest.getStartTime();
+        long endTimeR = mRequest.getEndTime();
+        return (startTimeR < endTimeA) && (startTimeA < endTimeR);
     }
 
     private void sendRequest() {
-        Activity activity = getActivity();
+        MainActivity activity = getMainActivity();
         if (activity != null) {
-            MainActivity mainActivity = (MainActivity) activity;
-            if (!isTimeBetween(mAvailability.getStartTime(), mAvailability.getEndTime(), mRequest.getStartTime())) {
+            if (!isTimeOverlapping()) {
                 Toast.makeText(activity, R.string.request_error_bad_time, Toast.LENGTH_SHORT).show();
-                mStartDateTextView.setError("");
                 mStartTimeTextView.setError("");
-                return;
-            }
-            if (!isTimeBetween(mAvailability.getStartTime(), mAvailability.getEndTime(), mRequest.getEndTime())) {
-                Toast.makeText(activity, R.string.request_error_bad_time, Toast.LENGTH_SHORT).show();
-                mEndDateTextView.setError("");
                 mEndTimeTextView.setError("");
                 return;
             }
@@ -441,11 +534,10 @@ public class RequestFragment
                 return;
             }
 
-            DatabaseReference requestTable = mDatabase.getReference().child(ModelUtils.TABLE_REQUEST);
-            DatabaseReference requestRef = requestTable.push();
+            DatabaseReference requestRef = mRequestTable.push();
             requestRef.setValue(mRequest);
 
-            mainActivity.onFragmentAction(INTERACTION_SEND_TAPPED, new Bundle());
+            activity.onFragmentAction(INTERACTION_SEND_TAPPED, new Bundle());
         }
     }
 

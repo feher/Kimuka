@@ -14,7 +14,7 @@ import net.feheren_fekete.kimuka.R;
 
 public class NeedPartnerDialogFragment extends DialogFragment {
 
-    public static final String INTERCATION_ITEM_SELECTED = NeedPartnerDialogFragment.class.getSimpleName() + ".INTERCATION_ITEM_SELECTED";
+    public static final String INTERACTION_ITEM_SELECTED = NeedPartnerDialogFragment.class.getSimpleName() + ".INTERACTION_ITEM_SELECTED";
     public static final String DATA_ITEM_INDEX = NeedPartnerDialogFragment.class.getSimpleName() + ".DATA_ITEM_INDEX";
 
     public interface Listener {
@@ -39,7 +39,7 @@ public class NeedPartnerDialogFragment extends DialogFragment {
                             FragmentInteractionListener listener = (FragmentInteractionListener) activity;
                             Bundle data = new Bundle();
                             data.putInt(DATA_ITEM_INDEX, i);
-                            listener.onFragmentAction(INTERCATION_ITEM_SELECTED, data);
+                            listener.onFragmentAction(INTERACTION_ITEM_SELECTED, data);
                         }
                     }
                 }).create();

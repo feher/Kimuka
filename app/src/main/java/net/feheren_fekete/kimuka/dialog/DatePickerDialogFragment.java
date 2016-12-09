@@ -14,7 +14,7 @@ import net.feheren_fekete.kimuka.FragmentInteractionListener;
 public class DatePickerDialogFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
-    public static final String INTERCATION_DATE_PICKED = DatePickerDialogFragment.class.getSimpleName() + ".INTERCATION_DATE_PICKED";
+    public static final String INTERACTION_DATE_PICKED = DatePickerDialogFragment.class.getSimpleName() + ".INTERACTION_DATE_PICKED";
     public static final String DATA_YEAR = DatePickerDialogFragment.class.getSimpleName() + ".DATA_YEAR";
     public static final String DATA_MONTH = DatePickerDialogFragment.class.getSimpleName() + ".DATA_MONTH";
     public static final String DATA_DAY_OF_MONTH = DatePickerDialogFragment.class.getSimpleName() + ".DATA_DAY_OF_MONTH";
@@ -50,7 +50,7 @@ public class DatePickerDialogFragment extends DialogFragment
             data.putInt(DATA_YEAR, year);
             data.putInt(DATA_MONTH, month);
             data.putInt(DATA_DAY_OF_MONTH, dayOfMonth);
-            listener.onFragmentAction(INTERCATION_DATE_PICKED, data);
+            listener.onFragmentAction(INTERACTION_DATE_PICKED, data);
         }
     }
 

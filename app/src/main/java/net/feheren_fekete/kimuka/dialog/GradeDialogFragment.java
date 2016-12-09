@@ -18,7 +18,7 @@ public class GradeDialogFragment extends DialogFragment {
     public static final int TYPE_FREE_CLIMBING = 0;
     public static final int TYPE_BOULDERING = 1;
 
-    public static final String INTERCATION_GRADE_SELECTED = GradeDialogFragment.class.getSimpleName() + ".INTERCATION_GRADE_SELECTED";
+    public static final String INTERACTION_GRADE_SELECTED = GradeDialogFragment.class.getSimpleName() + ".INTERACTION_GRADE_SELECTED";
     public static final String DATA_GRADE = GradeDialogFragment.class.getSimpleName() + ".DATA_GRADE";
 
     private static final String ARG_TYPE = GradeDialogFragment.class.getSimpleName() + ".ARG_TYPE";
@@ -58,7 +58,7 @@ public class GradeDialogFragment extends DialogFragment {
                                     (type == TYPE_FREE_CLIMBING)
                                             ? Grading.sYdsNameMap.get(i).first
                                             : Grading.sFontenblauNameMap.get(i).first);
-                            listener.onFragmentAction(INTERCATION_GRADE_SELECTED, data);
+                            listener.onFragmentAction(INTERACTION_GRADE_SELECTED, data);
                         }
                     }
                 }).create();

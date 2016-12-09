@@ -15,7 +15,7 @@ import net.feheren_fekete.kimuka.FragmentInteractionListener;
 public class TimePickerDialogFragment extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener {
 
-    public static final String INTERCATION_TIME_PICKED = TimePickerDialogFragment.class.getSimpleName() + ".INTERCATION_TIME_PICKED";
+    public static final String INTERACTION_TIME_PICKED = TimePickerDialogFragment.class.getSimpleName() + ".INTERACTION_TIME_PICKED";
     public static final String DATA_HOUR_OF_DAY = TimePickerDialogFragment.class.getSimpleName() + ".DATA_HOUR_OF_DAY";
     public static final String DATA_MINUTE = TimePickerDialogFragment.class.getSimpleName() + ".DATA_MINUTE";
 
@@ -49,7 +49,7 @@ public class TimePickerDialogFragment extends DialogFragment
             Bundle data = new Bundle();
             data.putInt(DATA_HOUR_OF_DAY, hourOfDay);
             data.putInt(DATA_MINUTE, minute);
-            listener.onFragmentAction(INTERCATION_TIME_PICKED, data);
+            listener.onFragmentAction(INTERACTION_TIME_PICKED, data);
         }
     }
 

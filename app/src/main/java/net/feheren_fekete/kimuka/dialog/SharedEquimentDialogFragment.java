@@ -18,7 +18,7 @@ import java.util.List;
 
 public class SharedEquimentDialogFragment extends DialogFragment {
 
-    public static final String INTERCATION_EQUIPMENTS_SELECTED = SharedEquimentDialogFragment.class.getSimpleName() + ".INTERCATION_EQUIPMENTS_SELECTED";
+    public static final String INTERACTION_EQUIPMENTS_SELECTED = SharedEquimentDialogFragment.class.getSimpleName() + ".INTERACTION_EQUIPMENTS_SELECTED";
     public static final String DATA_EQUIPMENTS = SharedEquimentDialogFragment.class.getSimpleName() + ".DATA_EQUIPMENTS";
 
     private static final String ARG_SELECTED_ITEMS = "1";
@@ -64,7 +64,7 @@ public class SharedEquimentDialogFragment extends DialogFragment {
                             Bundle data = new Bundle();
                             Collections.sort(selectedItems);
                             data.putIntegerArrayList(DATA_EQUIPMENTS, selectedItems);
-                            listener.onFragmentAction(INTERCATION_EQUIPMENTS_SELECTED, data);
+                            listener.onFragmentAction(INTERACTION_EQUIPMENTS_SELECTED, data);
                         }
                     }
                 }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

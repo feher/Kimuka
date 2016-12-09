@@ -6,7 +6,25 @@
     <item
         android:id="@+id/action_send_request"
         android:title="@string/request_send_request"
-        android:icon="@drawable/ic_group_add"
+        android:icon="@drawable/ic_send"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_cancel_request"
+        android:title="@string/request_cancel_request"
+        android:icon="@drawable/ic_delete"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_accept_request"
+        android:title="@string/request_accept_request"
+        android:icon="@drawable/ic_thumb_up"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_reject_request"
+        android:title="@string/request_reject_request"
+        android:icon="@drawable/ic_thumb_down"
         app:showAsAction="always"/>
 
 </menu>
