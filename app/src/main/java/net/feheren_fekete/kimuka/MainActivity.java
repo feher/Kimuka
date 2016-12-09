@@ -310,9 +310,9 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.fragment_container, mAvailabilityFragment, "AvailabilityFragment")
                 .commit();
         if (availabilityKey.isEmpty()) {
-            getSupportActionBar().setTitle(R.string.add_availability_title_new);
+            getSupportActionBar().setTitle(R.string.availability_title_new);
         } else {
-            getSupportActionBar().setTitle(R.string.add_availability_title_edit);
+            getSupportActionBar().setTitle(R.string.availability_title_edit);
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         invalidateOptionsMenu();

@@ -5,19 +5,19 @@
 
     <item
         android:id="@+id/action_done"
-        android:title="@string/add_availability_done"
+        android:title="@string/availability_done"
         android:icon="@drawable/ic_done"
         app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_send_request"
-        android:title="@string/add_availability_send_request"
+        android:title="@string/availability_send_request"
         android:icon="@drawable/ic_group_add"
         app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_cancel"
-        android:title="@string/add_availability_cancel"
+        android:title="@string/availability_cancel"
         android:icon="@drawable/ic_group_add"
         app:showAsAction="always"/>
 

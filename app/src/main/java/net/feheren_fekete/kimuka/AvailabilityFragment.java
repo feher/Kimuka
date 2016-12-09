@@ -536,24 +536,24 @@ public class AvailabilityFragment
         if (activity != null) {
             if (mAvailability.getLocationLatitude() == Double.MAX_VALUE
                     || mAvailability.getLocationLongitude() == Double.MAX_VALUE) {
-                Toast.makeText(activity, R.string.add_availability_missing_location, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.availability_missing_location, Toast.LENGTH_SHORT).show();
                 mLocationTextView.setError("");
                 return;
             }
             if (mAvailability.getActivity().isEmpty()) {
-                Toast.makeText(activity, R.string.add_availability_missing_activity, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.availability_missing_activity, Toast.LENGTH_SHORT).show();
                 mActivityTextView.setError("");
                 return;
             }
             if (mAvailability.getNeedPartner() == Availability.NEED_PARTNER_UNDEFINED) {
-                Toast.makeText(activity, R.string.add_availability_missing_need_partner, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.availability_missing_need_partner, Toast.LENGTH_SHORT).show();
                 mNeedPartnerTextView.setError("");
                 return;
             }
 
             if (mAvailability.getNeedPartner() == Availability.NEED_PARTNER_YES) {
                 if (mAvailability.getIfNoPartner() == Availability.IF_NO_PARTNER_UNDEFINED) {
-                    Toast.makeText(activity, R.string.add_availability_missing_no_partner, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.availability_missing_no_partner, Toast.LENGTH_SHORT).show();
                     mIfNoPartnerTextView.setError("");
                     return;
                 }

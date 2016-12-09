@@ -13,7 +13,7 @@
 
         <TextView
             android:id="@+id/location_title"
-            android:text="@string/add_availability_location"
+            android:text="@string/availability_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
@@ -24,11 +24,11 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:padding="5dp"
-            android:hint="@string/add_availability_location_hint"/>
+            android:hint="@string/availability_location_hint"/>
 
         <TextView
             android:id="@+id/start_datetime_title"
-            android:text="@string/add_availability_start_time"
+            android:text="@string/availability_start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
@@ -54,7 +54,7 @@
 
         <TextView
             android:id="@+id/end_datetime_title"
-            android:text="@string/add_availability_end_time"
+            android:text="@string/availability_end_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
@@ -80,7 +80,7 @@
 
         <TextView
             android:id="@+id/activity_title"
-            android:text="@string/add_availability_activity"
+            android:text="@string/availability_activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -91,11 +91,11 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:padding="5dp"
-            android:hint="@string/add_availability_activity_hint"/>
+            android:hint="@string/availability_activity_hint"/>
 
         <TextView
             android:id="@+id/can_belay_title"
-            android:text="@string/add_availability_can_belay"
+            android:text="@string/availability_can_belay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -106,11 +106,11 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:padding="5dp"
-            android:hint="@string/add_availability_can_belay_hint"/>
+            android:hint="@string/availability_can_belay_hint"/>
 
         <TextView
             android:id="@+id/need_partner_title"
-            android:text="@string/add_availability_need_partner"
+            android:text="@string/availability_need_partner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -121,11 +121,11 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:padding="5dp"
-            android:hint="@string/add_availability_need_partner_hint"/>
+            android:hint="@string/availability_need_partner_hint"/>
 
         <TextView
             android:id="@+id/if_no_partner_title"
-            android:text="@string/add_availability_no_partner"
+            android:text="@string/availability_no_partner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -136,11 +136,11 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:padding="5dp"
-            android:hint="@string/add_availability_no_partner_hint"/>
+            android:hint="@string/availability_no_partner_hint"/>
 
         <TextView
             android:id="@+id/shared_equipment_title"
-            android:text="@string/add_availability_shared_equipment"
+            android:text="@string/availability_shared_equipment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -151,11 +151,11 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:padding="5dp"
-            android:hint="@string/add_availability_shared_equipment_hint"/>
+            android:hint="@string/availability_shared_equipment_hint"/>
 
         <TextView
             android:id="@+id/note_title"
-            android:text="@string/add_availability_note"
+            android:text="@string/availability_note"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -168,7 +168,7 @@
             android:ems="10"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:maxLength="200"
-            android:hint="@string/add_availability_note_hint"
+            android:hint="@string/availability_note_hint"
             android:gravity="top|start"
             />
 

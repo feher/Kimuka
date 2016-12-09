@@ -140,7 +140,7 @@
 
         <TextView
             android:id="@+id/note_title"
-            android:text="@string/add_availability_note"
+            android:text="@string/availability_note"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
