@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
     private SignInFragment mSignInFragment;
     private UserProfileFragment mUserProfileFragment;
     private AvailabilitiesFragment mAvailabilitiesFragment;
-    private AddAvailabilityFragment mAddAvailabilityFragment;
+    private AvailabilityFragment mAvailabilityFragment;
     private RequestFragment mRequestFragment;
     private Fragment mActiveFragment;
 
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (mActiveFragment == mAddAvailabilityFragment) {
+        if (mActiveFragment == mAvailabilityFragment) {
             showAvailabilitiesFragment();
         } else if (mActiveFragment == mUserProfileFragment) {
             showAvailabilitiesFragment();
@@ -127,10 +127,10 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentAction(String action, Bundle data) {
         if (UserProfileFragment.INTERACTION_DONE_TAPPED.equals(action)) {
             showAvailabilitiesFragment();
-        } else if (AddAvailabilityFragment.INTERACTION_DONE_TAPPED.equals(action)) {
+        } else if (AvailabilityFragment.INTERACTION_DONE_TAPPED.equals(action)) {
             showAvailabilitiesFragment();
-        } else if (AddAvailabilityFragment.INTERACTION_SEND_REQUEST_TAPPED.equals(action)) {
-            showRequestFragment(data.getString(AddAvailabilityFragment.DATA_AVAILABILITY_KEY), "");
+        } else if (AvailabilityFragment.INTERACTION_SEND_REQUEST_TAPPED.equals(action)) {
+            showRequestFragment(data.getString(AvailabilityFragment.DATA_AVAILABILITY_KEY), "");
         } else if (RequestFragment.INTERACTION_SEND_TAPPED.equals(action)) {
             showAvailabilitiesFragment();
         } else if (AvailabilitiesFragment.INTERACTION_ADD_AVAILABILITY_TAPPED.equals(action)) {
@@ -302,12 +302,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showAddAvailabilityFragment(String availabilityKey) {
-        if (mAddAvailabilityFragment == null) {
-            mAddAvailabilityFragment = AddAvailabilityFragment.newInstance(availabilityKey);
+        if (mAvailabilityFragment == null) {
+            mAvailabilityFragment = AvailabilityFragment.newInstance(availabilityKey);
         }
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, mAddAvailabilityFragment, "AddAvailabilityFragment")
+                .replace(R.id.fragment_container, mAvailabilityFragment, "AvailabilityFragment")
                 .commit();
         if (availabilityKey.isEmpty()) {
             getSupportActionBar().setTitle(R.string.add_availability_title_new);
@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         invalidateOptionsMenu();
-        mActiveFragment = mAddAvailabilityFragment;
+        mActiveFragment = mAvailabilityFragment;
     }
 
     private void showRequestFragment(String availabilityKey, String requestKey) {
@@ -334,7 +334,7 @@ public class MainActivity extends AppCompatActivity
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         invalidateOptionsMenu();
-        mActiveFragment = mAddAvailabilityFragment;
+        mActiveFragment = mAvailabilityFragment;
     }
 
 }

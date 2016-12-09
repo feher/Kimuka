@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class AddAvailabilityFragment
+public class AvailabilityFragment
         extends
                 Fragment
         implements
@@ -55,18 +55,18 @@ public class AddAvailabilityFragment
                 NeedPartnerDialogFragment.Listener,
                 CanBelayDialogFragment.Listener {
 
-    private static final String TAG = AddAvailabilityFragment.class.getSimpleName();
+    private static final String TAG = AvailabilityFragment.class.getSimpleName();
 
-    public static final String INTERACTION_DONE_TAPPED = AddAvailabilityFragment.class.getSimpleName() + ".INTERACTION_DONE_TAPPED";
-    public static final String INTERACTION_SEND_REQUEST_TAPPED = AddAvailabilityFragment.class.getSimpleName() + ".INTERACTION_SEND_REQUEST_TAPPED";
+    public static final String INTERACTION_DONE_TAPPED = AvailabilityFragment.class.getSimpleName() + ".INTERACTION_DONE_TAPPED";
+    public static final String INTERACTION_SEND_REQUEST_TAPPED = AvailabilityFragment.class.getSimpleName() + ".INTERACTION_SEND_REQUEST_TAPPED";
 
-    public static final String DATA_AVAILABILITY_KEY = AddAvailabilityFragment.class.getSimpleName() + ".DATA_AVAILABILITY_KEY";
+    public static final String DATA_AVAILABILITY_KEY = AvailabilityFragment.class.getSimpleName() + ".DATA_AVAILABILITY_KEY";
 
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int ONE_HOUR_IN_MILLIS = 1000 * 60 * 60;
     private static final int TWO_HOURS_IN_MILLIS = ONE_HOUR_IN_MILLIS * 2;
 
-    private static final String ARG_AVAILABILITY_KEY = AddAvailabilityFragment.class.getSimpleName() + ".ARG_AVAILABILITY_KEY";
+    private static final String ARG_AVAILABILITY_KEY = AvailabilityFragment.class.getSimpleName() + ".ARG_AVAILABILITY_KEY";
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mAvailabilityTable;
@@ -91,11 +91,11 @@ public class AddAvailabilityFragment
     private boolean mIsHosting;
     private boolean mIsNewAvailability;
 
-    public AddAvailabilityFragment() {
+    public AvailabilityFragment() {
     }
 
-    public static AddAvailabilityFragment newInstance(String availabilityKey) {
-        AddAvailabilityFragment fragment = new AddAvailabilityFragment();
+    public static AvailabilityFragment newInstance(String availabilityKey) {
+        AvailabilityFragment fragment = new AvailabilityFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_AVAILABILITY_KEY, availabilityKey);
         fragment.setArguments(bundle);
@@ -114,7 +114,7 @@ public class AddAvailabilityFragment
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
-        View view = inflater.inflate(R.layout.fragment_add_availability, container, false);
+        View view = inflater.inflate(R.layout.fragment_availability, container, false);
 
         mLocationTextView = (TextView) view.findViewById(R.id.location_value);
         mLocationTextView.setOnClickListener(new View.OnClickListener() {
