@@ -1,4 +1,4 @@
-package net.feheren_fekete.kimuka.availabilities;
+package net.feheren_fekete.kimuka.availabilitylist;
 
 
 import android.app.Activity;
@@ -24,24 +24,24 @@ import net.feheren_fekete.kimuka.model.Availability;
 import net.feheren_fekete.kimuka.model.ModelUtils;
 
 
-public class AvailabilitiesFragment extends Fragment implements AvailabilitiesAdapter.Listener {
+public class AvailabilityListFragment extends Fragment implements AvailabilityListAdapter.Listener {
 
-    public static final String INTERACTION_ADD_AVAILABILITY_TAPPED = AvailabilitiesFragment.class.getSimpleName() + ".INTERACTION_ADD_AVAILABILITY_TAPPED";
-    public static final String INTERACTION_AVAILABILITY_TAPPED = AvailabilitiesFragment.class.getSimpleName() + ".INTERACTION_AVAILABILITY_TAPPED";
+    public static final String INTERACTION_ADD_AVAILABILITY_TAPPED = AvailabilityListFragment.class.getSimpleName() + ".INTERACTION_ADD_AVAILABILITY_TAPPED";
+    public static final String INTERACTION_AVAILABILITY_TAPPED = AvailabilityListFragment.class.getSimpleName() + ".INTERACTION_AVAILABILITY_TAPPED";
 
-    public static final String DATA_AVAILABILITY_KEY = AvailabilitiesFragment.class.getSimpleName() + ".DATA_AVAILABILITY_KEY";
+    public static final String DATA_AVAILABILITY_KEY = AvailabilityListFragment.class.getSimpleName() + ".DATA_AVAILABILITY_KEY";
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mAvailabilityTable;
     private Query mSortedAvailabilityTable;
     private RecyclerView mRecyclerView;
-    private AvailabilitiesAdapter mAdapter;
+    private AvailabilityListAdapter mAdapter;
 
-    public AvailabilitiesFragment() {
+    public AvailabilityListFragment() {
     }
 
-    public static AvailabilitiesFragment newInstance() {
-        AvailabilitiesFragment fragment = new AvailabilitiesFragment();
+    public static AvailabilityListFragment newInstance() {
+        AvailabilityListFragment fragment = new AvailabilityListFragment();
         return fragment;
     }
 
@@ -52,13 +52,13 @@ public class AvailabilitiesFragment extends Fragment implements AvailabilitiesAd
         mAvailabilityTable = mDatabase.getReference().child(ModelUtils.TABLE_AVAILABILITY);
         mSortedAvailabilityTable = mAvailabilityTable.orderByChild("startTime").limitToLast(100);
         mSortedAvailabilityTable.addChildEventListener(mChildEventListener);
-        mAdapter = new AvailabilitiesAdapter(getContext(), this);
+        mAdapter = new AvailabilityListAdapter(getContext(), this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_availabilities, container, false);
+        View view = inflater.inflate(R.layout.fragment_availability_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setAdapter(mAdapter);

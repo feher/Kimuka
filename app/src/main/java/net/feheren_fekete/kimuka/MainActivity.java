@@ -21,7 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import net.feheren_fekete.kimuka.availabilities.AvailabilitiesFragment;
+import net.feheren_fekete.kimuka.availabilitylist.AvailabilityListFragment;
 import net.feheren_fekete.kimuka.dialog.ActivityDialogFragment;
 import net.feheren_fekete.kimuka.dialog.CanBelayDialogFragment;
 import net.feheren_fekete.kimuka.dialog.DatePickerDialogFragment;
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
 
     private SignInFragment mSignInFragment;
     private UserProfileFragment mUserProfileFragment;
-    private AvailabilitiesFragment mAvailabilitiesFragment;
+    private AvailabilityListFragment mAvailabilityListFragment;
     private AvailabilityFragment mAvailabilityFragment;
     private RequestFragment mRequestFragment;
     private Fragment mActiveFragment;
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        if (mActiveFragment == mAvailabilitiesFragment) {
+        if (mActiveFragment == mAvailabilityListFragment) {
             menu.findItem(R.id.action_user_profile).setVisible(true);
             menu.findItem(R.id.action_sign_out).setVisible(true);
         } else {
@@ -133,10 +133,10 @@ public class MainActivity extends AppCompatActivity
             showRequestFragment(data.getString(AvailabilityFragment.DATA_AVAILABILITY_KEY), "");
         } else if (RequestFragment.INTERACTION_SEND_TAPPED.equals(action)) {
             showAvailabilitiesFragment();
-        } else if (AvailabilitiesFragment.INTERACTION_ADD_AVAILABILITY_TAPPED.equals(action)) {
+        } else if (AvailabilityListFragment.INTERACTION_ADD_AVAILABILITY_TAPPED.equals(action)) {
             showAddAvailabilityFragment("");
-        } else if (AvailabilitiesFragment.INTERACTION_AVAILABILITY_TAPPED.equals(action)) {
-            showAddAvailabilityFragment(data.getString(AvailabilitiesFragment.DATA_AVAILABILITY_KEY));
+        } else if (AvailabilityListFragment.INTERACTION_AVAILABILITY_TAPPED.equals(action)) {
+            showAddAvailabilityFragment(data.getString(AvailabilityListFragment.DATA_AVAILABILITY_KEY));
         } else if (TimePickerDialogFragment.INTERCATION_TIME_PICKED.equals(action)
                 && mActiveFragment instanceof TimePickerDialogFragment.Listener) {
             TimePickerDialogFragment.Listener listener = (TimePickerDialogFragment.Listener) mActiveFragment;
@@ -288,17 +288,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showAvailabilitiesFragment() {
-        if (mAvailabilitiesFragment == null) {
-            mAvailabilitiesFragment = AvailabilitiesFragment.newInstance();
+        if (mAvailabilityListFragment == null) {
+            mAvailabilityListFragment = AvailabilityListFragment.newInstance();
         }
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, mAvailabilitiesFragment, "AvailabilitiesFragment")
+                .replace(R.id.fragment_container, mAvailabilityListFragment, "AvailabilityListFragment")
                 .commit();
-        getSupportActionBar().setTitle(R.string.availabilities_title);
+        getSupportActionBar().setTitle(R.string.availability_list_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         invalidateOptionsMenu();
-        mActiveFragment = mAvailabilitiesFragment;
+        mActiveFragment = mAvailabilityListFragment;
     }
 
     private void showAddAvailabilityFragment(String availabilityKey) {

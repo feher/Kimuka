@@ -1,4 +1,4 @@
-package net.feheren_fekete.kimuka.availabilities;
+package net.feheren_fekete.kimuka.availabilitylist;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -19,7 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAdapter.ViewHolder> {
+public class AvailabilityListAdapter extends RecyclerView.Adapter<AvailabilityListAdapter.ViewHolder> {
 
     public interface Listener {
         void onItemClicked(Availability availability);
@@ -46,7 +46,7 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
         }
     }
 
-    public AvailabilitiesAdapter(Context context, Listener listener) {
+    public AvailabilityListAdapter(Context context, Listener listener) {
         mContext = context;
         mListener = listener;
     }
@@ -90,14 +90,14 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
     }
 
     @Override
-    public AvailabilitiesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AvailabilityListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.availability_item, parent, false);
         return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(AvailabilitiesAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(AvailabilityListAdapter.ViewHolder holder, final int position) {
         final Availability availability = mAvailabilities.get(position);
 
         long startTime = availability.getStartTime();

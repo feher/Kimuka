@@ -10,7 +10,7 @@
 
     <string name="sign_in_title">Sign in</string>
 
-    <string name="availabilities_title">Available buddies</string>
+    <string name="availability_list_title">Available buddies</string>
 
     <string name="availability_title_new">New availability</string>
     <string name="availability_title_edit">Edit availability</string>
