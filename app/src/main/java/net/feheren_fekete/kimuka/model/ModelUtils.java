@@ -9,8 +9,9 @@ import java.util.List;
 
 public class ModelUtils {
 
-    public static final String TABLE_AVAILABILITIES = "availability";
-    public static final String TABLE_USERS = "users";
+    public static final String TABLE_AVAILABILITY = "availability";
+    public static final String TABLE_REQUEST = "request";
+    public static final String TABLE_USER = "users";
 
     public static ArrayList<Integer> toIntList(String stringListOfInts) throws NumberFormatException {
         String[] parts = stringListOfInts.split(",");

@@ -166,11 +166,11 @@ public class UserProfileFragment
                 user.setNote(mNoteTextView.getText().toString().trim());
 
                 DatabaseReference userRef = FirebaseDatabase.getInstance()
-                        .getReference(ModelUtils.TABLE_USERS)
+                        .getReference(ModelUtils.TABLE_USER)
                         .child(user.getKey());
                 userRef.setValue(user);
 
-                mainActivity.onFragmentAction(INTERACTION_DONE_TAPPED, null);
+                mainActivity.onFragmentAction(INTERACTION_DONE_TAPPED, new Bundle());
             }
         }
     }

@@ -58,6 +58,9 @@ public class AddAvailabilityFragment
     private static final String TAG = AddAvailabilityFragment.class.getSimpleName();
 
     public static final String INTERACTION_DONE_TAPPED = AddAvailabilityFragment.class.getSimpleName() + ".INTERACTION_DONE_TAPPED";
+    public static final String INTERACTION_SEND_REQUEST_TAPPED = AddAvailabilityFragment.class.getSimpleName() + ".INTERACTION_SEND_REQUEST_TAPPED";
+
+    public static final String DATA_AVAILABILITY_KEY = AddAvailabilityFragment.class.getSimpleName() + ".DATA_AVAILABILITY_KEY";
 
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int ONE_HOUR_IN_MILLIS = 1000 * 60 * 60;
@@ -67,6 +70,8 @@ public class AddAvailabilityFragment
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mAvailabilityTable;
+
+    private Menu mMenu;
 
     private TextView mLocationTextView;
     private TextView mStartDateTextView;
@@ -81,10 +86,10 @@ public class AddAvailabilityFragment
     private TextView mSharedEquipmentTextView;
     private EditText mNoteEditText;
 
-    private boolean mIsNewAvailability;
-    private boolean mIsHosting;
-    private Menu mMenu;
+    private User mUser;
     private Availability mAvailability = new Availability();
+    private boolean mIsHosting;
+    private boolean mIsNewAvailability;
 
     public AddAvailabilityFragment() {
     }
@@ -101,7 +106,7 @@ public class AddAvailabilityFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance();
-        mAvailabilityTable = mDatabase.getReference().child(ModelUtils.TABLE_AVAILABILITIES);
+        mAvailabilityTable = mDatabase.getReference().child(ModelUtils.TABLE_AVAILABILITY);
     }
 
     @Override
@@ -240,6 +245,24 @@ public class AddAvailabilityFragment
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        MainActivity activity = getMainActivity();
+        if (activity != null) {
+            User user = activity.getUser();
+            if (user != null) {
+                mUser = user;
+            } else {
+                // TODO: Handle error. Report exception. Close fragment.
+                throw new RuntimeException();
+            }
+        } else {
+            // TODO: Handle error. Report exception. Close fragment.
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.add_availability_menu, menu);
@@ -344,35 +367,23 @@ public class AddAvailabilityFragment
     }
 
     private void initNewAvailability() {
-        Activity activity = getActivity();
-        if (activity != null
-                && (activity instanceof MainActivity)) {
-            MainActivity mainActivity = (MainActivity) activity;
-            User user = mainActivity.getUser();
-            if (user != null) {
-                mAvailability.setUserKey(user.getKey());
-                mAvailability.setUserName(user.getName());
-                mAvailability.setHostUser(true);
-                mAvailability.setCanBelay(user.getCanBelay());
-                mAvailability.setGrades(user.getGrades());
-                mAvailability.setLocationLatitude(Double.MAX_VALUE);
-                mAvailability.setLocationLongitude(Double.MAX_VALUE);
-                long twoHoursAhead = System.currentTimeMillis() + TWO_HOURS_IN_MILLIS;
-                mAvailability.setStartTime(twoHoursAhead);
-                long threeHoursAhead = twoHoursAhead + ONE_HOUR_IN_MILLIS;
-                mAvailability.setEndTime(threeHoursAhead);
-                mAvailability.setLocationAddress("");
-                mAvailability.setLocationName("");
-                mAvailability.setActivity("");
-                mAvailability.setNeedPartner(Availability.NEED_PARTNER_UNDEFINED);
-                mAvailability.setIfNoPartner(Availability.IF_NO_PARTNER_UNDEFINED);
-                mAvailability.setSharedEquipment("");
-            } else {
-                // TODO: Handle error. Throw and report exception.
-            }
-        } else {
-            // TODO: Handle error. Throw and report exception.
-        }
+        mAvailability.setUserKey(mUser.getKey());
+        mAvailability.setUserName(mUser.getName());
+        mAvailability.setHostUser(true);
+        mAvailability.setCanBelay(mUser.getCanBelay());
+        mAvailability.setGrades(mUser.getGrades());
+        mAvailability.setLocationLatitude(Double.MAX_VALUE);
+        mAvailability.setLocationLongitude(Double.MAX_VALUE);
+        long twoHoursAhead = System.currentTimeMillis() + TWO_HOURS_IN_MILLIS;
+        mAvailability.setStartTime(twoHoursAhead);
+        long threeHoursAhead = twoHoursAhead + ONE_HOUR_IN_MILLIS;
+        mAvailability.setEndTime(threeHoursAhead);
+        mAvailability.setLocationAddress("");
+        mAvailability.setLocationName("");
+        mAvailability.setActivity("");
+        mAvailability.setNeedPartner(Availability.NEED_PARTNER_UNDEFINED);
+        mAvailability.setIfNoPartner(Availability.IF_NO_PARTNER_UNDEFINED);
+        mAvailability.setSharedEquipment("");
     }
 
     private TextWatcher mNoteTextWatcher = new TextWatcher() {
@@ -444,22 +455,8 @@ public class AddAvailabilityFragment
     }
 
     private boolean getIsHosting(Availability availability) {
-        boolean result = false;
-        Activity activity = getActivity();
-        if (activity != null
-                && (activity instanceof MainActivity)) {
-            MainActivity mainActivity = (MainActivity) activity;
-            User user = mainActivity.getUser();
-            if (user != null) {
-                result = user.getKey().equals(availability.getUserKey())
-                        && availability.isHostUser();
-            } else {
-                // TODO: Report error
-            }
-        } else {
-            // TODO: Report error
-        }
-        return result;
+        return mUser.getKey().equals(availability.getUserKey())
+                && availability.isHostUser();
     }
 
     private void updateViewsFromAvailability(Availability availability) {
@@ -526,58 +523,66 @@ public class AddAvailabilityFragment
         mMenu.findItem(R.id.action_cancel).setVisible(canCancel);
     }
 
-    private void addAvailability() {
+    private MainActivity getMainActivity() {
         Activity activity = getActivity();
-        if (activity != null
-                && (activity instanceof MainActivity)) {
-            MainActivity mainActivity = (MainActivity) activity;
-            User user = mainActivity.getUser();
-            if (user != null) {
-                if (mAvailability.getLocationLatitude() == Double.MAX_VALUE
-                        || mAvailability.getLocationLongitude() == Double.MAX_VALUE) {
-                    Toast.makeText(activity, R.string.add_availability_missing_location, Toast.LENGTH_SHORT).show();
-                    mLocationTextView.setError("");
-                    return;
-                }
-                if (mAvailability.getActivity().isEmpty()) {
-                    Toast.makeText(activity, R.string.add_availability_missing_activity, Toast.LENGTH_SHORT).show();
-                    mActivityTextView.setError("");
-                    return;
-                }
-                if (mAvailability.getNeedPartner() == Availability.NEED_PARTNER_UNDEFINED) {
-                    Toast.makeText(activity, R.string.add_availability_missing_need_partner, Toast.LENGTH_SHORT).show();
-                    mNeedPartnerTextView.setError("");
-                    return;
-                }
+        if (activity != null) {
+            return (MainActivity) activity;
+        }
+        return null;
+    }
 
-                if (mAvailability.getNeedPartner() == Availability.NEED_PARTNER_YES) {
-                    if (mAvailability.getIfNoPartner() == Availability.IF_NO_PARTNER_UNDEFINED) {
-                        Toast.makeText(activity, R.string.add_availability_missing_no_partner, Toast.LENGTH_SHORT).show();
-                        mIfNoPartnerTextView.setError("");
-                        return;
-                    }
-                } else {
-                    mAvailability.setIfNoPartner(
-                            (mAvailability.getIfNoPartner() == Availability.IF_NO_PARTNER_UNDEFINED)
-                            ? Availability.IF_NO_PARTNER_NOT_DECIDED_YET
-                            : mAvailability.getIfNoPartner());
-                }
-
-                DatabaseReference availabilityRef;
-                if (mIsNewAvailability) {
-                    availabilityRef = mAvailabilityTable.push();
-                } else {
-                    availabilityRef = mAvailabilityTable.child(mAvailability.getKey());
-                }
-                availabilityRef.setValue(mAvailability);
-
-                mainActivity.onFragmentAction(INTERACTION_DONE_TAPPED, null);
+    private void addAvailability() {
+        MainActivity activity = getMainActivity();
+        if (activity != null) {
+            if (mAvailability.getLocationLatitude() == Double.MAX_VALUE
+                    || mAvailability.getLocationLongitude() == Double.MAX_VALUE) {
+                Toast.makeText(activity, R.string.add_availability_missing_location, Toast.LENGTH_SHORT).show();
+                mLocationTextView.setError("");
+                return;
             }
+            if (mAvailability.getActivity().isEmpty()) {
+                Toast.makeText(activity, R.string.add_availability_missing_activity, Toast.LENGTH_SHORT).show();
+                mActivityTextView.setError("");
+                return;
+            }
+            if (mAvailability.getNeedPartner() == Availability.NEED_PARTNER_UNDEFINED) {
+                Toast.makeText(activity, R.string.add_availability_missing_need_partner, Toast.LENGTH_SHORT).show();
+                mNeedPartnerTextView.setError("");
+                return;
+            }
+
+            if (mAvailability.getNeedPartner() == Availability.NEED_PARTNER_YES) {
+                if (mAvailability.getIfNoPartner() == Availability.IF_NO_PARTNER_UNDEFINED) {
+                    Toast.makeText(activity, R.string.add_availability_missing_no_partner, Toast.LENGTH_SHORT).show();
+                    mIfNoPartnerTextView.setError("");
+                    return;
+                }
+            } else {
+                mAvailability.setIfNoPartner(
+                        (mAvailability.getIfNoPartner() == Availability.IF_NO_PARTNER_UNDEFINED)
+                        ? Availability.IF_NO_PARTNER_NOT_DECIDED_YET
+                        : mAvailability.getIfNoPartner());
+            }
+
+            DatabaseReference availabilityRef;
+            if (mIsNewAvailability) {
+                availabilityRef = mAvailabilityTable.push();
+            } else {
+                availabilityRef = mAvailabilityTable.child(mAvailability.getKey());
+            }
+            availabilityRef.setValue(mAvailability);
+
+            activity.onFragmentAction(INTERACTION_DONE_TAPPED, new Bundle());
         }
     }
 
     private void sendRequest() {
-        // TODO
+        MainActivity activity = getMainActivity();
+        if (activity != null) {
+            Bundle data = new Bundle();
+            data.putString(DATA_AVAILABILITY_KEY, mAvailability.getKey());
+            activity.onFragmentAction(INTERACTION_SEND_REQUEST_TAPPED, data);
+        }
     }
 
 }

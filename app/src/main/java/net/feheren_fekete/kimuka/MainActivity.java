@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     private UserProfileFragment mUserProfileFragment;
     private AvailabilitiesFragment mAvailabilitiesFragment;
     private AddAvailabilityFragment mAddAvailabilityFragment;
+    private RequestFragment mRequestFragment;
     private Fragment mActiveFragment;
 
     @Override
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
         mDatabase.setPersistenceEnabled(true);
-        mUsersTable = mDatabase.getReference(ModelUtils.TABLE_USERS);
+        mUsersTable = mDatabase.getReference(ModelUtils.TABLE_USER);
     }
 
     @Override
@@ -123,25 +124,26 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentAction(String action, @Nullable Bundle data) {
+    public void onFragmentAction(String action, Bundle data) {
         if (UserProfileFragment.INTERACTION_DONE_TAPPED.equals(action)) {
             showAvailabilitiesFragment();
         } else if (AddAvailabilityFragment.INTERACTION_DONE_TAPPED.equals(action)) {
             showAvailabilitiesFragment();
+        } else if (AddAvailabilityFragment.INTERACTION_SEND_REQUEST_TAPPED.equals(action)) {
+            showRequestFragment(data.getString(AddAvailabilityFragment.DATA_AVAILABILITY_KEY), "");
+        } else if (RequestFragment.INTERACTION_SEND_TAPPED.equals(action)) {
+            showAvailabilitiesFragment();
         } else if (AvailabilitiesFragment.INTERACTION_ADD_AVAILABILITY_TAPPED.equals(action)) {
             showAddAvailabilityFragment("");
-        } else if (AvailabilitiesFragment.INTERACTION_AVAILABILITY_TAPPED.equals(action)
-                && data != null) {
+        } else if (AvailabilitiesFragment.INTERACTION_AVAILABILITY_TAPPED.equals(action)) {
             showAddAvailabilityFragment(data.getString(AvailabilitiesFragment.DATA_AVAILABILITY_KEY));
         } else if (TimePickerDialogFragment.INTERCATION_TIME_PICKED.equals(action)
-                && data != null
                 && mActiveFragment instanceof TimePickerDialogFragment.Listener) {
             TimePickerDialogFragment.Listener listener = (TimePickerDialogFragment.Listener) mActiveFragment;
             listener.onTimeSet(
                     data.getInt(TimePickerDialogFragment.DATA_HOUR_OF_DAY),
                     data.getInt(TimePickerDialogFragment.DATA_MINUTE));
         } else if (DatePickerDialogFragment.INTERCATION_DATE_PICKED.equals(action)
-                && data != null
                 && mActiveFragment instanceof DatePickerDialogFragment.Listener) {
             DatePickerDialogFragment.Listener listener = (DatePickerDialogFragment.Listener) mActiveFragment;
             listener.onDateSet(
@@ -149,32 +151,26 @@ public class MainActivity extends AppCompatActivity
                     data.getInt(DatePickerDialogFragment.DATA_MONTH),
                     data.getInt(DatePickerDialogFragment.DATA_DAY_OF_MONTH));
         } else if (ActivityDialogFragment.INTERCATION_ACTIVITIES_SELECTED.equals(action)
-                && data != null
                 && mActiveFragment instanceof ActivityDialogFragment.Listener) {
             ActivityDialogFragment.Listener listener = (ActivityDialogFragment.Listener) mActiveFragment;
             listener.onActivitySelected(data.getIntegerArrayList(ActivityDialogFragment.DATA_ACTIVITIES));
         } else if (NeedPartnerDialogFragment.INTERCATION_ITEM_SELECTED.equals(action)
-                && data != null
                 && mActiveFragment instanceof NeedPartnerDialogFragment.Listener) {
             NeedPartnerDialogFragment.Listener listener = (NeedPartnerDialogFragment.Listener) mActiveFragment;
             listener.onNeedPartnerItemSelected(data.getInt(NeedPartnerDialogFragment.DATA_ITEM_INDEX));
         } else if (IfNoPartnerDialogFragment.INTERCATION_ITEM_SELECTED.equals(action)
-                && data != null
                 && mActiveFragment instanceof IfNoPartnerDialogFragment.Listener) {
             IfNoPartnerDialogFragment.Listener listener = (IfNoPartnerDialogFragment.Listener) mActiveFragment;
             listener.onIfNoPartnerItemSelected(data.getInt(IfNoPartnerDialogFragment.DATA_ITEM_INDEX));
         } else if (SharedEquimentDialogFragment.INTERCATION_EQUIPMENTS_SELECTED.equals(action)
-                && data != null
                 && mActiveFragment instanceof SharedEquimentDialogFragment.Listener) {
             SharedEquimentDialogFragment.Listener listener = (SharedEquimentDialogFragment.Listener) mActiveFragment;
             listener.onEquipmentSelected(data.getIntegerArrayList(SharedEquimentDialogFragment.DATA_EQUIPMENTS));
         } else if (GradeDialogFragment.INTERCATION_GRADE_SELECTED.equals(action)
-                && data != null
                 && mActiveFragment instanceof GradeDialogFragment.Listener) {
             GradeDialogFragment.Listener listener = (GradeDialogFragment.Listener) mActiveFragment;
             listener.onGradeSelected(data.getInt(GradeDialogFragment.DATA_GRADE));
         } else if (CanBelayDialogFragment.INTERCATION_ITEM_SELECTED.equals(action)
-                && data != null
                 && mActiveFragment instanceof CanBelayDialogFragment.Listener) {
             CanBelayDialogFragment.Listener listener = (CanBelayDialogFragment.Listener) mActiveFragment;
             listener.onCanBelayItemSelected(data.getInt(CanBelayDialogFragment.DATA_ITEM_INDEX));
@@ -317,6 +313,24 @@ public class MainActivity extends AppCompatActivity
             getSupportActionBar().setTitle(R.string.add_availability_title_new);
         } else {
             getSupportActionBar().setTitle(R.string.add_availability_title_edit);
+        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        invalidateOptionsMenu();
+        mActiveFragment = mAddAvailabilityFragment;
+    }
+
+    private void showRequestFragment(String availabilityKey, String requestKey) {
+        if (mRequestFragment == null) {
+            mRequestFragment = RequestFragment.newInstance(availabilityKey);
+        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, mRequestFragment, "RequestFragment")
+                .commit();
+        if (requestKey.isEmpty()) {
+            getSupportActionBar().setTitle(R.string.request_title_new);
+        } else {
+            getSupportActionBar().setTitle(R.string.request_title_view);
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         invalidateOptionsMenu();

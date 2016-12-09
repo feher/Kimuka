@@ -88,4 +88,23 @@
     <string name="user_profile_note">Note</string>
     <string name="user_profile_note_hint">Add extra info about yourself.</string>
 
+    <string name="request_title_new">Send request</string>
+    <string name="request_title_view">Request</string>
+    <string name="request_partner_title">Partner</string>
+    <string name="request_location_title">Location</string>
+    <string name="request_start_time_title">From</string>
+    <string name="request_end_time_title">To</string>
+    <string name="request_activity_title">Activity</string>
+    <string name="request_activity_hint">What would you like to do?</string>
+    <string name="request_can_belay_title">Can belay</string>
+    <string name="request_can_belay_hint">Can you belay?</string>
+    <string name="request_shared_equipment_title">Shared equipment</string>
+    <string name="request_shared_equipment_hint">Select shared equipment</string>
+    <string name="request_note_title">Note</string>
+    <string name="request_note_hint">Write extra info here (max 200 characters)</string>
+    <string name="request_send_request">Send request</string>
+    <string name="request_error_bad_time">Your time must overlap with your partner</string>
+    <string name="request_error_missing_activity">Activity missing</string>
+    <string name="request_error_missing_common_activity">No common activity with partner</string>
+
 </resources>

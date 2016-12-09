@@ -49,7 +49,7 @@ public class AvailabilitiesFragment extends Fragment implements AvailabilitiesAd
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance();
-        mAvailabilityTable = mDatabase.getReference().child(ModelUtils.TABLE_AVAILABILITIES);
+        mAvailabilityTable = mDatabase.getReference().child(ModelUtils.TABLE_AVAILABILITY);
         mSortedAvailabilityTable = mAvailabilityTable.orderByChild("startTime").limitToLast(100);
         mSortedAvailabilityTable.addChildEventListener(mChildEventListener);
         mAdapter = new AvailabilitiesAdapter(getContext(), this);
@@ -71,7 +71,7 @@ public class AvailabilitiesFragment extends Fragment implements AvailabilitiesAd
                 Activity activity = getActivity();
                 if (activity instanceof FragmentInteractionListener) {
                     FragmentInteractionListener listener = (FragmentInteractionListener) activity;
-                    listener.onFragmentAction(INTERACTION_ADD_AVAILABILITY_TAPPED, null);
+                    listener.onFragmentAction(INTERACTION_ADD_AVAILABILITY_TAPPED, new Bundle());
                 }
             }
         });
