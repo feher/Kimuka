@@ -100,15 +100,19 @@ public class PagerFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0) {
-                return AvailabilityListFragment.newInstance();
+            switch (position) {
+                case 0:
+                    return AvailabilityListFragment.newInstance(null);
+                case 1:
+                    return AvailabilityListFragment.newInstance(null);
+                default:
+                    return null;
             }
-            return null;
         }
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
 
 //        @Override
@@ -118,10 +122,14 @@ public class PagerFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            if (position == 0) {
-                return getResources().getString(R.string.availability_list_title);
+            switch (position) {
+                case 0:
+                    return getResources().getString(R.string.availability_list_title_all);
+                case 1:
+                    return getResources().getString(R.string.availability_list_title_my);
+                default:
+                    return super.getPageTitle(position);
             }
-            return super.getPageTitle(position);
         }
     }
 

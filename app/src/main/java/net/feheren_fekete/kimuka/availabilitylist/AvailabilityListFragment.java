@@ -3,6 +3,7 @@ package net.feheren_fekete.kimuka.availabilitylist;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +36,8 @@ public class AvailabilityListFragment extends Fragment implements AvailabilityLi
 
     public static final String DATA_AVAILABILITY_KEY = AvailabilityListFragment.class.getSimpleName() + ".DATA_AVAILABILITY_KEY";
 
+    private static final String ARG_USER_KEY = AvailabilityListFragment.class.getSimpleName() + ".ARG_USER_KEY";
+
     private FirebaseDatabase mDatabase;
     private DatabaseReference mAvailabilityTable;
     private Query mSortedAvailabilityTable;
@@ -44,8 +47,13 @@ public class AvailabilityListFragment extends Fragment implements AvailabilityLi
     public AvailabilityListFragment() {
     }
 
-    public static AvailabilityListFragment newInstance() {
+    public static AvailabilityListFragment newInstance(@Nullable Availability filter) {
         AvailabilityListFragment fragment = new AvailabilityListFragment();
+        if (filter != null) {
+            Bundle arguments = new Bundle();
+            arguments.putString(ARG_USER_KEY, filter.getUserKey());
+            fragment.setArguments(arguments);
+        }
         return fragment;
     }
 
@@ -54,9 +62,27 @@ public class AvailabilityListFragment extends Fragment implements AvailabilityLi
         super.onCreate(savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance();
         mAvailabilityTable = mDatabase.getReference().child(ModelUtils.TABLE_AVAILABILITY);
-        mSortedAvailabilityTable = mAvailabilityTable.orderByChild("startTime").limitToLast(100);
+        mSortedAvailabilityTable = createFilteredQuery();
         mSortedAvailabilityTable.addChildEventListener(mChildEventListener);
         mAdapter = new AvailabilityListAdapter(getContext(), this);
+    }
+
+    private Query createFilteredQuery() {
+        Query result;
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            String userKey = arguments.getString(ARG_USER_KEY, "");
+            if (!userKey.isEmpty()) {
+                result = mAvailabilityTable
+                        .orderByChild("userKey").equalTo(userKey)
+                        .orderByChild("startTime").limitToLast(100);
+            } else {
+                result = mAvailabilityTable.orderByChild("startTime").limitToLast(100);
+            }
+        } else {
+            result = mAvailabilityTable.orderByChild("startTime").limitToLast(100);
+        }
+        return result;
     }
 
     @Override
