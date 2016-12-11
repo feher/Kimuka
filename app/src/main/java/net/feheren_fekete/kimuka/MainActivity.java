@@ -2,6 +2,8 @@ package net.feheren_fekete.kimuka;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,9 +52,13 @@ public class MainActivity extends AppCompatActivity
     private @Nullable Query mUserQuery;
     private @Nullable User mUser;
 
+    private Toolbar mToolbar;
+    private TabLayout mTabLayout;
+    private FloatingActionButton mFab;
+
     private SignInFragment mSignInFragment;
     private UserProfileFragment mUserProfileFragment;
-    private AvailabilityListFragment mAvailabilityListFragment;
+    private PagerFragment mPagerFragment;
     private AvailabilityFragment mAvailabilityFragment;
     private RequestFragment mRequestFragment;
     private Fragment mActiveFragment;
@@ -61,8 +68,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
@@ -87,7 +99,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        if (mActiveFragment == mAvailabilityListFragment) {
+        if (mActiveFragment == mPagerFragment) {
             menu.findItem(R.id.action_user_profile).setVisible(true);
             menu.findItem(R.id.action_sign_out).setVisible(true);
         } else {
@@ -117,22 +129,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         if (mActiveFragment == mAvailabilityFragment) {
-            showAvailabilityListFragment();
+            showPagerFragment();
         } else if (mActiveFragment == mUserProfileFragment) {
-            showAvailabilityListFragment();
+            showPagerFragment();
         }
     }
 
     @Override
     public void onFragmentAction(String action, Bundle data) {
         if (UserProfileFragment.INTERACTION_DONE_TAPPED.equals(action)) {
-            showAvailabilityListFragment();
+            showPagerFragment();
         } else if (AvailabilityFragment.INTERACTION_DONE_TAPPED.equals(action)) {
-            showAvailabilityListFragment();
+            showPagerFragment();
         } else if (AvailabilityFragment.INTERACTION_SEND_REQUEST_TAPPED.equals(action)) {
             showRequestFragment(data.getString(AvailabilityFragment.DATA_AVAILABILITY_KEY), "");
         } else if (RequestFragment.INTERACTION_SEND_TAPPED.equals(action)) {
-            showAvailabilityListFragment();
+            showPagerFragment();
         } else if (AvailabilityListFragment.INTERACTION_ADD_AVAILABILITY_TAPPED.equals(action)) {
             showAvailabilityFragment("");
         } else if (AvailabilityListFragment.INTERACTION_AVAILABILITY_TAPPED.equals(action)) {
@@ -177,6 +189,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public Toolbar getToolbar() {
+        return mToolbar;
+    }
+
+    public TabLayout getTabLayout() {
+        return mTabLayout;
+    }
+
+    public FloatingActionButton getFab() {
+        return mFab;
+    }
+
     @Nullable
     public User getUser() {
         return mUser;
@@ -189,7 +213,7 @@ public class MainActivity extends AppCompatActivity
             if (mFirebaseUser != null) {
                 Log.d(TAG, "onAuthStateChanged:signed_in:" + mFirebaseUser.getUid());
                 reRegisterUserListener(mFirebaseUser.getUid());
-                showAvailabilityListFragment();
+                showPagerFragment();
             } else {
                 Log.d(TAG, "onAuthStateChanged:signed_out");
                 mUser = null;
@@ -269,6 +293,8 @@ public class MainActivity extends AppCompatActivity
                 .commit();
         getSupportActionBar().setTitle(R.string.sign_in_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        mTabLayout.setVisibility(View.GONE);
+        mFab.setVisibility(View.GONE);
         invalidateOptionsMenu();
         mActiveFragment = mSignInFragment;
     }
@@ -283,22 +309,24 @@ public class MainActivity extends AppCompatActivity
                 .commit();
         getSupportActionBar().setTitle(R.string.user_profile_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mTabLayout.setVisibility(View.GONE);
+        mFab.setVisibility(View.GONE);
         invalidateOptionsMenu();
         mActiveFragment = mUserProfileFragment;
     }
 
-    private void showAvailabilityListFragment() {
-        if (mAvailabilityListFragment == null) {
-            mAvailabilityListFragment = AvailabilityListFragment.newInstance();
-        }
+    private void showPagerFragment() {
+        mPagerFragment = PagerFragment.newInstance();
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, mAvailabilityListFragment, "AvailabilityListFragment")
+                .replace(R.id.fragment_container, mPagerFragment, "PagerFragment")
                 .commit();
-        getSupportActionBar().setTitle(R.string.availability_list_title);
+        getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        mTabLayout.setVisibility(View.VISIBLE);
+        mFab.setVisibility(View.VISIBLE);
         invalidateOptionsMenu();
-        mActiveFragment = mAvailabilityListFragment;
+        mActiveFragment = mPagerFragment;
     }
 
     private void showAvailabilityFragment(String availabilityKey) {
@@ -313,6 +341,8 @@ public class MainActivity extends AppCompatActivity
             getSupportActionBar().setTitle(R.string.availability_title_edit);
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mTabLayout.setVisibility(View.GONE);
+        mFab.setVisibility(View.GONE);
         invalidateOptionsMenu();
         mActiveFragment = mAvailabilityFragment;
     }
@@ -329,6 +359,8 @@ public class MainActivity extends AppCompatActivity
             getSupportActionBar().setTitle(R.string.request_title_view);
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mTabLayout.setVisibility(View.GONE);
+        mFab.setVisibility(View.GONE);
         invalidateOptionsMenu();
         mActiveFragment = mRequestFragment;
     }

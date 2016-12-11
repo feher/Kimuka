@@ -10,7 +10,7 @@
 
     <string name="sign_in_title">Sign in</string>
 
-    <string name="availability_list_title">Available buddies</string>
+    <string name="availability_list_title">Availabilities</string>
 
     <string name="availability_title_new">New availability</string>
     <string name="availability_title_edit">Edit availability</string>
@@ -31,6 +31,7 @@
     <string name="availability_shared_equipment_hint">Select shared equipment</string>
     <string name="availability_note">Note</string>
     <string name="availability_note_hint">Write extra info here (max 200 characters)</string>
+    <string name="availability_my_availabilities">My availabilities</string>
     <string name="availability_done">Done</string>
     <string name="availability_send_request">Send request</string>
     <string name="availability_cancel">Cancel availability</string>

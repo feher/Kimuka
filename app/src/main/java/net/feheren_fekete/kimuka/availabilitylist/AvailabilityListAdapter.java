@@ -3,6 +3,7 @@ package net.feheren_fekete.kimuka.availabilitylist;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 
 public class AvailabilityListAdapter extends RecyclerView.Adapter<AvailabilityListAdapter.ViewHolder> {
+
+    private static final String TAG = AvailabilityListAdapter.class.getSimpleName();
 
     public interface Listener {
         void onItemClicked(Availability availability);
@@ -180,6 +183,7 @@ public class AvailabilityListAdapter extends RecyclerView.Adapter<AvailabilityLi
             notifyItemMoved(fromPosition, newPosition);
         } else {
             notifyItemInserted(newPosition);
+            Log.d(TAG, "ADDED ITEM AT " + newPosition + " , new size " + mAvailabilities.size());
         }
     }
 

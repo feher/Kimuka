@@ -2,7 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="net.feheren_fekete.kimuka.SignInFragment">
+    android:layout_marginTop="?attr/actionBarSize"
+    tools:context="net.feheren_fekete.kimuka.SignInFragment"
+    >
 
     <TextView
         android:id="@+id/textView"

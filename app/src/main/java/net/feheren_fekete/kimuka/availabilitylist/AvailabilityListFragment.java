@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import net.feheren_fekete.kimuka.FragmentInteractionListener;
+import net.feheren_fekete.kimuka.MainActivity;
 import net.feheren_fekete.kimuka.R;
 import net.feheren_fekete.kimuka.model.Availability;
 import net.feheren_fekete.kimuka.model.ModelUtils;
 
 
 public class AvailabilityListFragment extends Fragment implements AvailabilityListAdapter.Listener {
+
+    private static final String TAG = AvailabilityListFragment.class.getSimpleName();
 
     public static final String INTERACTION_ADD_AVAILABILITY_TAPPED = AvailabilityListFragment.class.getSimpleName() + ".INTERACTION_ADD_AVAILABILITY_TAPPED";
     public static final String INTERACTION_AVAILABILITY_TAPPED = AvailabilityListFragment.class.getSimpleName() + ".INTERACTION_AVAILABILITY_TAPPED";
@@ -64,7 +68,7 @@ public class AvailabilityListFragment extends Fragment implements AvailabilityLi
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
+        FloatingActionButton floatingActionButton = getMainActivity().getFab();
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,6 +92,21 @@ public class AvailabilityListFragment extends Fragment implements AvailabilityLi
             data.putString(DATA_AVAILABILITY_KEY, availability.getKey());
             listener.onFragmentAction(INTERACTION_AVAILABILITY_TAPPED, data);
         }
+    }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        mAdapter.notifyDataSetChanged();
+//        Log.d(TAG, "ON RESUME: ITEMS " + mAdapter.getItemCount() + " " + this);
+//    }
+
+    private MainActivity getMainActivity() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            return (MainActivity) activity;
+        }
+        return null;
     }
 
     private ChildEventListener mChildEventListener = new ChildEventListener() {
