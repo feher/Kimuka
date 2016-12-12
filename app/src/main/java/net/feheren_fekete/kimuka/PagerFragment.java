@@ -15,9 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.feheren_fekete.kimuka.availabilitylist.AvailabilityListFragment;
+import net.feheren_fekete.kimuka.model.Availability;
+import net.feheren_fekete.kimuka.model.Request;
+import net.feheren_fekete.kimuka.requestlist.RequestListFragment;
 
 
-public class PagerFragment extends Fragment {
+public class PagerFragment extends BaseFragment {
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
@@ -45,6 +48,7 @@ public class PagerFragment extends Fragment {
 
         PagerAdapter adapter = new ViewStatePagerAdapter(getMainActivity().getSupportFragmentManager());
         mViewPager.setAdapter(adapter);
+        mViewPager.addOnPageChangeListener(mOnPageChangeListener);
 
         return view;
     }
@@ -54,14 +58,42 @@ public class PagerFragment extends Fragment {
         super.onAttach(context);
     }
 
-    private MainActivity getMainActivity() {
-        Activity activity = getActivity();
-        if (activity != null) {
-            return (MainActivity) activity;
+    private ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
         }
-        // TODO: Handle error.
-        throw new RuntimeException();
-    }
+
+        @Override
+        public void onPageSelected(int position) {
+            switch (position) {
+                case 0: {
+                    getMainActivity().getFab().setVisibility(View.VISIBLE);
+                    break;
+                }
+                case 1: {
+                    getMainActivity().getFab().setVisibility(View.VISIBLE);
+                    break;
+                }
+                case 2: {
+                    getMainActivity().getFab().setVisibility(View.GONE);
+                    break;
+                }
+                case 3: {
+                    getMainActivity().getFab().setVisibility(View.GONE);
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
 //    private class ViewPagerAdapter extends FragmentPagerAdapter {
 //        private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -101,18 +133,33 @@ public class PagerFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0:
+                case 0: {
                     return AvailabilityListFragment.newInstance(null);
-                case 1:
-                    return AvailabilityListFragment.newInstance(null);
-                default:
+                }
+                case 1: {
+                    Availability filter = new Availability();
+                    filter.setUserKey(getUser().getKey());
+                    return AvailabilityListFragment.newInstance(filter);
+                }
+                case 2: {
+                    Request filter = new Request();
+                    filter.setReceiverKey(getUser().getKey());
+                    return RequestListFragment.newInstance(filter);
+                }
+                case 3: {
+                    Request filter = new Request();
+                    filter.setSenderKey(getUser().getKey());
+                    return RequestListFragment.newInstance(filter);
+                }
+                default: {
                     return null;
+                }
             }
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 4;
         }
 
 //        @Override
@@ -127,6 +174,10 @@ public class PagerFragment extends Fragment {
                     return getResources().getString(R.string.availability_list_title_all);
                 case 1:
                     return getResources().getString(R.string.availability_list_title_my);
+                case 2:
+                    return getResources().getString(R.string.request_list_title_received);
+                case 3:
+                    return getResources().getString(R.string.request_list_title_sent);
                 default:
                     return super.getPageTitle(position);
             }

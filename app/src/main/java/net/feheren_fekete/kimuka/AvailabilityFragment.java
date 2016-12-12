@@ -45,7 +45,7 @@ import java.util.Locale;
 
 public class AvailabilityFragment
         extends
-                Fragment
+                BaseFragment
         implements
                 DatePickerDialogFragment.Listener,
                 TimePickerDialogFragment.Listener,
@@ -357,33 +357,6 @@ public class AvailabilityFragment
     public void onEquipmentSelected(List<Integer> equipments) {
         mAvailability.setSharedEquipment(ModelUtils.toCommaSeparatedString(equipments));
         updateViews();
-    }
-
-    private MainActivity getMainActivity() {
-        Activity activity = getActivity();
-        if (activity != null) {
-            return (MainActivity) activity;
-        }
-        return null;
-    }
-
-    private User getUser() {
-        if (mUser == null) {
-            MainActivity activity = getMainActivity();
-            if (activity != null) {
-                User user = activity.getUser();
-                if (user != null) {
-                    mUser = user;
-                } else {
-                    // TODO: Handle error. Report exception. Close fragment.
-                    throw new RuntimeException();
-                }
-            } else {
-                // TODO: Handle error. Report exception. Close fragment.
-                throw new RuntimeException();
-            }
-        }
-        return mUser;
     }
 
     private void initNewAvailability() {

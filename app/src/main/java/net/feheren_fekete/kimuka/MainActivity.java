@@ -213,7 +213,9 @@ public class MainActivity extends AppCompatActivity
             if (mFirebaseUser != null) {
                 Log.d(TAG, "onAuthStateChanged:signed_in:" + mFirebaseUser.getUid());
                 reRegisterUserListener(mFirebaseUser.getUid());
-                showPagerFragment();
+                if (mUser != null) {
+                    showPagerFragment();
+                }
             } else {
                 Log.d(TAG, "onAuthStateChanged:signed_out");
                 mUser = null;
@@ -250,11 +252,16 @@ public class MainActivity extends AppCompatActivity
                     mUser = user.getValue(User.class);
                     if (mUser != null) {
                         mUser.setKey(user.getKey());
+                        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                            showPagerFragment();
+                        }
                     } else {
                         // TODO: Handle error.
+                        throw new RuntimeException();
                     }
                 } else {
                     // TODO: Handle error.
+                    throw new RuntimeException();
                 }
             } else if (mFirebaseUser != null) {
                 createUser(mFirebaseUser.getUid(), mFirebaseUser.getDisplayName());
@@ -263,6 +270,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onCancelled(DatabaseError databaseError) {
             // TODO: Handle error.
+            throw new RuntimeException();
         }
     };
 

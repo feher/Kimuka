@@ -39,7 +39,7 @@ import java.util.Locale;
 
 public class RequestFragment
         extends
-                Fragment
+                BaseFragment
         implements
                 DatePickerDialogFragment.Listener,
                 TimePickerDialogFragment.Listener,
@@ -315,33 +315,6 @@ public class RequestFragment
             mRequest.setNote(editable.toString().trim().replace('\n', ' '));
         }
     };
-
-    private MainActivity getMainActivity() {
-        Activity activity = getActivity();
-        if (activity != null) {
-            return (MainActivity) activity;
-        }
-        return null;
-    }
-
-    private User getUser() {
-        if (mUser == null) {
-            MainActivity activity = getMainActivity();
-            if (activity != null) {
-                User user = activity.getUser();
-                if (user != null) {
-                    mUser = user;
-                } else {
-                    // TODO: Handle error. Report exception. Close fragment.
-                    throw new RuntimeException();
-                }
-            } else {
-                // TODO: Handle error. Report exception. Close fragment.
-                throw new RuntimeException();
-            }
-        }
-        return mUser;
-    }
 
     private void adjustStartAndEndTime(boolean isTriggeredByStartTime) {
         long startTime = mRequest.getStartTime();

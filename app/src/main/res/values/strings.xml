@@ -10,8 +10,11 @@
 
     <string name="sign_in_title">Sign in</string>
 
-    <string name="availability_list_title_all">Availabilities</string>
-    <string name="availability_list_title_my">My availabilities</string>
+    <string name="availability_list_title_all">Buddies</string>
+    <string name="availability_list_title_my">Me</string>
+
+    <string name="request_list_title_received">Inbox</string>
+    <string name="request_list_title_sent">Sent</string>
 
     <string name="availability_title_new">New availability</string>
     <string name="availability_title_edit">Edit availability</string>

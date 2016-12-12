@@ -5,11 +5,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,14 +21,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import net.feheren_fekete.kimuka.BaseFragment;
 import net.feheren_fekete.kimuka.FragmentInteractionListener;
-import net.feheren_fekete.kimuka.MainActivity;
 import net.feheren_fekete.kimuka.R;
 import net.feheren_fekete.kimuka.model.Availability;
 import net.feheren_fekete.kimuka.model.ModelUtils;
 
 
-public class AvailabilityListFragment extends Fragment implements AvailabilityListAdapter.Listener {
+public class AvailabilityListFragment extends BaseFragment implements AvailabilityListAdapter.Listener {
 
     private static final String TAG = AvailabilityListFragment.class.getSimpleName();
 
@@ -75,7 +76,7 @@ public class AvailabilityListFragment extends Fragment implements AvailabilityLi
             if (!userKey.isEmpty()) {
                 result = mAvailabilityTable
                         .orderByChild("userKey").equalTo(userKey)
-                        .orderByChild("startTime").limitToLast(100);
+                        .limitToLast(100);
             } else {
                 result = mAvailabilityTable.orderByChild("startTime").limitToLast(100);
             }
@@ -88,6 +89,8 @@ public class AvailabilityListFragment extends Fragment implements AvailabilityLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+
         View view = inflater.inflate(R.layout.fragment_availability_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -126,14 +129,6 @@ public class AvailabilityListFragment extends Fragment implements AvailabilityLi
 //        mAdapter.notifyDataSetChanged();
 //        Log.d(TAG, "ON RESUME: ITEMS " + mAdapter.getItemCount() + " " + this);
 //    }
-
-    private MainActivity getMainActivity() {
-        Activity activity = getActivity();
-        if (activity != null) {
-            return (MainActivity) activity;
-        }
-        return null;
-    }
 
     private ChildEventListener mChildEventListener = new ChildEventListener() {
         @Override

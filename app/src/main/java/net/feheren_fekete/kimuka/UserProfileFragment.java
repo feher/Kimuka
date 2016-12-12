@@ -3,7 +3,6 @@ package net.feheren_fekete.kimuka;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,7 +24,7 @@ import net.feheren_fekete.kimuka.model.User;
 
 public class UserProfileFragment
         extends
-                Fragment
+                BaseFragment
         implements
                 GradeDialogFragment.Listener,
                 CanBelayDialogFragment.Listener {
@@ -98,25 +97,18 @@ public class UserProfileFragment
 
         mNoteTextView = (EditText) view.findViewById(R.id.note_value);
 
-        if (getActivity() instanceof MainActivity) {
-            MainActivity mainActivity = (MainActivity) getActivity();
-            User user = mainActivity.getUser();
-            if (user != null) {
-                mNameTextView.setText(user.getName());
-                mFreeClimbingGradeTextView.setText(Grading.getNameForYdsGrade(
-                        user.getFreeClimbingGrade(), Grading.NAME_FRENCH));
-                mBoulderingGradeTextView.setText(Grading.getNameForFontenblauGrade(
-                        user.getBoulderingGrade(), Grading.NAME_FONTENBLAU));
-                mCanBelayTextView.setText(ModelUtils.createCanBelayText(getContext(), user.getCanBelay()));
-                mNoteTextView.setText(user.getNote());
+        User user = getUser();
+        mNameTextView.setText(user.getName());
+        mFreeClimbingGradeTextView.setText(Grading.getNameForYdsGrade(
+                user.getFreeClimbingGrade(), Grading.NAME_FRENCH));
+        mBoulderingGradeTextView.setText(Grading.getNameForFontenblauGrade(
+                user.getBoulderingGrade(), Grading.NAME_FONTENBLAU));
+        mCanBelayTextView.setText(ModelUtils.createCanBelayText(getContext(), user.getCanBelay()));
+        mNoteTextView.setText(user.getNote());
 
-                mFreeClimbingGrade = user.getFreeClimbingGrade();
-                mBoulderingGrade = user.getBoulderingGrade();
-                mCanBelay = user.getCanBelay();
-            }
-        } else {
-            throw new RuntimeException("Activity must implement MainActivity");
-        }
+        mFreeClimbingGrade = user.getFreeClimbingGrade();
+        mBoulderingGrade = user.getBoulderingGrade();
+        mCanBelay = user.getCanBelay();
 
         return view;
     }
