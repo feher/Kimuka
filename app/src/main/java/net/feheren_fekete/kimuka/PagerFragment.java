@@ -68,7 +68,7 @@ public class PagerFragment extends BaseFragment {
         public void onPageSelected(int position) {
             switch (position) {
                 case 0: {
-                    getMainActivity().getFab().setVisibility(View.VISIBLE);
+                    getMainActivity().getFab().setVisibility(View.GONE);
                     break;
                 }
                 case 1: {

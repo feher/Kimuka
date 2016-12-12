@@ -332,7 +332,7 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         mTabLayout.setVisibility(View.VISIBLE);
-        mFab.setVisibility(View.VISIBLE);
+        mFab.setVisibility(View.GONE);
         invalidateOptionsMenu();
         mActiveFragment = mPagerFragment;
     }
