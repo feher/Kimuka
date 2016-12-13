@@ -171,7 +171,7 @@ public class AvailabilityListAdapter extends RecyclerView.Adapter<AvailabilityLi
         int newPosition = 0;
         for (; newPosition < count; ++newPosition) {
             availability = mAvailabilities.get(newPosition);
-            if (newAvailability.getStartTime() > availability.getStartTime()) {
+            if (newAvailability.getStartTime() < availability.getStartTime()) {
                 break;
             }
             if (availability.getKey().equals(newAvailability.getKey())) {

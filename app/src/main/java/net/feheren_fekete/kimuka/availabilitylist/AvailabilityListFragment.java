@@ -3,6 +3,7 @@ package net.feheren_fekete.kimuka.availabilitylist;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -76,12 +77,18 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
             if (!userKey.isEmpty()) {
                 result = mAvailabilityTable
                         .orderByChild("userKey").equalTo(userKey)
-                        .limitToLast(100);
+                        .limitToFirst(100);
             } else {
-                result = mAvailabilityTable.orderByChild("startTime").limitToLast(100);
+                result = mAvailabilityTable
+                        .orderByChild("startTime")
+//                        .startAt(System.currentTimeMillis())
+                        .limitToFirst(100);
             }
         } else {
-            result = mAvailabilityTable.orderByChild("startTime").limitToLast(100);
+            result = mAvailabilityTable
+                    .orderByChild("startTime")
+//                    .startAt(System.currentTimeMillis())
+                    .limitToFirst(100);
         }
         return result;
     }

@@ -161,7 +161,7 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
         int newPosition = 0;
         for (; newPosition < count; ++newPosition) {
             request = mRequests.get(newPosition);
-            if (newRequest.getStartTime() > request.getStartTime()) {
+            if (newRequest.getStartTime() < request.getStartTime()) {
                 break;
             }
             if (request.getKey().equals(newRequest.getKey())) {

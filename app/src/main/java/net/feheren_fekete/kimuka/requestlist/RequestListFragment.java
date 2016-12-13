@@ -74,16 +74,22 @@ public class RequestListFragment extends BaseFragment implements RequestListAdap
             if (!senderKey.isEmpty()) {
                 result = mRequestTable
                         .orderByChild("senderKey").equalTo(senderKey)
-                        .limitToLast(100);
+                        .limitToFirst(100);
             } else if (!receiverKey.isEmpty()) {
                 result = mRequestTable
                         .orderByChild("receiverKey").equalTo(receiverKey)
-                        .limitToLast(100);
+                        .limitToFirst(100);
             } else {
-                result = mRequestTable.orderByChild("startTime").limitToLast(100);
+                result = mRequestTable
+                        .orderByChild("startTime")
+//                        .startAt(System.currentTimeMillis())
+                        .limitToFirst(100);
             }
         } else {
-            result = mRequestTable.orderByChild("startTime").limitToLast(100);
+            result = mRequestTable
+                    .orderByChild("startTime")
+//                        .startAt(System.currentTimeMillis())
+                    .limitToFirst(100);
         }
         return result;
     }
