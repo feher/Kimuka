@@ -115,4 +115,9 @@
     <string name="request_error_missing_activity">Activity missing</string>
     <string name="request_error_missing_common_activity">No common activity with partner</string>
 
+    <string name="filter_title_new">New filter</string>
+    <string name="filter_save">Save filter</string>
+    <string name="filter_delete">Delete filter</string>
+
+
 </resources>
