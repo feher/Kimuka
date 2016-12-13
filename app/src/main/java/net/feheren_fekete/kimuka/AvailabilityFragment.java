@@ -367,10 +367,11 @@ public class AvailabilityFragment
         mAvailability.setGrades(getUser().getGrades());
         mAvailability.setLocationLatitude(Double.MAX_VALUE);
         mAvailability.setLocationLongitude(Double.MAX_VALUE);
-        long twoHoursAhead = System.currentTimeMillis() + TWO_HOURS_IN_MILLIS;
-        mAvailability.setStartTime(twoHoursAhead);
-        long threeHoursAhead = twoHoursAhead + ONE_HOUR_IN_MILLIS;
-        mAvailability.setEndTime(threeHoursAhead);
+        long twoHoursAhead = (System.currentTimeMillis() + TWO_HOURS_IN_MILLIS);
+        long twoHoursAheadRounded = (twoHoursAhead / ONE_HOUR_IN_MILLIS) * ONE_HOUR_IN_MILLIS;
+        mAvailability.setStartTime(twoHoursAheadRounded);
+        long threeHoursAheadRounded = twoHoursAheadRounded + ONE_HOUR_IN_MILLIS;
+        mAvailability.setEndTime(threeHoursAheadRounded);
         mAvailability.setLocationAddress("");
         mAvailability.setLocationName("");
         mAvailability.setActivity("");
