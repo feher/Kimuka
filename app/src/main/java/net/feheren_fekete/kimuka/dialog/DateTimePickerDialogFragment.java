@@ -73,6 +73,7 @@ public class DateTimePickerDialogFragment extends DialogFragment {
         arguments.putInt(ARG_DAY_OF_MONTH, dayOfMonth);
         arguments.putInt(ARG_HOUR_OF_DAY, hourOfDay);
         arguments.putInt(ARG_MINUTE, minute);
+        fragment.setArguments(arguments);
         return fragment;
     }
 
@@ -112,6 +113,7 @@ public class DateTimePickerDialogFragment extends DialogFragment {
         });
 
         view.findViewById(R.id.ok_button).setOnClickListener(mOnOkClicked);
+        view.findViewById(R.id.cancel_button).setOnClickListener(mOnCancelClicked);
 
         return view;
     }
@@ -183,7 +185,15 @@ public class DateTimePickerDialogFragment extends DialogFragment {
                 data.putInt(DATA_HOUR_OF_DAY, mHourOfDay);
                 data.putInt(DATA_MINUTE, mMinute);
                 listener.onFragmentAction(INTERACTION_DATE_TIME_PICKED, data);
+                dismiss();
             }
+        }
+    };
+
+    private View.OnClickListener mOnCancelClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            dismiss();
         }
     };
 
