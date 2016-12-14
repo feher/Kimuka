@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import net.feheren_fekete.kimuka.availabilitylist.AvailabilityListFragment;
 import net.feheren_fekete.kimuka.model.Availability;
+import net.feheren_fekete.kimuka.model.Filter;
 import net.feheren_fekete.kimuka.model.Request;
 import net.feheren_fekete.kimuka.requestlist.RequestListFragment;
 
@@ -24,6 +25,7 @@ public class PagerFragment extends BaseFragment {
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
+    private ViewStatePagerAdapter mPagerAdapter;
 
     public PagerFragment() {
     }
@@ -34,11 +36,6 @@ public class PagerFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pager, container, false);
@@ -46,16 +43,11 @@ public class PagerFragment extends BaseFragment {
         mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        PagerAdapter adapter = new ViewStatePagerAdapter(getMainActivity().getSupportFragmentManager());
-        mViewPager.setAdapter(adapter);
+        mPagerAdapter = new ViewStatePagerAdapter(getMainActivity().getSupportFragmentManager());
+        mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(mOnPageChangeListener);
 
         return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
     }
 
     private ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -87,6 +79,7 @@ public class PagerFragment extends BaseFragment {
                     break;
                 }
             }
+            getMainActivity().invalidateOptionsMenu();
         }
 
         @Override
@@ -137,7 +130,7 @@ public class PagerFragment extends BaseFragment {
                     return AvailabilityListFragment.newInstance(null);
                 }
                 case 1: {
-                    Availability filter = new Availability();
+                    Filter filter = new Filter();
                     filter.setUserKey(getUser().getKey());
                     return AvailabilityListFragment.newInstance(filter);
                 }

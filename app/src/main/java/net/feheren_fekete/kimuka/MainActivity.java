@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity
     private PagerFragment mPagerFragment;
     private AvailabilityFragment mAvailabilityFragment;
     private RequestFragment mRequestFragment;
+    private FilterFragment mFilterFragment;
     private Fragment mActiveFragment;
 
     @Override
@@ -149,6 +150,8 @@ public class MainActivity extends AppCompatActivity
             showAvailabilityFragment("");
         } else if (AvailabilityListFragment.INTERACTION_AVAILABILITY_TAPPED.equals(action)) {
             showAvailabilityFragment(data.getString(AvailabilityListFragment.DATA_AVAILABILITY_KEY));
+        } else if (AvailabilityListFragment.INTERACTION_CREATE_FILTER_TAPPED.equals(action)) {
+            showFilterFragment();
         } else if (TimePickerDialogFragment.INTERACTION_TIME_PICKED.equals(action)
                 && mActiveFragment instanceof TimePickerDialogFragment.Listener) {
             TimePickerDialogFragment.Listener listener = (TimePickerDialogFragment.Listener) mActiveFragment;
@@ -371,6 +374,20 @@ public class MainActivity extends AppCompatActivity
         mFab.setVisibility(View.GONE);
         invalidateOptionsMenu();
         mActiveFragment = mRequestFragment;
+    }
+
+    private void showFilterFragment() {
+        mFilterFragment = FilterFragment.newInstance();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, mFilterFragment, "FilterFragment")
+                .commit();
+        getSupportActionBar().setTitle(R.string.filter_title_new);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mTabLayout.setVisibility(View.GONE);
+        mFab.setVisibility(View.GONE);
+        invalidateOptionsMenu();
+        mActiveFragment = mFilterFragment;
     }
 
 }

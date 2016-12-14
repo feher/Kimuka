@@ -26,6 +26,7 @@ import net.feheren_fekete.kimuka.dialog.TimePickerDialogFragment;
 import net.feheren_fekete.kimuka.model.Availability;
 import net.feheren_fekete.kimuka.model.Filter;
 import net.feheren_fekete.kimuka.model.ModelUtils;
+import net.feheren_fekete.kimuka.model.User;
 
 import java.util.Calendar;
 import java.util.List;
@@ -99,6 +100,17 @@ public class FilterFragment
                 }
             }
         });
+        mLocationTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mLocationTextView.setText("");
+                mFilter.setLocationLatitude(null);
+                mFilter.setLocationLongitude(null);
+                mFilter.setLocationName(null);
+                mFilter.setLocationAddress(null);
+                return true;
+            }
+        });
 
         mStartDateTextView = (TextView) view.findViewById(R.id.start_date_value);
         mStartDateTextView.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +134,17 @@ public class FilterFragment
                 mIsAdjustingStartTime = true;
             }
         });
+        View.OnLongClickListener startDateTimeLongClickListener = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mStartDateTextView.setText("");
+                mStartDateTextView.setText("");
+                mFilter.setStartTime(null);
+                return true;
+            }
+        };
+        mStartDateTextView.setOnLongClickListener(startDateTimeLongClickListener);
+        mStartTimeTextView.setOnLongClickListener(startDateTimeLongClickListener);
 
         mEndDateTextView = (TextView) view.findViewById(R.id.end_date_value);
         mEndDateTextView.setOnClickListener(new View.OnClickListener() {
@@ -145,6 +168,17 @@ public class FilterFragment
                 mIsAdjustingStartTime = false;
             }
         });
+        View.OnLongClickListener endDateTimeLongClickListener = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mEndDateTextView.setText("");
+                mEndTimeTextView.setText("");
+                mFilter.setEndTime(null);
+                return true;
+            }
+        };
+        mEndDateTextView.setOnLongClickListener(endDateTimeLongClickListener);
+        mEndTimeTextView.setOnLongClickListener(endDateTimeLongClickListener);
 
         mActivityTextView = (TextView) view.findViewById(R.id.activity_value);
         mActivityTextView.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +188,14 @@ public class FilterFragment
                 DialogFragment newFragment = ActivityDialogFragment.newInstance(
                         ModelUtils.toIntList(mFilter.getActivity()));
                 newFragment.show(getActivity().getSupportFragmentManager(), "ActivityDialogFragment");
+            }
+        });
+        mActivityTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mActivityTextView.setText("");
+                mFilter.setActivity(null);
+                return true;
             }
         });
 
@@ -166,6 +208,14 @@ public class FilterFragment
                 newFragment.show(getActivity().getSupportFragmentManager(), "CanBelayDialogFragment");
             }
         });
+        mCanBelayTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mCanBelayTextView.setText("");
+                mFilter.setCanBelay(null);
+                return true;
+            }
+        });
 
         mNeedPartnerTextView = (TextView) view.findViewById(R.id.need_partner_value);
         mNeedPartnerTextView.setOnClickListener(new View.OnClickListener() {
@@ -174,6 +224,14 @@ public class FilterFragment
                 mNeedPartnerTextView.setError(null);
                 DialogFragment newFragment = NeedPartnerDialogFragment.newInstance();
                 newFragment.show(getActivity().getSupportFragmentManager(), "NeedPartnerDialogFragment");
+            }
+        });
+        mNeedPartnerTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mNeedPartnerTextView.setText("");
+                mFilter.setNeedPartner(null);
+                return true;
             }
         });
 
@@ -186,17 +244,20 @@ public class FilterFragment
                 newFragment.show(getActivity().getSupportFragmentManager(), "SharedEquipmentDialogFragment");
             }
         });
+        mSharedEquipmentTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mSharedEquipmentTextView.setText("");
+                mFilter.setSharedEquipment(null);
+                return true;
+            }
+        });
 
         mIsNewFilter = true;
-        initNewAvailability();
+        initNewFilter();
         updateViews();
 
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -209,8 +270,10 @@ public class FilterFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
+            case R.id.action_reset_filter:
+                resetFilter();
             case R.id.action_save_filter:
-                addAvailability();
+                saveFilter();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -271,7 +334,11 @@ public class FilterFragment
 
     @Override
     public void onActivitySelected(List<Integer> activities) {
-        mFilter.setActivity(ModelUtils.toCommaSeparatedString(activities));
+        if (!activities.isEmpty()) {
+            mFilter.setActivity(ModelUtils.toCommaSeparatedString(activities));
+        } else {
+            mFilter.setActivity(null);
+        }
         updateViews();
     }
 
@@ -289,29 +356,23 @@ public class FilterFragment
 
     @Override
     public void onEquipmentSelected(List<Integer> equipments) {
-        mFilter.setSharedEquipment(ModelUtils.toCommaSeparatedString(equipments));
+        if (!equipments.isEmpty()) {
+            mFilter.setSharedEquipment(ModelUtils.toCommaSeparatedString(equipments));
+        } else {
+            mFilter.setSharedEquipment(null);
+        }
         updateViews();
     }
 
-    private void initNewAvailability() {
-        mFilter.setUserKey(getUser().getKey());
-        mFilter.setUserName(getUser().getName());
-        mFilter.setHostUser(true);
-        mFilter.setCanBelay(getUser().getCanBelay());
-        mFilter.setGrades(getUser().getGrades());
-        mFilter.setLocationLatitude(Double.MAX_VALUE);
-        mFilter.setLocationLongitude(Double.MAX_VALUE);
+    private void initNewFilter() {
+        mFilter = new Filter();
+        mFilter.setCanBelay(User.CAN_BELAY_YES);
         long twoHoursAhead = (System.currentTimeMillis() + TWO_HOURS_IN_MILLIS);
         long twoHoursAheadRounded = (twoHoursAhead / ONE_HOUR_IN_MILLIS) * ONE_HOUR_IN_MILLIS;
         mFilter.setStartTime(twoHoursAheadRounded);
         long threeHoursAheadRounded = twoHoursAheadRounded + ONE_HOUR_IN_MILLIS;
         mFilter.setEndTime(threeHoursAheadRounded);
-        mFilter.setLocationAddress("");
-        mFilter.setLocationName("");
-        mFilter.setActivity("");
-        mFilter.setNeedPartner(Availability.NEED_PARTNER_UNDEFINED);
-        mFilter.setIfNoPartner(Availability.IF_NO_PARTNER_UNDEFINED);
-        mFilter.setSharedEquipment("");
+        mFilter.setNeedPartner(Availability.NEED_PARTNER_YES);
     }
 
     private void adjustStartAndEndTime(boolean isTriggeredByStartTime) {
@@ -349,7 +410,8 @@ public class FilterFragment
     }
 
     private void updateViews() {
-        if (mFilter.getLocationLatitude() != Double.MAX_VALUE) {
+        if (mFilter.getLocationLatitude() != null
+                && mFilter.getLocationLatitude() != Double.MAX_VALUE) {
             mLocationTextView.setText(
                     mFilter.getLocationName() + ", "
                             + mFilter.getLocationAddress()
@@ -358,38 +420,70 @@ public class FilterFragment
             mLocationTextView.setText("");
         }
 
-        mStartDateTextView.setText(formatDateForTextView(mFilter.getStartTime()));
-        mStartTimeTextView.setText(formatTimeForTextView(mFilter.getStartTime()));
+        if (mFilter.getStartTime() != null) {
+            mStartDateTextView.setText(formatDateForTextView(mFilter.getStartTime()));
+            mStartTimeTextView.setText(formatTimeForTextView(mFilter.getStartTime()));
+        } else {
+            mStartDateTextView.setText("");
+            mStartTimeTextView.setText("");
+        }
 
-        mEndDateTextView.setText(formatDateForTextView(mFilter.getEndTime()));
-        mEndTimeTextView.setText(formatTimeForTextView(mFilter.getEndTime()));
+        if (mFilter.getEndTime() != null) {
+            mEndDateTextView.setText(formatDateForTextView(mFilter.getEndTime()));
+            mEndTimeTextView.setText(formatTimeForTextView(mFilter.getEndTime()));
+        } else {
+            mEndDateTextView.setText("");
+            mEndTimeTextView.setText("");
+        }
 
-        mActivityTextView.setText(
-                ModelUtils.createActivityNameList(
-                        getContext(),
-                        ModelUtils.toIntList(mFilter.getActivity())));
+        if (mFilter.getActivity() != null) {
+            mActivityTextView.setText(
+                    ModelUtils.createActivityNameList(
+                            getContext(),
+                            ModelUtils.toIntList(mFilter.getActivity())));
+        } else {
+            mActivityTextView.setText("");
+        }
 
-        mCanBelayTextView.setText(
-                ModelUtils.createCanBelayText(getContext(), mFilter.getCanBelay()));
+        if (mFilter.getCanBelay() != null) {
+            mCanBelayTextView.setText(
+                    ModelUtils.createCanBelayText(getContext(), mFilter.getCanBelay()));
+        } else {
+            mCanBelayTextView.setText("");
+        }
 
-        int needPartner = mFilter.getNeedPartner();
-        mNeedPartnerTextView.setText(
-                (needPartner != Availability.NEED_PARTNER_UNDEFINED)
-                ? ModelUtils.createNeedPartnerText(getContext(), needPartner)
-                : "");
+        if (mFilter.getNeedPartner() != null) {
+            int needPartner = mFilter.getNeedPartner();
+            mNeedPartnerTextView.setText(
+                    (needPartner != Availability.NEED_PARTNER_UNDEFINED)
+                            ? ModelUtils.createNeedPartnerText(getContext(), needPartner)
+                            : "");
+        } else {
+            mNeedPartnerTextView.setText("");
+        }
 
-        mSharedEquipmentTextView.setText(
-                ModelUtils.createEquipmentNameList(
-                        getContext(),
-                        ModelUtils.toIntList(mFilter.getSharedEquipment())));
+        if (mFilter.getSharedEquipment() != null) {
+            mSharedEquipmentTextView.setText(
+                    ModelUtils.createEquipmentNameList(
+                            getContext(),
+                            ModelUtils.toIntList(mFilter.getSharedEquipment())));
+        } else {
+            mSharedEquipmentTextView.setText("");
+        }
 
         getActivity().invalidateOptionsMenu();
     }
 
-    private void addAvailability() {
-        MainActivity activity = getMainActivity();
-        if (activity != null) {
-            activity.onFragmentAction(INTERACTION_DONE_TAPPED, new Bundle());
+    private void resetFilter() {
+        initNewFilter();
+        updateViews();
+    }
+
+    private void saveFilter() {
+        Activity activity = getActivity();
+        if (activity instanceof FragmentInteractionListener) {
+            FragmentInteractionListener listener = (FragmentInteractionListener) activity;
+            listener.onFragmentAction(INTERACTION_DONE_TAPPED, new Bundle());
         }
     }
 

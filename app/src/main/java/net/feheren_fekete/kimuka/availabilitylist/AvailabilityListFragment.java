@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,6 +27,7 @@ import net.feheren_fekete.kimuka.BaseFragment;
 import net.feheren_fekete.kimuka.FragmentInteractionListener;
 import net.feheren_fekete.kimuka.R;
 import net.feheren_fekete.kimuka.model.Availability;
+import net.feheren_fekete.kimuka.model.Filter;
 import net.feheren_fekete.kimuka.model.ModelUtils;
 
 
@@ -35,6 +37,7 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
 
     public static final String INTERACTION_ADD_AVAILABILITY_TAPPED = AvailabilityListFragment.class.getSimpleName() + ".INTERACTION_ADD_AVAILABILITY_TAPPED";
     public static final String INTERACTION_AVAILABILITY_TAPPED = AvailabilityListFragment.class.getSimpleName() + ".INTERACTION_AVAILABILITY_TAPPED";
+    public static final String INTERACTION_CREATE_FILTER_TAPPED = AvailabilityListFragment.class.getSimpleName() + ".INTERACTION_CREATE_FILTER_TAPPED";
 
     public static final String DATA_AVAILABILITY_KEY = AvailabilityListFragment.class.getSimpleName() + ".DATA_AVAILABILITY_KEY";
 
@@ -49,11 +52,13 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
     public AvailabilityListFragment() {
     }
 
-    public static AvailabilityListFragment newInstance(@Nullable Availability filter) {
+    public static AvailabilityListFragment newInstance(@Nullable Filter filter) {
         AvailabilityListFragment fragment = new AvailabilityListFragment();
         if (filter != null) {
             Bundle arguments = new Bundle();
-            arguments.putString(ARG_USER_KEY, filter.getUserKey());
+            if (filter.getUserKey() != null) {
+                arguments.putString(ARG_USER_KEY, filter.getUserKey());
+            }
             fragment.setArguments(arguments);
         }
         return fragment;
@@ -67,30 +72,6 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
         mSortedAvailabilityTable = createFilteredQuery();
         mSortedAvailabilityTable.addChildEventListener(mChildEventListener);
         mAdapter = new AvailabilityListAdapter(getContext(), this);
-    }
-
-    private Query createFilteredQuery() {
-        Query result;
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            String userKey = arguments.getString(ARG_USER_KEY, "");
-            if (!userKey.isEmpty()) {
-                result = mAvailabilityTable
-                        .orderByChild("userKey").equalTo(userKey)
-                        .limitToFirst(100);
-            } else {
-                result = mAvailabilityTable
-                        .orderByChild("startTime")
-//                        .startAt(System.currentTimeMillis())
-                        .limitToFirst(100);
-            }
-        } else {
-            result = mAvailabilityTable
-                    .orderByChild("startTime")
-//                    .startAt(System.currentTimeMillis())
-                    .limitToFirst(100);
-        }
-        return result;
     }
 
     @Override
@@ -117,6 +98,23 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
         });
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.availability_list_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.action_filter:
+                createFilter();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -179,5 +177,37 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
 
         }
     };
+
+    private Query createFilteredQuery() {
+        Query result;
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            String userKey = arguments.getString(ARG_USER_KEY, "");
+            if (!userKey.isEmpty()) {
+                result = mAvailabilityTable
+                        .orderByChild("userKey").equalTo(userKey)
+                        .limitToFirst(100);
+            } else {
+                result = mAvailabilityTable
+                        .orderByChild("startTime")
+//                        .startAt(System.currentTimeMillis())
+                        .limitToFirst(100);
+            }
+        } else {
+            result = mAvailabilityTable
+                    .orderByChild("startTime")
+//                    .startAt(System.currentTimeMillis())
+                    .limitToFirst(100);
+        }
+        return result;
+    }
+
+    private void createFilter() {
+        Activity activity = getActivity();
+        if (activity instanceof FragmentInteractionListener) {
+            FragmentInteractionListener listener = (FragmentInteractionListener) activity;
+            listener.onFragmentAction(INTERACTION_CREATE_FILTER_TAPPED, new Bundle());
+        }
+    }
 
 }

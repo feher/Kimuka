@@ -9,6 +9,8 @@ public class Filter {
     private String userName;
     private Double locationLatitude;
     private Double locationLongitude;
+    private String locationName;
+    private String locationAddress;
     private Long startTime; // ms since Epoch.
     private Long endTime; // ms since Epoch.
     private String activity; // Comma separated list of activities (integers).
@@ -32,35 +34,51 @@ public class Filter {
         this.userName = userName;
     }
 
-    public double getLocationLatitude() {
+    public Double getLocationLatitude() {
         return locationLatitude;
     }
 
-    public void setLocationLatitude(double locationLatitude) {
+    public void setLocationLatitude(Double locationLatitude) {
         this.locationLatitude = locationLatitude;
     }
 
-    public double getLocationLongitude() {
+    public Double getLocationLongitude() {
         return locationLongitude;
     }
 
-    public void setLocationLongitude(double locationLongitude) {
+    public void setLocationLongitude(Double locationLongitude) {
         this.locationLongitude = locationLongitude;
     }
 
-    public long getStartTime() {
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
+    }
+
+    public String getLocationAddress() {
+        return locationAddress;
+    }
+
+    public void setLocationAddress(String locationAddress) {
+        this.locationAddress = locationAddress;
+    }
+
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(long startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
 
-    public long getEndTime() {
+    public Long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(long endTime) {
+    public void setEndTime(Long endTime) {
         this.endTime = endTime;
     }
 
@@ -72,11 +90,11 @@ public class Filter {
         this.activity = activity;
     }
 
-    public int getNeedPartner() {
+    public Integer getNeedPartner() {
         return needPartner;
     }
 
-    public void setNeedPartner(int needPartner) {
+    public void setNeedPartner(Integer needPartner) {
         this.needPartner = needPartner;
     }
 
@@ -88,11 +106,11 @@ public class Filter {
         this.sharedEquipment = sharedEquipment;
     }
 
-    public int getCanBelay() {
+    public Integer getCanBelay() {
         return canBelay;
     }
 
-    public void setCanBelay(int canBelay) {
+    public void setCanBelay(Integer canBelay) {
         this.canBelay = canBelay;
     }
 
@@ -103,6 +121,8 @@ public class Filter {
             jsonObject.put("userName", userName);
             jsonObject.put("locationLatitude", locationLatitude);
             jsonObject.put("locationLongitude", locationLongitude);
+            jsonObject.put("locationName", locationName);
+            jsonObject.put("locationAddress", locationAddress);
             jsonObject.put("startTime", startTime);
             jsonObject.put("endTime", endTime);
             jsonObject.put("activity", activity);
@@ -118,15 +138,17 @@ public class Filter {
 
     public void fromJson(JSONObject jsonObject) {
         userKey = jsonObject.has("userKey") ? jsonObject.optString("userKey") : null;
-        userName = jsonObject.has("userName") ? jsonObject.optString("userName", userName) : null;
+        userName = jsonObject.has("userName") ? jsonObject.optString("userName") : null;
         locationLatitude = jsonObject.has("locationLatitude") ? jsonObject.optDouble("locationLatitude") : null;
-        locationLongitude = jsonObject.has("locationLongitude") ? jsonObject.optDouble("locationLongitude", locationLongitude) : null;
-        startTime = jsonObject.has("startTime") ? jsonObject.optLong("startTime", startTime) : null;
-        endTime = jsonObject.has("endTime") ? jsonObject.optLong("endTime", endTime) : null;
-        activity = jsonObject.has("activity") ? jsonObject.optString("activity", activity) : null;
-        needPartner = jsonObject.has("needPartner") ? jsonObject.optInt("needPartner", needPartner) : null;
-        sharedEquipment = jsonObject.has("sharedEquipment") ? jsonObject.optString("sharedEquipment", sharedEquipment) : null;
-        canBelay = jsonObject.has("canBelay") ? jsonObject.optInt("canBelay", canBelay) : null;
+        locationLongitude = jsonObject.has("locationLongitude") ? jsonObject.optDouble("locationLongitude") : null;
+        locationName = jsonObject.has("locationName") ? jsonObject.optString("locationName") : null;
+        locationAddress = jsonObject.has("locationAddress") ? jsonObject.optString("locationAddress") : null;
+        startTime = jsonObject.has("startTime") ? jsonObject.optLong("startTime") : null;
+        endTime = jsonObject.has("endTime") ? jsonObject.optLong("endTime") : null;
+        activity = jsonObject.has("activity") ? jsonObject.optString("activity") : null;
+        needPartner = jsonObject.has("needPartner") ? jsonObject.optInt("needPartner") : null;
+        sharedEquipment = jsonObject.has("sharedEquipment") ? jsonObject.optString("sharedEquipment") : null;
+        canBelay = jsonObject.has("canBelay") ? jsonObject.optInt("canBelay") : null;
     }
 
 }

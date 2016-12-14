@@ -12,6 +12,7 @@
 
     <string name="availability_list_title_all">Buddies</string>
     <string name="availability_list_title_my">Me</string>
+    <string name="availability_list_filter">Filter</string>
 
     <string name="request_list_title_received">Inbox</string>
     <string name="request_list_title_sent">Sent</string>
@@ -116,8 +117,11 @@
     <string name="request_error_missing_common_activity">No common activity with partner</string>
 
     <string name="filter_title_new">New filter</string>
+    <string name="filter_reset">Reset filter</string>
     <string name="filter_save">Save filter</string>
     <string name="filter_delete">Delete filter</string>
+    <string name="filter_partner_title">Partner</string>
+    <string name="filter_location_title">Location</string>
 
 
 </resources>

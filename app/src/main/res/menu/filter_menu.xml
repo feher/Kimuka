@@ -4,6 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_reset_filter"
+        android:title="@string/filter_delete"
+        android:icon="@drawable/ic_reset"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/action_save_filter"
         android:title="@string/filter_save"
         android:icon="@drawable/ic_done"
