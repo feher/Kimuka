@@ -28,6 +28,10 @@ import net.feheren_fekete.kimuka.model.Filter;
 import net.feheren_fekete.kimuka.model.ModelUtils;
 import net.feheren_fekete.kimuka.model.User;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -47,6 +51,7 @@ public class FilterFragment
     private static final String TAG = FilterFragment.class.getSimpleName();
 
     public static final String INTERACTION_DONE_TAPPED = FilterFragment.class.getSimpleName() + ".INTERACTION_DONE_TAPPED";
+    public static final String DATA_FILTER_JSON = FilterFragment.class.getSimpleName() + ".DATA_FILTER_JSON";
 
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int ONE_HOUR_IN_MILLIS = 1000 * 60 * 60;
@@ -480,11 +485,40 @@ public class FilterFragment
     }
 
     private void saveFilter() {
-        Activity activity = getActivity();
-        if (activity instanceof FragmentInteractionListener) {
-            FragmentInteractionListener listener = (FragmentInteractionListener) activity;
-            listener.onFragmentAction(INTERACTION_DONE_TAPPED, new Bundle());
+        String filterJson = mFilter.toJson();
+        boolean isOK = saveFile(
+                getContext().getExternalFilesDir("filters").getAbsolutePath() + File.separator + mFilter.getName(),
+                filterJson);
+        if (isOK) {
+            Activity activity = getActivity();
+            if (activity instanceof FragmentInteractionListener) {
+                FragmentInteractionListener listener = (FragmentInteractionListener) activity;
+                Bundle data = new Bundle();
+                data.putString(DATA_FILTER_JSON, filterJson);
+                listener.onFragmentAction(INTERACTION_DONE_TAPPED, data);
+            }
+        } else {
+            // TODO: Handle: Show toast: "Cannot save filter".
         }
+    }
+
+    private boolean saveFile(String yourfilename, String yourstring) {
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(yourfilename));
+            writer.write(yourstring);
+        } catch (IOException e) {
+            return false;
+        } finally  {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                // Ignore.
+            }
+        }
+        return true;
     }
 
 }

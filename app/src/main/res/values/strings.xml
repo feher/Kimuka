@@ -123,5 +123,7 @@
     <string name="filter_partner_title">Partner</string>
     <string name="filter_location_title">Location</string>
 
+    <string name="filter_dialog_title">Filters</string>
+    <string name="filter_dialog_new_filter">New filter…</string>
 
 </resources>

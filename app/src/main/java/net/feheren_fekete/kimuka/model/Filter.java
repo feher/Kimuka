@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 public class Filter {
 
+    private String name;
     private String userKey;
     private String userName;
     private Double locationLatitude;
@@ -17,6 +18,14 @@ public class Filter {
     private Integer needPartner;
     private String sharedEquipment; // Comma separated list of equipments (integers).
     private Integer canBelay;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getUserKey() {
         return userKey;
