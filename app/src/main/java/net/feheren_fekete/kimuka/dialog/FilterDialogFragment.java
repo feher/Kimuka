@@ -25,8 +25,12 @@ import java.util.List;
 public class FilterDialogFragment extends DialogFragment {
 
     public static final String INTERACTION_CREATE_FILTER_SELECTED = FilterDialogFragment.class.getSimpleName() + ".INTERACTION_CREATE_FILTER_SELECTED";
+    public static final String INTERACTION_NO_FILTER_SELECTED = FilterDialogFragment.class.getSimpleName() + ".INTERACTION_NO_FILTER_SELECTED";
     public static final String INTERACTION_FILTER_SELECTED = FilterDialogFragment.class.getSimpleName() + ".INTERACTION_FILTER_SELECTED";
     public static final String DATA_FILTER_JSON = FilterDialogFragment.class.getSimpleName() + ".DATA_FILTER_JSON";
+
+    private int mNoFilterIndex;
+    private int mNewFilterIndex;
 
     public interface Listener {
         void onFilterSelected(String jsonFilter);
@@ -52,8 +56,10 @@ public class FilterDialogFragment extends DialogFragment {
                         if (activity instanceof FragmentInteractionListener) {
                             FragmentInteractionListener listener = (FragmentInteractionListener) activity;
                             Bundle data = new Bundle();
-                            if (i == items.length - 1) {
+                            if (i == mNewFilterIndex) {
                                 listener.onFragmentAction(INTERACTION_CREATE_FILTER_SELECTED, data);
+                            } else if (i == mNoFilterIndex) {
+                                listener.onFragmentAction(INTERACTION_NO_FILTER_SELECTED, data);
                             } else {
                                 String filterJson = loadFile(getFiltersDirPath() + File.separator + items[i]);
                                 if (!filterJson.isEmpty()) {
@@ -75,11 +81,18 @@ public class FilterDialogFragment extends DialogFragment {
 
     private List<String> getFilterNames() {
         List<String> result = new ArrayList<>();
+
+        result.add(getResources().getString(R.string.filter_dialog_no_filter));
+        mNoFilterIndex = result.size() - 1;
+
         File filtersDir = new File(getFiltersDirPath());
         if (filtersDir.isDirectory() && filtersDir.exists()) {
             result.addAll(Arrays.asList(filtersDir.list()));
         }
+
         result.add(getResources().getString(R.string.filter_dialog_new_filter));
+        mNewFilterIndex = result.size() - 1;
+
         return result;
     }
 

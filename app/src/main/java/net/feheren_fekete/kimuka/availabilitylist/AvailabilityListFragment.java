@@ -3,12 +3,10 @@ package net.feheren_fekete.kimuka.availabilitylist;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +24,7 @@ import com.google.firebase.database.Query;
 import net.feheren_fekete.kimuka.BaseFragment;
 import net.feheren_fekete.kimuka.FragmentInteractionListener;
 import net.feheren_fekete.kimuka.R;
+import net.feheren_fekete.kimuka.dialog.FilterDialogFragment;
 import net.feheren_fekete.kimuka.model.Availability;
 import net.feheren_fekete.kimuka.model.Filter;
 import net.feheren_fekete.kimuka.model.ModelUtils;
@@ -37,11 +36,10 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
 
     public static final String INTERACTION_ADD_AVAILABILITY_TAPPED = AvailabilityListFragment.class.getSimpleName() + ".INTERACTION_ADD_AVAILABILITY_TAPPED";
     public static final String INTERACTION_AVAILABILITY_TAPPED = AvailabilityListFragment.class.getSimpleName() + ".INTERACTION_AVAILABILITY_TAPPED";
-    public static final String INTERACTION_CREATE_FILTER_TAPPED = AvailabilityListFragment.class.getSimpleName() + ".INTERACTION_CREATE_FILTER_TAPPED";
 
     public static final String DATA_AVAILABILITY_KEY = AvailabilityListFragment.class.getSimpleName() + ".DATA_AVAILABILITY_KEY";
 
-    private static final String ARG_USER_KEY = AvailabilityListFragment.class.getSimpleName() + ".ARG_USER_KEY";
+    private static final String ARG_FILTER_JSON = AvailabilityListFragment.class.getSimpleName() + ".ARG_FILTER_JSON";
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mAvailabilityTable;
@@ -52,15 +50,11 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
     public AvailabilityListFragment() {
     }
 
-    public static AvailabilityListFragment newInstance(@Nullable Filter filter) {
+    public static AvailabilityListFragment newInstance(String filterJson) {
         AvailabilityListFragment fragment = new AvailabilityListFragment();
-        if (filter != null) {
-            Bundle arguments = new Bundle();
-            if (filter.getUserKey() != null) {
-                arguments.putString(ARG_USER_KEY, filter.getUserKey());
-            }
-            fragment.setArguments(arguments);
-        }
+        Bundle arguments = new Bundle();
+        arguments.putString(ARG_FILTER_JSON, filterJson);
+        fragment.setArguments(arguments);
         return fragment;
     }
 
@@ -77,8 +71,6 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
-
         View view = inflater.inflate(R.layout.fragment_availability_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -98,23 +90,6 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
         });
 
         return view;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.availability_list_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        switch (itemId) {
-            case R.id.action_filter:
-                createFilter();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -181,33 +156,37 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
     private Query createFilteredQuery() {
         Query result;
         Bundle arguments = getArguments();
-        if (arguments != null) {
-            String userKey = arguments.getString(ARG_USER_KEY, "");
-            if (!userKey.isEmpty()) {
+        String filterJson = arguments.getString(ARG_FILTER_JSON, "");
+        if (!filterJson.isEmpty()) {
+            Filter filter = new Filter();
+            filter.fromJson(filterJson);
+            if (filter.getUserKey() != null) {
                 result = mAvailabilityTable
-                        .orderByChild("userKey").equalTo(userKey)
+                        .orderByChild("userKey").equalTo(filter.getUserKey())
+                        .limitToFirst(100);
+            } else if (filter.getStartTime() != null) {
+                result = mAvailabilityTable
+                        .orderByChild("startTime")
+                        .startAt(filter.getStartTime())
                         .limitToFirst(100);
             } else {
                 result = mAvailabilityTable
                         .orderByChild("startTime")
-//                        .startAt(System.currentTimeMillis())
+                        .startAt(System.currentTimeMillis())
                         .limitToFirst(100);
             }
         } else {
             result = mAvailabilityTable
                     .orderByChild("startTime")
-//                    .startAt(System.currentTimeMillis())
+                    .startAt(System.currentTimeMillis())
                     .limitToFirst(100);
         }
         return result;
     }
 
-    private void createFilter() {
-        Activity activity = getActivity();
-        if (activity instanceof FragmentInteractionListener) {
-            FragmentInteractionListener listener = (FragmentInteractionListener) activity;
-            listener.onFragmentAction(INTERACTION_CREATE_FILTER_TAPPED, new Bundle());
-        }
+    public void filter() {
+        DialogFragment newFragment = FilterDialogFragment.newInstance();
+        newFragment.show(getActivity().getSupportFragmentManager(), "FilterDialogFragment");
     }
 
 }

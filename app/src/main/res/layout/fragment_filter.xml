@@ -13,6 +13,21 @@
         android:layout_margin="5dp">
 
         <TextView
+            android:id="@+id/name_title"
+            android:text="@string/filter_name_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <EditText
+            android:id="@+id/name_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:padding="5dp"
+            />
+
+        <TextView
             android:id="@+id/partner_title"
             android:text="@string/filter_partner_title"
             android:layout_width="wrap_content"

@@ -40,10 +40,11 @@
     <string name="availability_done">Done</string>
     <string name="availability_send_request">Send request</string>
     <string name="availability_cancel">Cancel availability</string>
-    <string name="availability_missing_location">Location missing</string>
-    <string name="availability_missing_activity">Activity missing</string>
-    <string name="availability_missing_need_partner">Do you need partner?</string>
-    <string name="availability_missing_no_partner">What do you do without partner?</string>
+    <string name="availability_error_missing_location">Location missing</string>
+    <string name="availability_error_bad_time">Start-time must be before end-time</string>
+    <string name="availability_error_missing_activity">Activity missing</string>
+    <string name="availability_error_missing_need_partner">Do you need partner?</string>
+    <string name="availability_error_missing_no_partner">What do you do without partner?</string>
 
     <string name="activity_dialog_title">Activities</string>
     <string-array name="activities">
@@ -120,10 +121,16 @@
     <string name="filter_reset">Reset filter</string>
     <string name="filter_save">Save filter</string>
     <string name="filter_delete">Delete filter</string>
+    <string name="filter_name_title">Filter name</string>
     <string name="filter_partner_title">Partner</string>
+    <string name="filter_partner_hint">Select partner</string>
     <string name="filter_location_title">Location</string>
+    <string name="filter_location_hint">Select location</string>
+    <string name="filter_error_missing_name">Filter name missing</string>
+    <string name="filter_error_bad_time">Start-time must be before end-time</string>
 
     <string name="filter_dialog_title">Filters</string>
+    <string name="filter_dialog_no_filter">Don\'t filter</string>
     <string name="filter_dialog_new_filter">New filter…</string>
 
 </resources>

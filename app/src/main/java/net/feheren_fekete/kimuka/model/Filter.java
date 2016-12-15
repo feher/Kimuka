@@ -126,6 +126,7 @@ public class Filter {
     public String toJson() {
         JSONObject jsonObject = new JSONObject();
         try {
+            jsonObject.put("name", name);
             jsonObject.put("userKey", userKey);
             jsonObject.put("userName", userName);
             jsonObject.put("locationLatitude", locationLatitude);
@@ -145,19 +146,26 @@ public class Filter {
         return jsonObject.toString();
     }
 
-    public void fromJson(JSONObject jsonObject) {
-        userKey = jsonObject.has("userKey") ? jsonObject.optString("userKey") : null;
-        userName = jsonObject.has("userName") ? jsonObject.optString("userName") : null;
-        locationLatitude = jsonObject.has("locationLatitude") ? jsonObject.optDouble("locationLatitude") : null;
-        locationLongitude = jsonObject.has("locationLongitude") ? jsonObject.optDouble("locationLongitude") : null;
-        locationName = jsonObject.has("locationName") ? jsonObject.optString("locationName") : null;
-        locationAddress = jsonObject.has("locationAddress") ? jsonObject.optString("locationAddress") : null;
-        startTime = jsonObject.has("startTime") ? jsonObject.optLong("startTime") : null;
-        endTime = jsonObject.has("endTime") ? jsonObject.optLong("endTime") : null;
-        activity = jsonObject.has("activity") ? jsonObject.optString("activity") : null;
-        needPartner = jsonObject.has("needPartner") ? jsonObject.optInt("needPartner") : null;
-        sharedEquipment = jsonObject.has("sharedEquipment") ? jsonObject.optString("sharedEquipment") : null;
-        canBelay = jsonObject.has("canBelay") ? jsonObject.optInt("canBelay") : null;
+    public void fromJson(String jsonString) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            name = jsonObject.has("name") ? jsonObject.optString("name") : null;
+            userKey = jsonObject.has("userKey") ? jsonObject.optString("userKey") : null;
+            userName = jsonObject.has("userName") ? jsonObject.optString("userName") : null;
+            locationLatitude = jsonObject.has("locationLatitude") ? jsonObject.optDouble("locationLatitude") : null;
+            locationLongitude = jsonObject.has("locationLongitude") ? jsonObject.optDouble("locationLongitude") : null;
+            locationName = jsonObject.has("locationName") ? jsonObject.optString("locationName") : null;
+            locationAddress = jsonObject.has("locationAddress") ? jsonObject.optString("locationAddress") : null;
+            startTime = jsonObject.has("startTime") ? jsonObject.optLong("startTime") : null;
+            endTime = jsonObject.has("endTime") ? jsonObject.optLong("endTime") : null;
+            activity = jsonObject.has("activity") ? jsonObject.optString("activity") : null;
+            needPartner = jsonObject.has("needPartner") ? jsonObject.optInt("needPartner") : null;
+            sharedEquipment = jsonObject.has("sharedEquipment") ? jsonObject.optString("sharedEquipment") : null;
+            canBelay = jsonObject.has("canBelay") ? jsonObject.optInt("canBelay") : null;
+        } catch (JSONException e) {
+            // TODO: Handle?
+            throw new RuntimeException();
+        }
     }
 
 }

@@ -28,6 +28,7 @@ import net.feheren_fekete.kimuka.availabilitylist.AvailabilityListFragment;
 import net.feheren_fekete.kimuka.dialog.ActivityDialogFragment;
 import net.feheren_fekete.kimuka.dialog.CanBelayDialogFragment;
 import net.feheren_fekete.kimuka.dialog.DatePickerDialogFragment;
+import net.feheren_fekete.kimuka.dialog.FilterDialogFragment;
 import net.feheren_fekete.kimuka.dialog.GradeDialogFragment;
 import net.feheren_fekete.kimuka.dialog.IfNoPartnerDialogFragment;
 import net.feheren_fekete.kimuka.dialog.NeedPartnerDialogFragment;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity
         implements FragmentInteractionListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private AppPreferences mAppPreferences;
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase;
@@ -68,6 +71,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAppPreferences = new AppPreferences(this);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -133,6 +138,8 @@ public class MainActivity extends AppCompatActivity
             showPagerFragment();
         } else if (mActiveFragment == mUserProfileFragment) {
             showPagerFragment();
+        } else if (mActiveFragment == mRequestFragment) {
+            showPagerFragment();
         }
     }
 
@@ -150,8 +157,17 @@ public class MainActivity extends AppCompatActivity
             showAvailabilityFragment("");
         } else if (AvailabilityListFragment.INTERACTION_AVAILABILITY_TAPPED.equals(action)) {
             showAvailabilityFragment(data.getString(AvailabilityListFragment.DATA_AVAILABILITY_KEY));
-        } else if (AvailabilityListFragment.INTERACTION_CREATE_FILTER_TAPPED.equals(action)) {
+        } else if (FilterDialogFragment.INTERACTION_FILTER_SELECTED.equals(action)) {
+            mAppPreferences.setActiveFilter(data.getString(FilterDialogFragment.DATA_FILTER_JSON));
+            showPagerFragment();
+        } else if (FilterDialogFragment.INTERACTION_NO_FILTER_SELECTED.equals(action)) {
+            mAppPreferences.setActiveFilter("");
+            showPagerFragment();
+        } else if (FilterDialogFragment.INTERACTION_CREATE_FILTER_SELECTED.equals(action)) {
             showFilterFragment();
+        } else if (FilterFragment.INTERACTION_DONE_TAPPED.equals(action)) {
+            mAppPreferences.setActiveFilter(data.getString(FilterFragment.DATA_FILTER_JSON));
+            showPagerFragment();
         } else if (TimePickerDialogFragment.INTERACTION_TIME_PICKED.equals(action)
                 && mActiveFragment instanceof TimePickerDialogFragment.Listener) {
             TimePickerDialogFragment.Listener listener = (TimePickerDialogFragment.Listener) mActiveFragment;
@@ -327,6 +343,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showPagerFragment() {
+        if (mPagerFragment != null) {
+            mPagerFragment.setHasOptionsMenu(false);
+        }
         mPagerFragment = PagerFragment.newInstance();
         getSupportFragmentManager()
                 .beginTransaction()

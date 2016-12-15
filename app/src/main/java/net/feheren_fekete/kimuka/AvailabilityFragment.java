@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -36,7 +35,6 @@ import net.feheren_fekete.kimuka.dialog.SharedEquimentDialogFragment;
 import net.feheren_fekete.kimuka.dialog.TimePickerDialogFragment;
 import net.feheren_fekete.kimuka.model.Availability;
 import net.feheren_fekete.kimuka.model.ModelUtils;
-import net.feheren_fekete.kimuka.model.User;
 
 import java.util.Calendar;
 import java.util.List;
@@ -84,7 +82,6 @@ public class AvailabilityFragment
     private TextView mSharedEquipmentTextView;
     private EditText mNoteEditText;
 
-    private User mUser;
     private Availability mAvailability = new Availability();
     private boolean mIsNewAvailability;
 
@@ -132,6 +129,8 @@ public class AvailabilityFragment
         mStartDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mStartTimeTextView.setError(null);
+                mEndTimeTextView.setError(null);
                 String[] dateParts = mStartDateTextView.getText().toString().split("\\.");
                 DialogFragment newFragment = DatePickerDialogFragment.newInstance(
                         Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1]) - 1, Integer.valueOf(dateParts[2]));
@@ -143,6 +142,8 @@ public class AvailabilityFragment
         mStartTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mStartTimeTextView.setError(null);
+                mEndTimeTextView.setError(null);
                 String[] timeParts = mStartTimeTextView.getText().toString().split(":");
                 DialogFragment newFragment = TimePickerDialogFragment.newInstance(
                         Integer.valueOf(timeParts[0]), Integer.valueOf(timeParts[1]));
@@ -155,6 +156,8 @@ public class AvailabilityFragment
         mEndDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mStartTimeTextView.setError(null);
+                mEndTimeTextView.setError(null);
                 String[] dateParts = mEndDateTextView.getText().toString().split("\\.");
                 DialogFragment newFragment = DatePickerDialogFragment.newInstance(
                         Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1]) - 1, Integer.valueOf(dateParts[2]));
@@ -166,6 +169,8 @@ public class AvailabilityFragment
         mEndTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mStartTimeTextView.setError(null);
+                mEndTimeTextView.setError(null);
                 String[] timeParts = mEndTimeTextView.getText().toString().split(":");
                 DialogFragment newFragment = TimePickerDialogFragment.newInstance(
                         Integer.valueOf(timeParts[0]), Integer.valueOf(timeParts[1]));
@@ -270,7 +275,7 @@ public class AvailabilityFragment
                 sendRequest();
                 break;
             case R.id.action_save_availability:
-                addAvailability();
+                addOrUpdateAvailability();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -396,19 +401,19 @@ public class AvailabilityFragment
     };
 
     private void adjustStartAndEndTime(boolean isTriggeredByStartTime) {
-        long startTime = mAvailability.getStartTime();
-        long endTime = mAvailability.getEndTime();
-        if (isTriggeredByStartTime) {
-            if (endTime <= startTime) {
-                endTime = startTime + TWO_HOURS_IN_MILLIS;
-            }
-        } else {
-            if (endTime <= startTime) {
-                startTime = endTime - TWO_HOURS_IN_MILLIS;
-            }
-        }
-        mAvailability.setStartTime(startTime);
-        mAvailability.setEndTime(endTime);
+//        long startTime = mAvailability.getStartTime();
+//        long endTime = mAvailability.getEndTime();
+//        if (isTriggeredByStartTime) {
+//            if (endTime <= startTime) {
+//                endTime = startTime + TWO_HOURS_IN_MILLIS;
+//            }
+//        } else {
+//            if (endTime <= startTime) {
+//                startTime = endTime - TWO_HOURS_IN_MILLIS;
+//            }
+//        }
+//        mAvailability.setStartTime(startTime);
+//        mAvailability.setEndTime(endTime);
     }
 
     private String formatDateForTextView(long timeInMillis) {
@@ -517,29 +522,35 @@ public class AvailabilityFragment
         getActivity().invalidateOptionsMenu();
     }
 
-    private void addAvailability() {
+    private void addOrUpdateAvailability() {
         MainActivity activity = getMainActivity();
         if (activity != null) {
             if (mAvailability.getLocationLatitude() == Double.MAX_VALUE
                     || mAvailability.getLocationLongitude() == Double.MAX_VALUE) {
-                Toast.makeText(activity, R.string.availability_missing_location, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.availability_error_missing_location, Toast.LENGTH_SHORT).show();
                 mLocationTextView.setError("");
                 return;
             }
+            if (mAvailability.getStartTime() >= mAvailability.getEndTime()) {
+                Toast.makeText(activity, R.string.availability_error_bad_time, Toast.LENGTH_SHORT).show();
+                mStartTimeTextView.setError("");
+                mEndTimeTextView.setError("");
+                return;
+            }
             if (mAvailability.getActivity().isEmpty()) {
-                Toast.makeText(activity, R.string.availability_missing_activity, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.availability_error_missing_activity, Toast.LENGTH_SHORT).show();
                 mActivityTextView.setError("");
                 return;
             }
             if (mAvailability.getNeedPartner() == Availability.NEED_PARTNER_UNDEFINED) {
-                Toast.makeText(activity, R.string.availability_missing_need_partner, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.availability_error_missing_need_partner, Toast.LENGTH_SHORT).show();
                 mNeedPartnerTextView.setError("");
                 return;
             }
 
             if (mAvailability.getNeedPartner() == Availability.NEED_PARTNER_YES) {
                 if (mAvailability.getIfNoPartner() == Availability.IF_NO_PARTNER_UNDEFINED) {
-                    Toast.makeText(activity, R.string.availability_missing_no_partner, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.availability_error_missing_no_partner, Toast.LENGTH_SHORT).show();
                     mIfNoPartnerTextView.setError("");
                     return;
                 }

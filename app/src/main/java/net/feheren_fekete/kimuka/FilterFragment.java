@@ -4,13 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -57,6 +61,7 @@ public class FilterFragment
     private static final int ONE_HOUR_IN_MILLIS = 1000 * 60 * 60;
     private static final int TWO_HOURS_IN_MILLIS = ONE_HOUR_IN_MILLIS * 2;
 
+    private EditText mNameEditText;
     private TextView mLocationTextView;
     private TextView mStartDateTextView;
     private TextView mStartTimeTextView;
@@ -91,6 +96,21 @@ public class FilterFragment
 
         View view = inflater.inflate(R.layout.fragment_filter, container, false);
 
+        mNameEditText = (EditText) view.findViewById(R.id.name_value);
+        mNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+                mNameEditText.setError(null);
+                mFilter.setName(mNameEditText.getText().toString().trim());
+            }
+        });
+
         mLocationTextView = (TextView) view.findViewById(R.id.location_value);
         mLocationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +141,13 @@ public class FilterFragment
         mStartDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] dateParts = mStartDateTextView.getText().toString().split("\\.");
+                mStartTimeTextView.setError(null);
+                mEndTimeTextView.setError(null);
+                String text = mStartDateTextView.getText().toString().trim();
+                if (text.isEmpty()) {
+                    text = formatDateForTextView(getFutureTime(2));
+                }
+                String[] dateParts = text.split("\\.");
                 DialogFragment newFragment = DatePickerDialogFragment.newInstance(
                         Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1]) - 1, Integer.valueOf(dateParts[2]));
                 newFragment.show(getActivity().getSupportFragmentManager(), "DatePickerDialogFragment");
@@ -132,7 +158,13 @@ public class FilterFragment
         mStartTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] timeParts = mStartTimeTextView.getText().toString().split(":");
+                mStartTimeTextView.setError(null);
+                mEndTimeTextView.setError(null);
+                String text = mStartTimeTextView.getText().toString().trim();
+                if (text.isEmpty()) {
+                    text = formatTimeForTextView(getFutureTime(2));
+                }
+                String[] timeParts = text.split(":");
                 DialogFragment newFragment = TimePickerDialogFragment.newInstance(
                         Integer.valueOf(timeParts[0]), Integer.valueOf(timeParts[1]));
                 newFragment.show(getActivity().getSupportFragmentManager(), "TimePickerDialogFragment");
@@ -155,7 +187,13 @@ public class FilterFragment
         mEndDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] dateParts = mEndDateTextView.getText().toString().split("\\.");
+                mStartTimeTextView.setError(null);
+                mEndTimeTextView.setError(null);
+                String text = mEndDateTextView.getText().toString().trim();
+                if (text.isEmpty()) {
+                    text = formatDateForTextView(getFutureTime(3));
+                }
+                String[] dateParts = text.split("\\.");
                 DialogFragment newFragment = DatePickerDialogFragment.newInstance(
                         Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1]) - 1, Integer.valueOf(dateParts[2]));
                 newFragment.show(getActivity().getSupportFragmentManager(), "DatePickerDialogFragment");
@@ -166,7 +204,13 @@ public class FilterFragment
         mEndTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] timeParts = mEndTimeTextView.getText().toString().split(":");
+                mStartTimeTextView.setError(null);
+                mEndTimeTextView.setError(null);
+                String text = mEndTimeTextView.getText().toString().trim();
+                if (text.isEmpty()) {
+                    text = formatTimeForTextView(getFutureTime(3));
+                }
+                String[] timeParts = text.split(":");
                 DialogFragment newFragment = TimePickerDialogFragment.newInstance(
                         Integer.valueOf(timeParts[0]), Integer.valueOf(timeParts[1]));
                 newFragment.show(getActivity().getSupportFragmentManager(), "TimePickerDialogFragment");
@@ -268,7 +312,7 @@ public class FilterFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.availability_menu, menu);
+        inflater.inflate(R.menu.filter_menu, menu);
     }
 
     @Override
@@ -277,6 +321,7 @@ public class FilterFragment
         switch (itemId) {
             case R.id.action_reset_filter:
                 resetFilter();
+                break;
             case R.id.action_save_filter:
                 saveFilter();
                 break;
@@ -301,18 +346,13 @@ public class FilterFragment
 
     @Override
     public void onDateSet(int year, int month, int dayOfMonth) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = createCalendarFromFilter();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         if (mIsAdjustingStartTime) {
-            calendar.setTimeInMillis(mFilter.getStartTime());
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             mFilter.setStartTime(calendar.getTimeInMillis());
         } else {
-            calendar.setTimeInMillis(mFilter.getEndTime());
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             mFilter.setEndTime(calendar.getTimeInMillis());
         }
         adjustStartAndEndTime(mIsAdjustingStartTime);
@@ -321,20 +361,42 @@ public class FilterFragment
 
     @Override
     public void onTimeSet(int hourOfDay, int minute) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = createCalendarFromFilter();
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
         if (mIsAdjustingStartTime) {
-            calendar.setTimeInMillis(mFilter.getStartTime());
-            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            calendar.set(Calendar.MINUTE, minute);
             mFilter.setStartTime(calendar.getTimeInMillis());
         } else {
-            calendar.setTimeInMillis(mFilter.getEndTime());
-            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            calendar.set(Calendar.MINUTE, minute);
             mFilter.setEndTime(calendar.getTimeInMillis());
         }
         adjustStartAndEndTime(mIsAdjustingStartTime);
         updateViews();
+    }
+
+    private Calendar createCalendarFromFilter() {
+        Calendar calendar = Calendar.getInstance();
+        if (mIsAdjustingStartTime) {
+            if (mFilter.getStartTime() != null) {
+                calendar.setTimeInMillis(mFilter.getStartTime());
+            } else {
+                calendar.setTimeInMillis(getFutureTime(2));
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+            }
+        } else {
+            if (mFilter.getEndTime() != null) {
+                calendar.setTimeInMillis(mFilter.getEndTime());
+            } else {
+                calendar.setTimeInMillis(getFutureTime(3));
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+            }
+        }
+        return calendar;
     }
 
     @Override
@@ -372,28 +434,31 @@ public class FilterFragment
     private void initNewFilter() {
         mFilter = new Filter();
         mFilter.setCanBelay(User.CAN_BELAY_YES);
-        long twoHoursAhead = (System.currentTimeMillis() + TWO_HOURS_IN_MILLIS);
-        long twoHoursAheadRounded = (twoHoursAhead / ONE_HOUR_IN_MILLIS) * ONE_HOUR_IN_MILLIS;
-        mFilter.setStartTime(twoHoursAheadRounded);
-        long threeHoursAheadRounded = twoHoursAheadRounded + ONE_HOUR_IN_MILLIS;
-        mFilter.setEndTime(threeHoursAheadRounded);
+        mFilter.setStartTime(getFutureTime(2));
+        mFilter.setEndTime(getFutureTime(3));
         mFilter.setNeedPartner(Availability.NEED_PARTNER_YES);
     }
 
+    private long getFutureTime(int hoursAhead) {
+        long timeAhead = (System.currentTimeMillis() + ONE_HOUR_IN_MILLIS * hoursAhead);
+        long timeAheadRoundedToHour = (timeAhead / ONE_HOUR_IN_MILLIS) * ONE_HOUR_IN_MILLIS;
+        return timeAheadRoundedToHour;
+    }
+
     private void adjustStartAndEndTime(boolean isTriggeredByStartTime) {
-        long startTime = mFilter.getStartTime();
-        long endTime = mFilter.getEndTime();
-        if (isTriggeredByStartTime) {
-            if (endTime <= startTime) {
-                endTime = startTime + TWO_HOURS_IN_MILLIS;
-            }
-        } else {
-            if (endTime <= startTime) {
-                startTime = endTime - TWO_HOURS_IN_MILLIS;
-            }
-        }
-        mFilter.setStartTime(startTime);
-        mFilter.setEndTime(endTime);
+//        long startTime = mFilter.getStartTime();
+//        long endTime = mFilter.getEndTime();
+//        if (isTriggeredByStartTime) {
+//            if (endTime <= startTime) {
+//                endTime = startTime + TWO_HOURS_IN_MILLIS;
+//            }
+//        } else {
+//            if (endTime <= startTime) {
+//                startTime = endTime - TWO_HOURS_IN_MILLIS;
+//            }
+//        }
+//        mFilter.setStartTime(startTime);
+//        mFilter.setEndTime(endTime);
     }
 
     private String formatDateForTextView(long timeInMillis) {
@@ -415,6 +480,12 @@ public class FilterFragment
     }
 
     private void updateViews() {
+        if (mFilter.getName() != null) {
+            mNameEditText.setText(mFilter.getName());
+        } else {
+            mNameEditText.setText("");
+        }
+
         if (mFilter.getLocationLatitude() != null
                 && mFilter.getLocationLatitude() != Double.MAX_VALUE) {
             mLocationTextView.setText(
@@ -480,11 +551,25 @@ public class FilterFragment
     }
 
     private void resetFilter() {
-        initNewFilter();
+        mFilter = new Filter();
         updateViews();
     }
 
     private void saveFilter() {
+        if (mFilter.getName() == null || mFilter.getName().isEmpty()) {
+            Toast.makeText(getContext(), R.string.filter_error_missing_name, Toast.LENGTH_SHORT).show();
+            mNameEditText.setError("");
+            return;
+        }
+
+        if (mFilter.getStartTime() != null && mFilter.getEndTime() != null
+                && mFilter.getStartTime() > mFilter.getEndTime()) {
+            Toast.makeText(getContext(), R.string.availability_error_bad_time, Toast.LENGTH_SHORT).show();
+            mStartTimeTextView.setError("");
+            mEndTimeTextView.setError("");
+            return;
+        }
+
         String filterJson = mFilter.toJson();
         boolean isOK = saveFile(
                 getContext().getExternalFilesDir("filters").getAbsolutePath() + File.separator + mFilter.getName(),
