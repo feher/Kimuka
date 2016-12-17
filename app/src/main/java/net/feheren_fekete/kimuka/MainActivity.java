@@ -141,6 +141,8 @@ public class MainActivity extends AppCompatActivity
             showPagerFragment();
         } else if (mActiveFragment == mRequestFragment) {
             showPagerFragment();
+        } else if (mActiveFragment == mFilterFragment) {
+            showPagerFragment();
         }
     }
 

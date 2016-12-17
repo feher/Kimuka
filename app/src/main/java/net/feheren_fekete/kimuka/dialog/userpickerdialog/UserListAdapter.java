@@ -78,6 +78,11 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         }
     }
 
+    public void removeItems() {
+        mUsers.clear();
+        notifyDataSetChanged();
+    }
+
     @Override
     public UserListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())

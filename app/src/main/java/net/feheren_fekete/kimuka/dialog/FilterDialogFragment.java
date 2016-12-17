@@ -82,14 +82,13 @@ public class FilterDialogFragment extends DialogFragment {
     private List<String> getFilterNames() {
         List<String> result = new ArrayList<>();
 
-        result.add(getResources().getString(R.string.filter_dialog_no_filter));
-        mNoFilterIndex = result.size() - 1;
-
         File filtersDir = new File(getFiltersDirPath());
         if (filtersDir.isDirectory() && filtersDir.exists()) {
             result.addAll(Arrays.asList(filtersDir.list()));
         }
 
+        result.add(getResources().getString(R.string.filter_dialog_no_filter));
+        mNoFilterIndex = result.size() - 1;
         result.add(getResources().getString(R.string.filter_dialog_new_filter));
         mNewFilterIndex = result.size() - 1;
 

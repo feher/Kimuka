@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +58,10 @@ public class UserPickerDialogFragment extends DialogFragment implements UserList
         mAdapter = new UserListAdapter(this);
 
         View view = inflater.inflate(R.layout.user_picker_dialog, container, false);
+
         mUserNameEditText = (EditText) view.findViewById(R.id.partner_name_value);
+        mUserNameEditText.addTextChangedListener(mTextWatcher);
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -81,6 +86,26 @@ public class UserPickerDialogFragment extends DialogFragment implements UserList
             dismiss();
         }
     }
+
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            mFilteredAvailabilityTable.removeEventListener(mChildEventListener);
+            mAdapter.removeItems();
+            mFilteredAvailabilityTable = createFilteredQuery();
+            mFilteredAvailabilityTable.addChildEventListener(mChildEventListener);
+        }
+    };
 
     private Query createFilteredQuery() {
         String userName = mUserNameEditText.getText().toString().trim();
