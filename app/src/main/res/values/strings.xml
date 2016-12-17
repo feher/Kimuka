@@ -130,7 +130,7 @@
     <string name="filter_error_bad_time">Start-time must be before end-time</string>
 
     <string name="filter_dialog_title">Filters</string>
-    <string name="filter_dialog_no_filter">Don\'t filter</string>
+    <string name="filter_dialog_no_filter">No filter</string>
     <string name="filter_dialog_new_filter">New filter…</string>
 
     <string name="user_picker_dialog_title">Select a partner</string>

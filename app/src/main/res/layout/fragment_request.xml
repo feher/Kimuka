@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:padding="5dp"
-            android:hint="@string/request_activity_hint"/>
+            />
 
         <TextView
             android:id="@+id/can_belay_title"
@@ -122,7 +122,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:padding="5dp"
-            android:hint="@string/request_can_belay_hint"/>
+            />
 
         <TextView
             android:id="@+id/shared_equipment_title"
@@ -137,7 +137,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:padding="5dp"
-            android:hint="@string/request_shared_equipment_hint"/>
+            />
 
         <TextView
             android:id="@+id/note_title"
@@ -154,7 +154,6 @@
             android:ems="10"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:maxLength="200"
-            android:hint="@string/request_note_hint"
             android:gravity="top|start"
             />
 
