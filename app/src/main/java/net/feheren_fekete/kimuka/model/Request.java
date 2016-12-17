@@ -4,6 +4,10 @@ import com.google.firebase.database.Exclude;
 
 public class Request {
 
+    public static final String FIELD_SENDER_KEY = "senderKey";
+    public static final String FIELD_RECEIVER_KEY = "receiverKey";
+    public static final String FIELD_START_TIME = "startTime";
+
     @Exclude
     private String key;
 

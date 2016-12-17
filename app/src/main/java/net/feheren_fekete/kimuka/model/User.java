@@ -6,6 +6,12 @@ import java.util.List;
 
 public class User {
 
+    public static final String FIELD_UID = "uid";
+    public static final String FIELD_NAME = "name";
+    public static final String FIELD_CAN_BELAY = "canBelay";
+    public static final String FIELD_GRADES = "grades";
+    public static final String FIELD_NOTE = "note";
+
     public static final int GRADE_FREE_CLIMBING = 0;
     public static final int GRADE_BOULDERING = 1;
 

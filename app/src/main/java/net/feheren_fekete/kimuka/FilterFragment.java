@@ -27,6 +27,7 @@ import net.feheren_fekete.kimuka.dialog.DatePickerDialogFragment;
 import net.feheren_fekete.kimuka.dialog.NeedPartnerDialogFragment;
 import net.feheren_fekete.kimuka.dialog.SharedEquimentDialogFragment;
 import net.feheren_fekete.kimuka.dialog.TimePickerDialogFragment;
+import net.feheren_fekete.kimuka.dialog.userpickerdialog.UserPickerDialogFragment;
 import net.feheren_fekete.kimuka.model.Availability;
 import net.feheren_fekete.kimuka.model.Filter;
 import net.feheren_fekete.kimuka.model.ModelUtils;
@@ -36,7 +37,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,6 +48,7 @@ public class FilterFragment
         extends
                 BaseFragment
         implements
+                UserPickerDialogFragment.Listener,
                 DatePickerDialogFragment.Listener,
                 TimePickerDialogFragment.Listener,
                 ActivityDialogFragment.Listener,
@@ -61,8 +65,9 @@ public class FilterFragment
     private static final int ONE_HOUR_IN_MILLIS = 1000 * 60 * 60;
     private static final int TWO_HOURS_IN_MILLIS = ONE_HOUR_IN_MILLIS * 2;
 
-    private EditText mNameEditText;
+    private EditText mFilterNameEditText;
     private TextView mLocationTextView;
+    private TextView mPartnerTextView;
     private TextView mStartDateTextView;
     private TextView mStartTimeTextView;
     private TextView mEndDateTextView;
@@ -96,8 +101,8 @@ public class FilterFragment
 
         View view = inflater.inflate(R.layout.fragment_filter, container, false);
 
-        mNameEditText = (EditText) view.findViewById(R.id.name_value);
-        mNameEditText.addTextChangedListener(new TextWatcher() {
+        mFilterNameEditText = (EditText) view.findViewById(R.id.filter_name_value);
+        mFilterNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -106,8 +111,27 @@ public class FilterFragment
             }
             @Override
             public void afterTextChanged(Editable editable) {
-                mNameEditText.setError(null);
-                mFilter.setName(mNameEditText.getText().toString().trim());
+                mFilterNameEditText.setError(null);
+                mFilter.setName(mFilterNameEditText.getText().toString().trim());
+            }
+        });
+
+        mPartnerTextView = (TextView) view.findViewById(R.id.partner_value);
+        mPartnerTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPartnerTextView.setError(null);
+                DialogFragment newFragment = UserPickerDialogFragment.newInstance();
+                newFragment.show(getActivity().getSupportFragmentManager(), "UserPickerDialogFragment");
+            }
+        });
+        mPartnerTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mPartnerTextView.setText("");
+                mFilter.setUserKey(null);
+                mFilter.setUserName(null);
+                return true;
             }
         });
 
@@ -234,8 +258,9 @@ public class FilterFragment
             @Override
             public void onClick(View view) {
                 mActivityTextView.setError(null);
-                DialogFragment newFragment = ActivityDialogFragment.newInstance(
-                        ModelUtils.toIntList(mFilter.getActivity()));
+                DialogFragment newFragment = (mFilter.getActivity() != null)
+                        ? ActivityDialogFragment.newInstance(ModelUtils.toIntList(mFilter.getActivity()))
+                        : ActivityDialogFragment.newInstance(new ArrayList<Integer>());
                 newFragment.show(getActivity().getSupportFragmentManager(), "ActivityDialogFragment");
             }
         });
@@ -342,6 +367,13 @@ public class FilterFragment
                 updateViews();
             }
         }
+    }
+
+    @Override
+    public void onUserSelected(String userKey, String userName) {
+        mFilter.setUserKey(userKey);
+        mFilter.setUserName(userName);
+        updateViews();
     }
 
     @Override
@@ -480,10 +512,16 @@ public class FilterFragment
     }
 
     private void updateViews() {
-        if (mFilter.getName() != null) {
-            mNameEditText.setText(mFilter.getName());
+        if (mFilter.getUserName() != null) {
+            mPartnerTextView.setText(mFilter.getUserName());
         } else {
-            mNameEditText.setText("");
+            mPartnerTextView.setText("");
+        }
+
+        if (mFilter.getName() != null) {
+            mFilterNameEditText.setText(mFilter.getName());
+        } else {
+            mFilterNameEditText.setText("");
         }
 
         if (mFilter.getLocationLatitude() != null
@@ -558,7 +596,7 @@ public class FilterFragment
     private void saveFilter() {
         if (mFilter.getName() == null || mFilter.getName().isEmpty()) {
             Toast.makeText(getContext(), R.string.filter_error_missing_name, Toast.LENGTH_SHORT).show();
-            mNameEditText.setError("");
+            mFilterNameEditText.setError("");
             return;
         }
 

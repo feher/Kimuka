@@ -1,23 +1,33 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:text="@string/user_picker_dialog_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        />
 
     <EditText
         android:id="@+id/partner_name_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Name"
         android:ems="10"
-        android:layout_alignParentTop="true"
+        android:hint="@string/user_picker_dialog_partner_name_hint"
+        android:layout_below="@+id/title"
         android:layout_alignParentStart="true"
         />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/partner_name_value"
         />
 

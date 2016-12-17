@@ -159,22 +159,22 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
             filter.fromJson(filterJson);
             if (filter.getUserKey() != null) {
                 result = mAvailabilityTable
-                        .orderByChild("userKey").equalTo(filter.getUserKey())
+                        .orderByChild(Availability.FIELD_USER_KEY).equalTo(filter.getUserKey())
                         .limitToFirst(100);
             } else if (filter.getStartTime() != null) {
                 result = mAvailabilityTable
-                        .orderByChild("startTime")
+                        .orderByChild(Availability.FIELD_START_TIME)
                         .startAt(filter.getStartTime())
                         .limitToFirst(100);
             } else {
                 result = mAvailabilityTable
-                        .orderByChild("startTime")
+                        .orderByChild(Availability.FIELD_START_TIME)
                         .startAt(System.currentTimeMillis())
                         .limitToFirst(100);
             }
         } else {
             result = mAvailabilityTable
-                    .orderByChild("startTime")
+                    .orderByChild(Availability.FIELD_START_TIME)
                     .startAt(System.currentTimeMillis())
                     .limitToFirst(100);
         }

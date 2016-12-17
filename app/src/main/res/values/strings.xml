@@ -133,4 +133,7 @@
     <string name="filter_dialog_no_filter">Don\'t filter</string>
     <string name="filter_dialog_new_filter">New filter…</string>
 
+    <string name="user_picker_dialog_title">Select a partner</string>
+    <string name="user_picker_dialog_partner_name_hint">Filter by name</string>
+
 </resources>

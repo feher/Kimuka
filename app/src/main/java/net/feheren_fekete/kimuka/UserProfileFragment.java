@@ -64,7 +64,7 @@ public class UserProfileFragment
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-        mNameTextView = (EditText) view.findViewById(R.id.name_value);
+        mNameTextView = (EditText) view.findViewById(R.id.filter_name_value);
 
         mFreeClimbingGradeTextView = (TextView) view.findViewById(R.id.free_climbing_grade_value);
         mFreeClimbingGradeTextView.setOnClickListener(new View.OnClickListener() {

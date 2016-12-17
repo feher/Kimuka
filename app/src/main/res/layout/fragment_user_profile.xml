@@ -19,7 +19,7 @@
             />
 
         <EditText
-            android:id="@+id/name_value"
+            android:id="@+id/filter_name_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"

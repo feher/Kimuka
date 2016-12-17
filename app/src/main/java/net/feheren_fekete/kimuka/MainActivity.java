@@ -34,6 +34,7 @@ import net.feheren_fekete.kimuka.dialog.IfNoPartnerDialogFragment;
 import net.feheren_fekete.kimuka.dialog.NeedPartnerDialogFragment;
 import net.feheren_fekete.kimuka.dialog.SharedEquimentDialogFragment;
 import net.feheren_fekete.kimuka.dialog.TimePickerDialogFragment;
+import net.feheren_fekete.kimuka.dialog.userpickerdialog.UserPickerDialogFragment;
 import net.feheren_fekete.kimuka.model.Grading;
 import net.feheren_fekete.kimuka.model.ModelUtils;
 import net.feheren_fekete.kimuka.model.User;
@@ -168,6 +169,12 @@ public class MainActivity extends AppCompatActivity
         } else if (FilterFragment.INTERACTION_DONE_TAPPED.equals(action)) {
             mAppPreferences.setActiveFilter(data.getString(FilterFragment.DATA_FILTER_JSON));
             showPagerFragment();
+        } else if (UserPickerDialogFragment.INTERACTION_USER_SELECTED.equals(action)
+                && mActiveFragment instanceof UserPickerDialogFragment.Listener) {
+            UserPickerDialogFragment.Listener listener = (UserPickerDialogFragment.Listener) mActiveFragment;
+            listener.onUserSelected(
+                    data.getString(UserPickerDialogFragment.DATA_USER_KEY),
+                    data.getString(UserPickerDialogFragment.DATA_USER_NAME));
         } else if (TimePickerDialogFragment.INTERACTION_TIME_PICKED.equals(action)
                 && mActiveFragment instanceof TimePickerDialogFragment.Listener) {
             TimePickerDialogFragment.Listener listener = (TimePickerDialogFragment.Listener) mActiveFragment;

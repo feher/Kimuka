@@ -7,6 +7,9 @@ import java.util.List;
 
 public class Availability {
 
+    public static final String FIELD_USER_KEY = "userKey";
+    public static final String FIELD_START_TIME = "startTime";
+
     public static final int ACTIVITY_TOP_ROPE = 0;
     public static final int ACTIVITY_LEAD = 1;
     public static final int ACTIVITY_TRAD = 2;
