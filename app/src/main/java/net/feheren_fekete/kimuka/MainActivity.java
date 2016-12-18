@@ -17,6 +17,7 @@ import android.view.View;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +36,7 @@ import net.feheren_fekete.kimuka.dialog.NeedPartnerDialogFragment;
 import net.feheren_fekete.kimuka.dialog.SharedEquimentDialogFragment;
 import net.feheren_fekete.kimuka.dialog.TimePickerDialogFragment;
 import net.feheren_fekete.kimuka.dialog.userpickerdialog.UserPickerDialogFragment;
+import net.feheren_fekete.kimuka.model.Availability;
 import net.feheren_fekete.kimuka.model.Grading;
 import net.feheren_fekete.kimuka.model.ModelUtils;
 import net.feheren_fekete.kimuka.model.User;
@@ -51,7 +53,9 @@ public class MainActivity extends AppCompatActivity
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase;
-    private DatabaseReference mUsersTable;
+    private DatabaseReference mUserTable;
+    private Query mOldAvailabilityQuery;
+    private Query mOldRequestQuery;
     private @Nullable FirebaseUser mFirebaseUser;
     private @Nullable Query mUserQuery;
     private @Nullable User mUser;
@@ -86,18 +90,31 @@ public class MainActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
         mDatabase.setPersistenceEnabled(true);
-        mUsersTable = mDatabase.getReference(ModelUtils.TABLE_USER);
+        mUserTable = mDatabase.getReference(ModelUtils.TABLE_USER);
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        mOldAvailabilityQuery = mDatabase.getReference(ModelUtils.TABLE_AVAILABILITY)
+                .orderByChild(Availability.FIELD_START_TIME)
+                .endAt(System.currentTimeMillis());
+        mOldAvailabilityQuery.addChildEventListener(mOldAvailabilityListener);
+
+        mOldRequestQuery = mDatabase.getReference(ModelUtils.TABLE_REQUEST)
+                .orderByChild(Availability.FIELD_START_TIME)
+                .endAt(System.currentTimeMillis());
+        mOldRequestQuery.addChildEventListener(mOldRequestListener);
+
         mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        mOldAvailabilityQuery.removeEventListener(mOldAvailabilityListener);
+        mOldRequestQuery.removeEventListener(mOldRequestListener);
+
         unregisterUserListener();
         mAuth.removeAuthStateListener(mAuthListener);
     }
@@ -234,6 +251,44 @@ public class MainActivity extends AppCompatActivity
         return mUser;
     }
 
+    private ChildEventListener mOldAvailabilityListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            dataSnapshot.getRef().removeValue();
+        }
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        }
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+        }
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+        }
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+        }
+    };
+
+    private ChildEventListener mOldRequestListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            dataSnapshot.getRef().removeValue();
+        }
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        }
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+        }
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+        }
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+        }
+    };
+
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -259,7 +314,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void registerUserListener(String uid) {
-        mUserQuery = mUsersTable.orderByChild("uid").equalTo(uid);
+        mUserQuery = mUserTable.orderByChild("uid").equalTo(uid);
         mUserQuery.addValueEventListener(mUserListener);
     }
 
@@ -310,7 +365,7 @@ public class MainActivity extends AppCompatActivity
         user.setGrades(ModelUtils.toCommaSeparatedString(Arrays.asList(
                 Grading.YDS_5_0, Grading.FONTENBLAU_3)));
         user.setNote("");
-        DatabaseReference userRef = mUsersTable.push();
+        DatabaseReference userRef = mUserTable.push();
         userRef.setValue(user).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {

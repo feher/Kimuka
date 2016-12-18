@@ -61,7 +61,6 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
         mDatabase = FirebaseDatabase.getInstance();
         mAvailabilityTable = mDatabase.getReference().child(ModelUtils.TABLE_AVAILABILITY);
         mSortedAvailabilityTable = createFilteredQuery();
-        mSortedAvailabilityTable.addChildEventListener(mChildEventListener);
         mAdapter = new AvailabilityListAdapter(getContext(), this);
     }
 
@@ -87,6 +86,18 @@ public class AvailabilityListFragment extends BaseFragment implements Availabili
         });
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mSortedAvailabilityTable.addChildEventListener(mChildEventListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mSortedAvailabilityTable.removeEventListener(mChildEventListener);
     }
 
     @Override

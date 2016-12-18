@@ -61,8 +61,19 @@ public class RequestListFragment extends BaseFragment implements RequestListAdap
         mDatabase = FirebaseDatabase.getInstance();
         mRequestTable = mDatabase.getReference().child(ModelUtils.TABLE_REQUEST);
         mSortedRequestTable = createFilteredQuery();
-        mSortedRequestTable.addChildEventListener(mChildEventListener);
         mAdapter = new RequestListAdapter(getContext(), this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mSortedRequestTable.addChildEventListener(mChildEventListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mSortedRequestTable.removeEventListener(mChildEventListener);
     }
 
     private Query createFilteredQuery() {

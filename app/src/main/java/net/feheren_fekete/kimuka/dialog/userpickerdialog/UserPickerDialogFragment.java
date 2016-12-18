@@ -22,7 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import net.feheren_fekete.kimuka.FragmentInteractionListener;
-import net.feheren_fekete.kimuka.MainActivity;
 import net.feheren_fekete.kimuka.R;
 import net.feheren_fekete.kimuka.model.ModelUtils;
 import net.feheren_fekete.kimuka.model.User;
@@ -69,9 +68,20 @@ public class UserPickerDialogFragment extends DialogFragment implements UserList
         mDatabase = FirebaseDatabase.getInstance();
         mUserTable = mDatabase.getReference().child(ModelUtils.TABLE_USER);
         mFilteredAvailabilityTable = createFilteredQuery();
-        mFilteredAvailabilityTable.addChildEventListener(mChildEventListener);
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mFilteredAvailabilityTable.addChildEventListener(mChildEventListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mFilteredAvailabilityTable.removeEventListener(mChildEventListener);
     }
 
     @Override
