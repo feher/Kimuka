@@ -103,7 +103,9 @@ public class RequestFragment
         View view = inflater.inflate(R.layout.fragment_request, container, false);
 
         mPartnerTextView = (TextView) view.findViewById(R.id.partner_value);
+        mPartnerTextView.setEnabled(false);
         mLocationTextView = (TextView) view.findViewById(R.id.location_value);
+        mLocationTextView.setEnabled(false);
 
         mStartDateTextView = (TextView) view.findViewById(R.id.start_date_value);
         mStartDateTextView.setOnClickListener(new View.OnClickListener() {

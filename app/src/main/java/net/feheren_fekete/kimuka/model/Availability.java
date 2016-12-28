@@ -10,10 +10,20 @@ public class Availability {
     public static final String FIELD_USER_KEY = "userKey";
     public static final String FIELD_START_TIME = "startTime";
 
+    // NOTE: Keep this in sync with "activities" array in strings.xml!
     public static final int ACTIVITY_TOP_ROPE = 0;
     public static final int ACTIVITY_LEAD = 1;
     public static final int ACTIVITY_TRAD = 2;
     public static final int ACTIVITY_BOULDERING = 3;
+
+    // NOTE: Keep this in sync with "shared_equipments" array in strings.xml!
+    public static final int EQUIPMENT_ROPE = 0;
+    public static final int EQUIPMENT_ATC = 1;
+    public static final int EQUIPMENT_GRIGRI = 2;
+    public static final int EQUIPMENT_CARABINERS = 3;
+    public static final int EQUIPMENT_QUICK_DRAWS = 4;
+    public static final int EQUIPMENT_FRIENDS = 5;
+    public static final int EQUIPMENT_SLINGS = 6;
 
     public static final int NEED_PARTNER_UNDEFINED = -1;
     public static final int NEED_PARTNER_YES = 0;

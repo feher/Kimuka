@@ -40,6 +40,7 @@ import net.feheren_fekete.kimuka.model.Availability;
 import net.feheren_fekete.kimuka.model.Grading;
 import net.feheren_fekete.kimuka.model.ModelUtils;
 import net.feheren_fekete.kimuka.model.User;
+import net.feheren_fekete.kimuka.testdata.TestData;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -72,6 +73,8 @@ public class MainActivity extends AppCompatActivity
     private FilterFragment mFilterFragment;
     private Fragment mActiveFragment;
 
+    private static boolean sTestDataCreated = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +94,11 @@ public class MainActivity extends AppCompatActivity
         mDatabase = FirebaseDatabase.getInstance();
         mDatabase.setPersistenceEnabled(true);
         mUserTable = mDatabase.getReference(ModelUtils.TABLE_USER);
+
+//        if (!sTestDataCreated) {
+//            TestData.addTestData();
+//            sTestDataCreated = true;
+//        }
     }
 
     @Override
@@ -429,11 +437,6 @@ public class MainActivity extends AppCompatActivity
                 .beginTransaction()
                 .replace(R.id.fragment_container, mAvailabilityFragment, "AvailabilityFragment")
                 .commit();
-        if (availabilityKey.isEmpty()) {
-            getSupportActionBar().setTitle(R.string.availability_title_new);
-        } else {
-            getSupportActionBar().setTitle(R.string.availability_title_edit);
-        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mTabLayout.setVisibility(View.GONE);
         mFab.setVisibility(View.GONE);

@@ -17,9 +17,10 @@
     <string name="request_list_title_received">Inbox</string>
     <string name="request_list_title_sent">Sent</string>
 
-    <string name="availability_title_new">New availability</string>
+    <string name="availability_title_new">Create availability</string>
     <string name="availability_title_edit">Edit availability</string>
-    <string name="availability_title_show">Availability</string>
+    <string name="availability_title_view">Availability</string>
+    <string name="availability_partner_title">Partner</string>
     <string name="availability_location">Location</string>
     <string name="availability_location_hint">Select location</string>
     <string name="availability_start_time">From</string>
@@ -47,6 +48,7 @@
     <string name="availability_error_missing_no_partner">What do you do without partner?</string>
 
     <string name="activity_dialog_title">Activities</string>
+    <!-- NOTE: Keep this in sync with Availability.ACTIVITY_* constants! -->
     <string-array name="activities">
         <item>Top rope</item>
         <item>Lead</item>
@@ -68,6 +70,7 @@
     </string-array>
 
     <string name="shared_equipment_dialog_title">Shared equipment</string>
+    <!-- NOTE: Keep this in sync with Availability.EQUIPMENT_* constants! -->
     <string-array name="shared_equipments">
         <item>Rope</item>
         <item>ATC</item>

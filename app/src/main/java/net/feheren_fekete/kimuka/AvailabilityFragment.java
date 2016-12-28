@@ -69,6 +69,8 @@ public class AvailabilityFragment
     private FirebaseDatabase mDatabase;
     private DatabaseReference mAvailabilityTable;
 
+    private TextView mPartnerTitleTextView;
+    private TextView mPartnerNameTextView;
     private TextView mLocationTextView;
     private TextView mStartDateTextView;
     private TextView mStartTimeTextView;
@@ -109,6 +111,10 @@ public class AvailabilityFragment
         setHasOptionsMenu(true);
 
         View view = inflater.inflate(R.layout.fragment_availability, container, false);
+
+        mPartnerTitleTextView = (TextView) view.findViewById(R.id.partner_title);
+        mPartnerNameTextView = (TextView) view.findViewById(R.id.partner_value);
+        mPartnerNameTextView.setEnabled(false);
 
         mLocationTextView = (TextView) view.findViewById(R.id.location_value);
         mLocationTextView.setOnClickListener(new View.OnClickListener() {
@@ -257,9 +263,10 @@ public class AvailabilityFragment
         inflater.inflate(R.menu.availability_menu, menu);
 
         if (mAvailability != null) {
-            boolean canSendRequest = true;
-//            boolean canSendRequest = (!mIsNewAvailability && !isUserHosting()
-//                    && mAvailability.getJoinedAvailabilityKeys().isEmpty());
+            boolean canEditAvailability = mIsNewAvailability || (isUserHosting() && nobodyJoinedYet());
+            menu.findItem(R.id.action_save_availability).setVisible(canEditAvailability);
+
+            boolean canSendRequest = (!mIsNewAvailability && !isUserHosting() && nobodyJoinedYet());
             menu.findItem(R.id.action_send_request).setVisible(canSendRequest);
 
             boolean canCancel = (!mIsNewAvailability && isUserOwner());
@@ -276,6 +283,9 @@ public class AvailabilityFragment
                 break;
             case R.id.action_save_availability:
                 addOrUpdateAvailability();
+                break;
+            case R.id.action_cancel_availability:
+                // TODO: cancelAvailability();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -461,7 +471,24 @@ public class AvailabilityFragment
         return getUser().getKey().equals(mAvailability.getUserKey());
     }
 
+    private boolean nobodyJoinedYet() {
+        return mAvailability.getJoinedAvailabilityKeys().isEmpty();
+    }
+
     private void updateViews() {
+        if (getContext() == null || getMainActivity() == null) {
+            return;
+        }
+
+        mPartnerNameTextView.setText(mAvailability.getUserName());
+        if (isUserOwner()) {
+            mPartnerTitleTextView.setVisibility(View.GONE);
+            mPartnerNameTextView.setVisibility(View.GONE);
+        } else {
+            mPartnerTitleTextView.setVisibility(View.VISIBLE);
+            mPartnerNameTextView.setVisibility(View.VISIBLE);
+        }
+
         if (mAvailability.getLocationLatitude() != Double.MAX_VALUE) {
             mLocationTextView.setText(
                     mAvailability.getLocationName() + ", "
@@ -504,7 +531,7 @@ public class AvailabilityFragment
 
         mNoteEditText.setText(mAvailability.getNote());
 
-        boolean isEditable = mIsNewAvailability || (isUserHosting() && mAvailability.getJoinedAvailabilityKeys().isEmpty());
+        boolean isEditable = mIsNewAvailability || (isUserHosting() && nobodyJoinedYet());
         if (!isEditable) {
             mLocationTextView.setEnabled(false);
             mStartDateTextView.setEnabled(false);
@@ -517,6 +544,14 @@ public class AvailabilityFragment
             mIfNoPartnerTextView.setEnabled(false);
             mSharedEquipmentTextView.setEnabled(false);
             mNoteEditText.setEnabled(false);
+        }
+
+        if (mIsNewAvailability) {
+            getMainActivity().getSupportActionBar().setTitle(R.string.availability_title_new);
+        } else if (isUserHosting() && nobodyJoinedYet()) {
+            getMainActivity().getSupportActionBar().setTitle(R.string.availability_title_edit);
+        } else {
+            getMainActivity().getSupportActionBar().setTitle(R.string.availability_title_view);
         }
 
         getActivity().invalidateOptionsMenu();
