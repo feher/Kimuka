@@ -1,0 +1,11 @@
+- View request
+-- mark read-only
+- Accept request
+-- add joined availability
+-- mark request as accepted in DB
+ 
+* Cancel request
+
+Availability:
+* Cancel
+
